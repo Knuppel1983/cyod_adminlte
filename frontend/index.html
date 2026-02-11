@@ -1225,7 +1225,18 @@
       } catch (e) {
         console.error('Auth paintUi error:', e);
       }
+    })
+    
+    (async function() {
+      const res = await fetch('/api/getbudgets', { credentials: 'include' });
+      const data = await res.json();
+      if (data.found) {
+        console.log('User row id:', data.id);
+      } else {
+        console.warn('Geen user gevonden voor', data.username);
+      }
     })();
+
     </script>
     
     <!--end::Script-->
