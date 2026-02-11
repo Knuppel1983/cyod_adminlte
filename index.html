@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
     <!--end::Accessibility Meta Tags-->
     <!--begin::Primary Meta Tags-->
-    <meta name="title" content="AdminLTE v4 | Dashboard" />
+    <meta name="title" content="Verwol CYOD | Dashboard" />
     <meta name="author" content="ColorlibHQ" />
     <meta
       name="description"
@@ -760,7 +760,8 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Dashboard</h3></div>
+              <!--<div class="col-sm-6"><h3 class="mb-0">Dashboard</h3></div>-->
+              <div class="col-sm-6"><h3 id="welcomeHeader" class="mb-0">Welkom</h3></div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -1295,6 +1296,40 @@
 
   } catch (e) {
     console.error('Auth UI error:', e);
+  }
+})();
+</script>
+
+<script>
+(async function setWelcomeHeader() {
+  try {
+    const res = await fetch('/.auth/me', { credentials: 'include' });
+    const json = await res.json();
+
+    // Normalize Azure Static Web Apps principal formats
+    const principal =
+      (json && json.clientPrincipal) ? json.clientPrincipal :
+      (Array.isArray(json) && json.length > 0) ? json[0] :
+      null;
+
+    const header = document.getElementById('welcomeHeader');
+    if (!header) return;
+
+    if (!principal) {
+      header.textContent = "Welkom";
+      return;
+    }
+
+    const claims = principal.userClaims || [];
+    const findClaim = (needle) =>
+      claims.find(c => c.typ && c.typ.toLowerCase().includes(needle))?.val;
+
+    const email = principal.userDetails || findClaim('email') || '';
+    const displayName = findClaim('name') || findClaim('preferred_username') || email || 'gebruiker';
+
+    header.textContent = `Welkom ${displayName}`;
+  } catch (e) {
+    console.error("Kon gebruiker niet ophalen:", e);
   }
 })();
 </script>
