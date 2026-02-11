@@ -1287,28 +1287,54 @@
            : (full || upnOrMail || 'Gebruiker');
     }
 
-
     (async function paintUi() {
       try {
+        console.log('[paintUi] start');
+
+        // 1) Principal ophalen
         const p = await getPrincipal();
+        console.log('[paintUi] principal:', p);
+
+        // 2) Weergavenaam bepalen
         const name = getDisplayName(p);
+        console.log('[paintUi] computed name:', name);
 
-        // Navbar
-        const spanTop = document.getElementById('userDisplay');
-        const spanHdr = document.getElementById('userDisplayHeader');
+        // 3) Doelelementen zoeken
+        const spanTop  = document.getElementById('userDisplay');
+        const spanHdr  = document.getElementById('userDisplayHeader');
         const spanMail = document.getElementById('userEmailHeader');
+        const header   = document.getElementById('welcomeHeader');
 
+        console.log('[paintUi] nodes found:', {
+          userDisplay: !!spanTop,
+          userDisplayHeader: !!spanHdr,
+          userEmailHeader: !!spanMail,
+          welcomeHeader: !!header
+        });
+
+        // 4) Schrijven naar navbar
         if (spanTop) {
-          spanTop.textContent = name || 'Niet ingelogd';
+          const safe = (name && name.trim()) ? name : (p?.userDetails || 'Niet ingelogd');
+          spanTop.textContent = safe;
           spanTop.classList.remove('d-none');
+          console.log('[paintUi] userDisplay set to:', safe);
+        } else {
+          console.warn('[paintUi] #userDisplay not found in DOM');
         }
-        if (spanHdr) spanHdr.textContent = name || '';
-        if (spanMail) spanMail.textContent = (p?.userDetails) || '';
 
-        // Welkomstkop
-        const header = document.getElementById('welcomeHeader');
-        if (header) header.textContent = name ? `Welkom ${name}` : 'Welkom';
+        // 5) Schrijven naar dropdown
+        if (spanHdr)  { spanHdr.textContent  = name || ''; console.log('[paintUi] userDisplayHeader set'); }
+        if (spanMail) { spanMail.textContent = (p?.userDetails) || ''; console.log('[paintUi] userEmailHeader set'); }
 
+        // 6) Welkom-kop
+        if (header) {
+          header.textContent = name ? `Welkom ${name}` : 'Welkom';
+          console.log('[paintUi] welcomeHeader set');
+        } else {
+          console.warn('[paintUi] #welcomeHeader not found in DOM');
+        }
+
+        console.log('[paintUi] done');
       } catch (e) {
         console.error('Auth paintUi error:', e);
       }
