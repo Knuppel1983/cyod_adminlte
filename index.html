@@ -1264,6 +1264,7 @@
       return principal;
     }
 
+
     function getDisplayName(principal) {
       if (!principal) return null;
 
@@ -1271,25 +1272,48 @@
       const find = (needle) =>
         claims.find(c => c.typ && c.typ.toLowerCase().includes(needle))?.val;
 
-      // Probeer eerst 'given_name' + 'family_name'
-      const given = find('given_name');
+      // 1) Probeer voornaam + achternaam
+      const given  = find('given_name');
       const family = find('family_name');
 
-      // Dan 'name' (volledige weergavenaam)
-      const fullFromName = find('name');
+      // 2) Dan de volledige naam
+      const full   = find('name');
 
-      // Dan 'preferred_username' (vaak UPN/e-mail) of 'email'
-      const preferred = find('preferred_username') || find('email') || principal.userDetails || '';
+      // 3) Als er geen naamclaims zijn: UPN/e-mail
+      const upnOrMail = principal.userDetails || find('preferred_username') || find('email') || '';
 
-      // Bouw de weergavenaam
-      const display =
-        (given || family) ? [given, family].filter(Boolean).join(' ')
-        : (fullFromName || preferred || 'Gebruiker');
-
-      return display;
+      // 4) Bouw de weergavenaam
+      return (given || family) ? [given, family].filter(Boolean).join(' ')
+           : (full || upnOrMail || 'Gebruiker');
     }
-    </script>
 
+
+    (async function paintUi() {
+      try {
+        const p = await getPrincipal();
+        const name = getDisplayName(p);
+
+        // Navbar
+        const spanTop = document.getElementById('userDisplay');
+        const spanHdr = document.getElementById('userDisplayHeader');
+        const spanMail = document.getElementById('userEmailHeader');
+
+        if (spanTop) {
+          spanTop.textContent = name || 'Niet ingelogd';
+          spanTop.classList.remove('d-none');
+        }
+        if (spanHdr) spanHdr.textContent = name || '';
+        if (spanMail) spanMail.textContent = (p?.userDetails) || '';
+
+        // Welkomstkop
+        const header = document.getElementById('welcomeHeader');
+        if (header) header.textContent = name ? `Welkom ${name}` : 'Welkom';
+
+      } catch (e) {
+        console.error('Auth paintUi error:', e);
+      }
+    })();
+    </script>
     
     <!--end::Script-->
   </body>
