@@ -1438,31 +1438,27 @@
         const res = await fetch('/.auth/me', { credentials: 'include' });
         const data = await res.json();
 
-        const isLoggedIn = Array.isArray(data) && data.length > 0;
-        const navLogin  = document.getElementById('nav-login');
-        const navLogout = document.getElementById('nav-logout');
+        const display = document.getElementById('userDisplay');
+        if (!display) return;
 
-        if (isLoggedIn) {
-          // Toon Uitloggen, verberg Inloggen
-          navLogin?.classList.add('d-none');
-          navLogout?.classList.remove('d-none');
-
-          // (Optioneel) zet user info ergens in je layout
-          const user = data[0];
-          const email = user.userDetails || '';
-          const nameClaim = (user.userClaims || []).find(c => c.typ?.match(/^(name|preferred_username|email)$/i));
-          const displayName = nameClaim?.val || email;
-
-          // Voorbeeld: zet in een badge in de navbar
-          const userSlot = document.querySelector('#userDisplay');
-          if (userSlot) userSlot.textContent = displayName;
-        } else {
-          // Niet ingelogd: toon Inloggen, verberg Uitloggen
-          navLogin?.classList.remove('d-none');
-          navLogout?.classList.add('d-none');
+        if (data.length === 0) {
+          display.textContent = "Niet ingelogd";
+          return;
         }
-      } catch (e) {
-        console.error('Auth UI init error:', e);
+
+        const user = data[0];
+        const email = user.userDetails;
+
+        // Zoek een naam
+        const nameClaim = user.userClaims.find(c =>
+          c.typ.toLowerCase().includes("name")
+        );
+
+        const displayName = nameClaim?.val || email;
+        display.textContent = displayName;
+      }
+      catch(e){
+        console.error("Auth UI error:", e);
       }
     })();
     </script>
