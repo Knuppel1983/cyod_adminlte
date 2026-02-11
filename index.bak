@@ -1247,57 +1247,70 @@
       sparkline3.render();
     </script>
     
-<script>
-(async function setUserBadges() {
-  try {
-    const res = await fetch('/.auth/me', { credentials: 'include' });
-    const data = await res.json();
+    <script>
+    (async function initAuthUi() {
+      try {
+        const res = await fetch('/.auth/me', { credentials: 'include' });
+        const data = await res.json();
 
-    // ---- Normaliseer het model: SWA kan {clientPrincipal:{...}} of [ ... ] retourneren
-    const principal =
-      (data && data.clientPrincipal) ? data.clientPrincipal
-      : (Array.isArray(data) && data.length > 0) ? data[0]
-      : null;
+        const display = document.getElementById('userDisplay');
+        if (!display) return;
 
-    const $ = (id) => document.getElementById(id);
-    const spanTop = $('userDisplay');           // jouw navbar <span id="userDisplay">
-    const spanHdr = $('userDisplayHeader');     // dropdown header (optioneel)
-    const spanMail = $('userEmailHeader');      // dropdown header (optioneel)
+        if (data.length === 0) {
+          display.textContent = "Niet ingelogd";
+          return;
+        }
 
-    if (!principal) {
-      if (spanTop) spanTop.textContent = 'Niet ingelogd';
-      return;
-    }
+        const user = data[0];
+        const email = user.userDetails;
 
-    // ---- Claims & velden: name / preferred_username / email
-    const claims = principal.userClaims || [];
-    const getClaim = (name) =>
-      claims.find(c => c.typ && c.typ.toLowerCase().includes(name))?.val;
+        // Zoek een naam
+        const nameClaim = user.userClaims.find(c =>
+          c.typ.toLowerCase().includes("name")
+        );
 
-    const email = principal.userDetails
-               || getClaim('email')
-               || getClaim('upn')
-               || '';
-    const displayName = getClaim('name')
-                     || getClaim('preferred_username')
-                     || email
-                     || 'Gebruiker';
+        const displayName = nameClaim?.val || email;
+        display.textContent = displayName;
+      }
+      catch(e){
+        console.error("Auth UI error:", e);
+      }
+    })();
+    </script>
+    
+    <script>
+    (async function fillUserMenu() {
+      try {
+        const res = await fetch('/.auth/me', { credentials: 'include' });
+        const data = await res.json();
 
-    // ---- Schrijf naar de UI
-    if (spanTop) {
-      spanTop.textContent = displayName;
-      // Als het element door d-none d-md-inline verborgen is op kleine schermen,
-      // kun je het force‑tonen:
-      spanTop.classList.remove('d-none');
-    }
-    if (spanHdr) spanHdr.textContent = displayName;
-    if (spanMail) spanMail.textContent = email;
+        if (!Array.isArray(data) || data.length === 0) {
+          // Geen gebruiker → verberg user menu als je wilt
+          return;
+        }
 
-  } catch (e) {
-    console.error('Auth UI error:', e);
-  }
-})();
-</script>
+        const user = data[0];
+        const email = user.userDetails;
+
+        // Zoek de beste naam-claim
+        const nameClaim = (user.userClaims || []).find(c =>
+          c.typ && c.typ.toLowerCase().includes('name')
+        );
+
+        const displayName = nameClaim?.val || email;
+
+        // Vul dropdown header
+        const nameTarget = document.getElementById('userDisplayHeader');
+        const emailTarget = document.getElementById('userEmailHeader');
+
+        if (nameTarget) nameTarget.textContent = displayName;
+        if (emailTarget) emailTarget.textContent = email;
+      }
+      catch (err) {
+        console.error("Couldn't load user info:", err);
+      }
+    })();
+    </script>
     
     <!--end::Script-->
   </body>
