@@ -1266,38 +1266,30 @@
 
     function getDisplayName(principal) {
       if (!principal) return null;
+
       const claims = principal.userClaims || [];
-      const find = (needle) => claims.find(c => c.typ && c.typ.toLowerCase().includes(needle))?.val;
-      const email = principal.userDetails || find('email') || find('upn') || '';
-      return find('name') || find('preferred_username') || email || 'Gebruiker';
+      const find = (needle) =>
+        claims.find(c => c.typ && c.typ.toLowerCase().includes(needle))?.val;
+
+      // Probeer eerst 'given_name' + 'family_name'
+      const given = find('given_name');
+      const family = find('family_name');
+
+      // Dan 'name' (volledige weergavenaam)
+      const fullFromName = find('name');
+
+      // Dan 'preferred_username' (vaak UPN/e-mail) of 'email'
+      const preferred = find('preferred_username') || find('email') || principal.userDetails || '';
+
+      // Bouw de weergavenaam
+      const display =
+        (given || family) ? [given, family].filter(Boolean).join(' ')
+        : (fullFromName || preferred || 'Gebruiker');
+
+      return display;
     }
-
-    (async function paintUi() {
-      try {
-        const p = await getPrincipal();
-        const name = getDisplayName(p);
-
-        // Navbar
-        const spanTop = document.getElementById('userDisplay');
-        const spanHdr = document.getElementById('userDisplayHeader');
-        const spanMail = document.getElementById('userEmailHeader');
-
-        if (spanTop) {
-          spanTop.textContent = name || 'Niet ingelogd';
-          spanTop.classList.remove('d-none');
-        }
-        if (spanHdr) spanHdr.textContent = name || '';
-        if (spanMail) spanMail.textContent = (p?.userDetails) || '';
-
-        // Welkomstkop
-        const header = document.getElementById('welcomeHeader');
-        if (header) header.textContent = name ? `Welkom ${name}` : 'Welkom';
-
-      } catch (e) {
-        console.error('Auth paintUi error:', e);
-      }
-    })();
     </script>
+
     
     <!--end::Script-->
   </body>
