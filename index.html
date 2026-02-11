@@ -523,16 +523,17 @@
                       </p>
                     </a>
                     <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="./examples/login.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
+                      <li class="nav-item" id="nav-login">
+                        <a href="/.auth/login/aad" class="nav-link">
+                          <i class="nav-icon bi bi-box-arrow-in-right"></i>
+                          <p>Inloggen</p>
                         </a>
                       </li>
-                      <li class="nav-item">
-                        <a href="./examples/register.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
+
+                      <li class="nav-item d-none" id="nav-logout">
+                        <a href="/.auth/logout" class="nav-link">
+                          <i class="nav-icon bi bi-box-arrow-right"></i>
+                          <p>Uitloggen</p>
                         </a>
                       </li>
                     </ul>
@@ -546,16 +547,17 @@
                       </p>
                     </a>
                     <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="./examples/login-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
+                      <li class="nav-item" id="nav-login">
+                        <a href="/.auth/login/aad" class="nav-link">
+                          <i class="nav-icon bi bi-box-arrow-in-right"></i>
+                          <p>Inloggen</p>
                         </a>
                       </li>
-                      <li class="nav-item">
-                        <a href="./examples/register-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
+
+                      <li class="nav-item d-none" id="nav-logout">
+                        <a href="/.auth/logout" class="nav-link">
+                          <i class="nav-icon bi bi-box-arrow-right"></i>
+                          <p>Uitloggen</p>
                         </a>
                       </li>
                     </ul>
@@ -1427,6 +1429,42 @@
       const sparkline3 = new ApexCharts(document.querySelector('#sparkline-3'), option_sparkline3);
       sparkline3.render();
     </script>
+    
+    <script>
+    (async function initAuthUi() {
+      try {
+        const res = await fetch('/.auth/me', { credentials: 'include' });
+        const data = await res.json();
+
+        const isLoggedIn = Array.isArray(data) && data.length > 0;
+        const navLogin  = document.getElementById('nav-login');
+        const navLogout = document.getElementById('nav-logout');
+
+        if (isLoggedIn) {
+          // Toon Uitloggen, verberg Inloggen
+          navLogin?.classList.add('d-none');
+          navLogout?.classList.remove('d-none');
+
+          // (Optioneel) zet user info ergens in je layout
+          const user = data[0];
+          const email = user.userDetails || '';
+          const nameClaim = (user.userClaims || []).find(c => c.typ?.match(/^(name|preferred_username|email)$/i));
+          const displayName = nameClaim?.val || email;
+
+          // Voorbeeld: zet in een badge in de navbar
+          const userSlot = document.querySelector('#userDisplay');
+          if (userSlot) userSlot.textContent = displayName;
+        } else {
+          // Niet ingelogd: toon Inloggen, verberg Uitloggen
+          navLogin?.classList.remove('d-none');
+          navLogout?.classList.add('d-none');
+        }
+      } catch (e) {
+        console.error('Auth UI init error:', e);
+      }
+    })();
+    </script>
+    
     <!--end::Script-->
   </body>
   <!--end::Body-->
