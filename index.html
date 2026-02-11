@@ -1252,7 +1252,7 @@
     async function getPrincipal() {
       if (window.__principal) return window.__principal;
 
-      const res = await fetch('/.auth/me', { credentials: 'include' });
+      const res  = await fetch('/.auth/me', { credentials: 'include' });
       const json = await res.json();
 
       const principal =
@@ -1260,38 +1260,41 @@
         (Array.isArray(json) && json.length > 0) ? json[0] :
         null;
 
-      window.__principal = principal; // cache op de pagina
+      // Normaliseer: zorg dat userClaims altijd bestaat
+      if (principal && !principal.userClaims && principal.claims) {
+        principal.userClaims = principal.claims;
+      }
+
+      window.__principal = principal;
       return principal;
     }
 
     function getDisplayName(principal) {
       if (!principal) return null;
 
-      const claims = principal.userClaims || [];
+      // SWA kan 'claims' of 'userClaims' gebruiken afhankelijk van flow/config
+      const claims = principal.userClaims || principal.claims || [];
 
-      // Helper: exact match (of URI die eindigt op /<key>)
+      // exacte/robuste claim-lookup: match 'name' of URI die eindigt op '/name'
       const get = (key) => {
         const k = key.toLowerCase();
         const hit = claims.find(c => {
           const typ = (c.typ || '').toLowerCase();
-          return typ === k || typ.endsWith('/' + k); // vangt bv. .../claims/name af
+          return typ === k || typ.endsWith('/' + k);
         });
-        return hit?.val || '';
+        return hit?.val?.trim() || '';
       };
 
-      // 1) Voornaam + achternaam
+      // 1) Voornaam + achternaam (als aanwezig)
       const given  = get('given_name');
       const family = get('family_name');
+      if (given || family) return [given, family].filter(Boolean).join(' ').trim();
 
-      if (given || family) {
-        return [given, family].filter(Boolean).join(' ').trim();
-      }
-
-      // 2) Volledige weergavenaam (display name)
+      // 2) Volledige weergavenaam
       const full = get('name');
       if (full) return full;
 
-      // 3) Liever géén e‑mail als zichtbare naam; val terug op een generieke tekst
+      // 3) Geen zichtbare fallback naar e‑mail
       return 'Gebruiker';
     }
 
