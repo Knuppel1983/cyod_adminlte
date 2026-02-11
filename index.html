@@ -1264,27 +1264,35 @@
       return principal;
     }
 
-
     function getDisplayName(principal) {
       if (!principal) return null;
 
       const claims = principal.userClaims || [];
-      const find = (needle) =>
-        claims.find(c => c.typ && c.typ.toLowerCase().includes(needle))?.val;
 
-      // 1) Probeer voornaam + achternaam
-      const given  = find('given_name');
-      const family = find('family_name');
+      // Helper: exact match (of URI die eindigt op /<key>)
+      const get = (key) => {
+        const k = key.toLowerCase();
+        const hit = claims.find(c => {
+          const typ = (c.typ || '').toLowerCase();
+          return typ === k || typ.endsWith('/' + k); // vangt bv. .../claims/name af
+        });
+        return hit?.val || '';
+      };
 
-      // 2) Dan de volledige naam
-      const full   = find('name');
+      // 1) Voornaam + achternaam
+      const given  = get('given_name');
+      const family = get('family_name');
 
-      // 3) Als er geen naamclaims zijn: UPN/e-mail
-      const upnOrMail = principal.userDetails || find('preferred_username') || find('email') || '';
+      if (given || family) {
+        return [given, family].filter(Boolean).join(' ').trim();
+      }
 
-      // 4) Bouw de weergavenaam
-      return (given || family) ? [given, family].filter(Boolean).join(' ')
-           : (full || upnOrMail || 'Gebruiker');
+      // 2) Volledige weergavenaam (display name)
+      const full = get('name');
+      if (full) return full;
+
+      // 3) Liever géén e‑mail als zichtbare naam; val terug op een generieke tekst
+      return 'Gebruiker';
     }
 
     (async function paintUi() {
