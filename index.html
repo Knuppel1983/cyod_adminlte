@@ -1248,91 +1248,56 @@
       sparkline3.render();
     </script>
     
-<script>
-(async function setUserBadges() {
-  try {
-    const res = await fetch('/.auth/me', { credentials: 'include' });
-    const data = await res.json();
+    <script>
+    async function getPrincipal() {
+      if (window.__principal) return window.__principal;
 
-    // ---- Normaliseer het model: SWA kan {clientPrincipal:{...}} of [ ... ] retourneren
-    const principal =
-      (data && data.clientPrincipal) ? data.clientPrincipal
-      : (Array.isArray(data) && data.length > 0) ? data[0]
-      : null;
+      const res = await fetch('/.auth/me', { credentials: 'include' });
+      const json = await res.json();
 
-    const $ = (id) => document.getElementById(id);
-    const spanTop = $('userDisplay');           // jouw navbar <span id="userDisplay">
-    const spanHdr = $('userDisplayHeader');     // dropdown header (optioneel)
-    const spanMail = $('userEmailHeader');      // dropdown header (optioneel)
+      const principal =
+        (json && json.clientPrincipal) ? json.clientPrincipal :
+        (Array.isArray(json) && json.length > 0) ? json[0] :
+        null;
 
-    if (!principal) {
-      if (spanTop) spanTop.textContent = 'Niet ingelogd';
-      return;
+      window.__principal = principal; // cache op de pagina
+      return principal;
     }
 
-    // ---- Claims & velden: name / preferred_username / email
-    const claims = principal.userClaims || [];
-    const getClaim = (name) =>
-      claims.find(c => c.typ && c.typ.toLowerCase().includes(name))?.val;
-
-    const email = principal.userDetails
-               || getClaim('email')
-               || getClaim('upn')
-               || '';
-    const displayName = getClaim('name')
-                     || getClaim('preferred_username')
-                     || email
-                     || 'Gebruiker';
-
-    // ---- Schrijf naar de UI
-    if (spanTop) {
-      spanTop.textContent = displayName;
-      // Als het element door d-none d-md-inline verborgen is op kleine schermen,
-      // kun je het force‑tonen:
-      spanTop.classList.remove('d-none');
-    }
-    if (spanHdr) spanHdr.textContent = displayName;
-    if (spanMail) spanMail.textContent = email;
-
-  } catch (e) {
-    console.error('Auth UI error:', e);
-  }
-})();
-</script>
-
-<script>
-(async function setWelcomeHeader() {
-  try {
-    const res = await fetch('/.auth/me', { credentials: 'include' });
-    const json = await res.json();
-
-    // Normalize Azure Static Web Apps principal formats
-    const principal =
-      (json && json.clientPrincipal) ? json.clientPrincipal :
-      (Array.isArray(json) && json.length > 0) ? json[0] :
-      null;
-
-    const header = document.getElementById('welcomeHeader');
-    if (!header) return;
-
-    if (!principal) {
-      header.textContent = "Welkom";
-      return;
+    function getDisplayName(principal) {
+      if (!principal) return null;
+      const claims = principal.userClaims || [];
+      const find = (needle) => claims.find(c => c.typ && c.typ.toLowerCase().includes(needle))?.val;
+      const email = principal.userDetails || find('email') || find('upn') || '';
+      return find('name') || find('preferred_username') || email || 'Gebruiker';
     }
 
-    const claims = principal.userClaims || [];
-    const findClaim = (needle) =>
-      claims.find(c => c.typ && c.typ.toLowerCase().includes(needle))?.val;
+    (async function paintUi() {
+      try {
+        const p = await getPrincipal();
+        const name = getDisplayName(p);
 
-    const email = principal.userDetails || findClaim('email') || '';
-    const displayName = findClaim('name') || findClaim('preferred_username') || email || 'gebruiker';
+        // Navbar
+        const spanTop = document.getElementById('userDisplay');
+        const spanHdr = document.getElementById('userDisplayHeader');
+        const spanMail = document.getElementById('userEmailHeader');
 
-    header.textContent = `Welkom ${displayName}`;
-  } catch (e) {
-    console.error("Kon gebruiker niet ophalen:", e);
-  }
-})();
-</script>
+        if (spanTop) {
+          spanTop.textContent = name || 'Niet ingelogd';
+          spanTop.classList.remove('d-none');
+        }
+        if (spanHdr) spanHdr.textContent = name || '';
+        if (spanMail) spanMail.textContent = (p?.userDetails) || '';
+
+        // Welkomstkop
+        const header = document.getElementById('welcomeHeader');
+        if (header) header.textContent = name ? `Welkom ${name}` : 'Welkom';
+
+      } catch (e) {
+        console.error('Auth paintUi error:', e);
+      }
+    })();
+    </script>
     
     <!--end::Script-->
   </body>
