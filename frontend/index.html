@@ -644,6 +644,7 @@
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol>
               </div>
+              <div class="col-sm-6"><h2 id="uitleg" class="mb-0">Hieronder vind je jouw budgetten bijgewerkt tot 12-02-2026:</h2></div>
             </div>
             <!--end::Row-->
           </div>
@@ -661,8 +662,8 @@
                 <!--begin::Small Box Widget 1-->
                 <div class="small-box text-bg-primary">
                   <div class="inner">
-                    <h3>150</h3>
-                    <p>New Orders</p>
+                    <h3><span class="info-box-number" id="val-tst">...</span></h3>
+                    <p>Toestel</p>
                   </div>
                   <svg
                     class="small-box-icon"
@@ -1235,31 +1236,25 @@
       } else {
         console.warn('Geen user gevonden voor', data.username);
       }
-    })();
+    })
 
-    async function loadUserBudget() {
+
+    (async function () {
       try {
-        const res = await fetch('/api/getbudgets', {
-          method: 'GET',
-          credentials: 'include'   // belangrijk: SWA-auth cookies meesturen
-        });
-
-        if (!res.ok) {
-          throw new Error("API error: " + res.status);
-        }
+        const res = await fetch('/api/getbudgets', { credentials: 'include' });
+        if (!res.ok) { console.error('API error', res.status); return; }
 
         const data = await res.json();
-        console.log("Data uit API:", data);
+        const fmt = (n) => (n == null ? '—' : `€ ${Number(n).toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
 
-        // voorbeeld: toon ID op pagina
-        document.getElementById("user-id").textContent = data.id;
-
-      } catch (err) {
-        console.error("Fout bij laden:", err);
+        document.getElementById('val-tst').textContent = fmt(data.tst_budget);
+        document.getElementById('val-rep').textContent = fmt(data.rep_budget);
+        document.getElementById('val-ovg').textContent = fmt(data.ovg_budget);
+      } catch (e) {
+        console.error(e);
       }
-    }
+    })();
 
-    loadUserBudget();
 
     </script>
     
