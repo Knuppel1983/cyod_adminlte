@@ -19,18 +19,36 @@ jobs:
         with:
           submodules: true
           lfs: false
+
+      # -------- NEW: API dependencies installeren --------
+      - name: Set up Node.js for API
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Build API (install deps)
+        working-directory: ./api
+        # Draai alleen als er een package.json is (anders sla deze stap over)
+        if: ${{ hashFiles('api/package.json') != '' }}
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+      # -------- END NEW --------
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_CLIFF_036E54803 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/frontend" # App source code path
-          api_location: "/api" # Api source code path - optional
-          output_location: "." # Built app content directory - optional
+          app_location: "/frontend"   # App source code path
+          api_location: "/api"        # API source code path (managed Functions)
+          output_location: ""         # Leeg voor "pure" statische sites (geen build-output map)
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
@@ -44,4 +62,3 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_CLIFF_036E54803 }}
           action: "close"
-
