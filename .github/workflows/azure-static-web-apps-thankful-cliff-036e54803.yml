@@ -24,9 +24,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+        if: ${{ hashFiles('api/package.json') != '' }}
 
       - name: Build API (install deps)
         working-directory: ./api
+        if: ${{ hashFiles('api/package.json') != '' }}
         run: |
           if [ -f package-lock.json ]; then
             npm ci --omit=dev
