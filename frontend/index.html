@@ -1237,6 +1237,30 @@
       }
     })();
 
+    async function loadUserBudget() {
+      try {
+        const res = await fetch('/api/getbudgets', {
+          method: 'GET',
+          credentials: 'include'   // belangrijk: SWA-auth cookies meesturen
+        });
+
+        if (!res.ok) {
+          throw new Error("API error: " + res.status);
+        }
+
+        const data = await res.json();
+        console.log("Data uit API:", data);
+
+        // voorbeeld: toon ID op pagina
+        document.getElementById("user-id").textContent = data.id;
+
+      } catch (err) {
+        console.error("Fout bij laden:", err);
+      }
+    }
+
+    loadUserBudget();
+
     </script>
     
     <!--end::Script-->

@@ -29,9 +29,13 @@ module.exports = async function (context, req) {
     const result = await pool.request()
       .input('Username', sql.NVarChar(256), username)
       .query(`
-        SELECT TOP (1) [id]
-        FROM [dbo].[users]
-        WHERE LOWER([username]) = LOWER(@Username);
+        SELECT TOP (1)
+               u.[id]          AS user_id,
+               b.[budget]      AS budget
+        FROM   dbo.[users]       AS u
+        LEFT JOIN dbo.[tst_budget] AS b
+               ON b.[user_id] = u.[id]
+        WHERE  LOWER(u.[username]) = LOWER(@Username);
       `);
 
     if (result.recordset.length === 0) {
