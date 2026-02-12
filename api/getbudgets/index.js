@@ -85,7 +85,9 @@ module.exports = async function (context, req) {
       body: {
         ok: true,
         user: { id: row.user_id, username },
-        budget: row.budget // kan null zijn bij LEFT JOIN
+        tst_budget: row.tst_budget,
+        rep_budget: row.rep_budget,
+        ovg_budget: row.ovg_budget
       }
     };
 
