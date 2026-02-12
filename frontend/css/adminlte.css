@@ -15598,15 +15598,25 @@ fieldset legend {
 .phone-icon {
     position: relative;
     font-size: 3rem;
+    display: inline-flex;   /* belangrijk voor iOS */
+    align-items: center;
+    justify-content: center;
+    line-height: 1;         /* voorkomt verschuiving */
+}
+
+.phone-icon i {
+    display: block;         /* voorkomt inline rendering issues */
 }
 
 .phone-icon .tools-icon {
     position: absolute;
-    top: 44%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 16px;
+    pointer-events: none;   /* optioneel */
 }
+
 
 .custom-smaller-icon {
     font-size: 2.4rem !important; /* grootte van het phone icoon */
