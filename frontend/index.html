@@ -1144,7 +1144,7 @@
 
       window.__principal = principal;
       return principal;
-    }
+    };
 
     function getDisplayName(principal) {
       if (!principal) return null;
@@ -1173,7 +1173,7 @@
 
       // 3) Geen zichtbare fallback naar e‑mail
       return 'Gebruiker';
-    }
+    };
 
     (async function paintUi() {
       try {
@@ -1226,7 +1226,7 @@
       } catch (e) {
         console.error('Auth paintUi error:', e);
       }
-    })
+    });
     
     (async function () {
       try {
