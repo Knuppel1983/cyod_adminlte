@@ -706,46 +706,9 @@
               </div>
               <div class="col-md-4 col-sm-6 col-12">
                 <div class="info-box text-bg-warning">
-                  <span class="info-box-icon">
-                    <svg
-                      class="icon-phone-tools"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 16 16"
-                      aria-hidden="true"
-                      fill="currentColor"
-                      width="42" height="42"
-                    >
-                      <defs>
-                        <!-- Schermgebied exact gecentreerd; pas w/h aan als je een ander scherm wilt -->
-                        <!-- Hier: breedte 8, hoogte 9.2, centreren op (8,8) -->
-                        <clipPath id="phoneScreenClip">
-                          <rect
-                            id="phoneScreen"
-                            x="4" y="3.4" width="8" height="9.2" rx="1" ry="1"
-                          />
-                        </clipPath>
-                      </defs>
-
-                      <!-- Telefoon-body -->
-                      <path d="M5 0h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2A2 2 0 0 1 5 0zm0 1a1 1 0 0 0-1 1v10.5h8V2a1 1 0 0 0-1-1H5z"/>
-                      <circle cx="8" cy="14.2" r="0.7"/>
-
-                      <!-- Wrench geclipt tot het scherm en exact gecentreerd -->
-                      <g clip-path="url(#phoneScreenClip)">
-                        <!--
-                          Tip:
-                          - We gebruiken transform-box/transform-origin op het pad zodat
-                            'translate' en 'scale' om het eigen middelpunt draaien.
-                          - De waarden hieronder plaatsen de wrench netjes in het midden.
-                          - Wil je 1 tikje omhoog/omlaag? Pas 'var(--tune-y)' (in CSS) aan.
-                        -->
-                        <path
-                          class="wrench"
-                          d="M1.5 10.5l3 3a1 1 0 0 0 1.4 0l1.1-1.1a1 1 0 0 0 0-1.4l-.6-.6 2.8-2.8c.2-.2.2-.5 0-.7l-.8-.8c-.2-.2-.5-.2-.7 0L4.9 8.9l-.6-.6a1 1 0 0 0-1.4 0L1.5 9.4a1 1 0 0 0 0 1.1z"
-                          transform="translate(8,8) scale(1.05) translate(-8,-8)"
-                        />
-                      </g>
-                    </svg>
+                  <span class="info-box-icon phone-icon">
+                      <i class="bi bi-phone"></i>
+                      <i class="bi bi-tools tools-icon"></i>
                   </span>
                   <div class="info-box-content">
                     <span class="info-box-text">Overig</span>
