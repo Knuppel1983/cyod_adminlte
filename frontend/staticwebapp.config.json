@@ -14,7 +14,7 @@
     }
   },
   "routes": [
-    { "route": "/api/getbudgets", "allowedRoles": [ "anonymous" ] },
+    { "route": "/api/getbudgets", "allowedRoles": [ "authenticated" ] },
     { "route": "/*", "allowedRoles": ["authenticated"] }
   ],
   "responseOverrides": {
