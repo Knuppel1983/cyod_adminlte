@@ -15597,7 +15597,7 @@ fieldset legend {
 
 .phone-icon {
     position: relative;
-    font-size: 40px; /* grootte van het phone icoon */
+    font-size: 60px; /* grootte van het phone icoon */
 }
 
 .phone-icon .tools-icon {
@@ -15605,5 +15605,5 @@ fieldset legend {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 18px; /* kleiner maken */
+    font-size: 16px; /* kleiner maken */
 }
