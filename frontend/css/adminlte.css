@@ -15591,3 +15591,19 @@ fieldset legend {
 }
 
 /*# sourceMappingURL=adminlte.css.map */
+
+
+/*custom Verwol*/
+
+.phone-icon {
+    position: relative;
+    font-size: 40px; /* grootte van het phone icoon */
+}
+
+.phone-icon .tools-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px; /* kleiner maken */
+}
