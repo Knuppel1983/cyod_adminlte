@@ -1,50 +1,48 @@
-// /api/TestDbConnection/index.js
-module.exports = async function (context, req) {
-  let sql;
-  try {
-    // Probeer de driver te laden pas in runtime
-    sql = require('mssql');
-  } catch (e) {
-    context.res = {
-      status: 500,
-      body: { ok: false, where: 'require', error: 'Cannot find module mssql', detail: e.message }
-    };
-    return;
-  }
+// /api/GetUserId/index.js
+const sql = require('mssql');
 
+module.exports = async function (context, req) {
   let pool;
   try {
     const connStr = process.env.SqlConnectionString;
     if (!connStr) {
-      context.res = { status: 500, body: { ok: false, error: 'Connection string missing' } };
+      context.res = { status: 500, body: 'DB config missing' };
       return;
     }
 
-    pool = await sql.connect(connStr);
-    const r = await pool.request().query('SELECT 1 AS test; SELECT DB_NAME() AS db; SELECT SUSER_SNAME() AS login;');
+    // Claims uit SWA (EasyAuth). Route is via SWA al authenticated.
+    const p = req.headers['x-ms-client-principal'];
+    if (!p) { context.res = { status: 401, body: 'Unauthorized' }; return; }
 
-    context.res = {
-      status: 200,
-      body: {
-        ok: true,
-        result: r.recordsets?.[0] ?? [],
-        db:      r.recordsets?.[1]?.[0]?.db ?? null,
-        login:   r.recordsets?.[2]?.[0]?.login ?? null
-      }
+    const principal = JSON.parse(Buffer.from(p, 'base64').toString('utf8'));
+    const claims = principal.userClaims || principal.claims || [];
+    const find = (k) => {
+      const key = k.toLowerCase();
+      const hit = claims.find(c => (c.typ || '').toLowerCase() === key || (c.typ || '').toLowerCase().endsWith('/' + key));
+      return hit?.val || '';
     };
+
+    const email = find('preferred_username') || find('email') || principal.userDetails || '';
+    const username = email.split('@')[0];
+
+    pool = await sql.connect(connStr);
+    const result = await pool.request()
+      .input('Username', sql.NVarChar(256), username)
+      .query(`
+        SELECT TOP (1) [id]
+        FROM [dbo].[users]
+        WHERE LOWER([username]) = LOWER(@Username);
+      `);
+
+    if (result.recordset.length === 0) {
+      context.res = { status: 404, body: { found: false, username, id: null } };
+      return;
+    }
+
+    context.res = { status: 200, body: { found: true, username, id: result.recordset[0].id } };
   } catch (err) {
-    context.res = {
-      status: 500,
-      body: {
-        ok: false,
-        where: 'connect/query',
-        error: err.message,
-        code: err.code ?? null,
-        number: err.number ?? null,
-        state: err.state ?? null,
-        class: err.class ?? null
-      }
-    };
+    context.log.error(err);
+    context.res = { status: 500, body: 'Internal Server Error' };
   } finally {
     if (pool && pool.close) await pool.close();
   }
