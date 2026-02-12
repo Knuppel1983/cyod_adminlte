@@ -55,12 +55,15 @@ module.exports = async function (context, req) {
 
     const query = `
       SELECT TOP (1)
-             u.[id]     AS user_id,
-             b.[budget] AS budget
-      FROM   dbo.[users] AS u
-      LEFT JOIN dbo.[tst_budget] AS b
-             ON b.[user_id] = u.[id]
-      WHERE  u.[username] = @Username;  -- aanname: kolom is case-insensitief gecolloceerd
+             a.[id]     AS user_id,
+             b.[budget] AS tst_budget,
+             c.[rep_budget] AS rep_budget,
+             d.[ovg_budget] AS ovg_budget             
+      FROM   dbo.[users] AS a
+      LEFT JOIN dbo.[tst_budget] AS b ON b.[user_id] = a.[id]
+      LEFT JOIN dbo.[rep_budget] AS c ON c.[user_id] = a.[id]
+      LEFT JOIN dbo.[ovg_budget] AS d ON d.[user_id] = a.[id]
+      WHERE  a.[username] = @Username;  -- aanname: kolom is case-insensitief gecolloceerd
     `;
 
     const r = await pool.request()
