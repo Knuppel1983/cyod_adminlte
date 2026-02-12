@@ -4,7 +4,7 @@ module.exports = async function (context, req) {
     headers: { "Content-Type": "application/json" },
     body: {
       ok: true,
-      path: "/api/Ping",
+      path: "/api/getbudgets",
       time: new Date().toISOString()
     }
   };
