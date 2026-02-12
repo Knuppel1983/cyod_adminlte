@@ -15593,7 +15593,7 @@ fieldset legend {
 /*# sourceMappingURL=adminlte.css.map */
 
 
-/* custom Verwol
+/* custom Verwol */
 
 .phone-icon {
     position: relative;
@@ -15606,32 +15606,7 @@ fieldset legend {
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 16px;
-}*/
-
-
-.phone-icon {
-    position: relative !important;
-    display: inline-block !important;   /* flex uitschakelen */
-    line-height: 1;                     /* baseline issues voorkomen */
 }
-
-.phone-icon > i {
-    display: block;                     /* voorkomt inline naast elkaar */
-}
-
-.phone-icon .bi-phone {
-    font-size: 40px;
-}
-
-.phone-icon .tools-icon {
-    position: absolute !important;
-    top: 10px;                          /* hier fine-tunen */
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 18px;
-    pointer-events: none;               /* voorkomt klikproblemen */
-}
-
 
 .custom-smaller-icon {
     font-size: 2.4rem !important; /* grootte van het phone icoon */
