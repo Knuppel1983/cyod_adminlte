@@ -20,7 +20,6 @@ jobs:
           submodules: true
           lfs: false
 
-      # -------- NEW: API dependencies installeren --------
       - name: Set up Node.js for API
         uses: actions/setup-node@v4
         with:
@@ -28,27 +27,23 @@ jobs:
 
       - name: Build API (install deps)
         working-directory: ./api
-        # Draai alleen als er een package.json is (anders sla deze stap over)
-        if: ${{ hashFiles('api/package.json') != '' }}
         run: |
           if [ -f package-lock.json ]; then
             npm ci
           else
             npm install
           fi
-      # -------- END NEW --------
 
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_CLIFF_036E54803 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e. PR comments)
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          app_location: "/frontend"   # App source code path
-          api_location: "/api"        # API source code path (managed Functions)
-          output_location: ""         # Leeg voor "pure" statische sites (geen build-output map)
+          app_location: "/frontend"
+          api_location: "/api"
+          output_location: ""   # <— leeg bij pure HTML
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
