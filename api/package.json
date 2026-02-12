@@ -11,6 +11,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "mssql": "^12.2.0"
+    "mssql": "^10.0.0"
   }
 }
