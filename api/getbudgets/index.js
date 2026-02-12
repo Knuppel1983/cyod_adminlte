@@ -82,6 +82,7 @@ module.exports = async function (context, req) {
     const row = r.recordset[0];
     context.res = {
       status: 200,
+      headers: { 'Content-Type': 'application/json' },
       body: {
         ok: true,
         user: { id: row.user_id, username },
