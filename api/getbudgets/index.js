@@ -1,26 +1,22 @@
 module.exports = async function (context, req) {
-  // Alleen de driver proberen te laden.
-  let loaded = false;
-  try {
-    const sql = require('mssql');
-    loaded = !!sql;
-  } catch (e) {
-    // Gecontroleerde fout, geen kale 500
-    context.res = {
-      status: 500,
-      body: { ok: false, where: 'require', error: e.message }
-    };
+  const sql = require('mssql');
+
+  const connStr = process.env.SqlConnectionString;
+  if (!connStr) {
+    context.res = { status: 500, body: { ok: false, error: 'SqlConnectionString missing' } };
     return;
   }
 
-  // Geen connectie, geen query: alleen bevestigen dat de driver geladen is
-  context.res = {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-    body: {
-      ok: true,
-      step: "driver-ok",
-      loaded
-    }
-  };
+  let pool;
+  try {
+    pool = await sql.connect(connStr);
+    context.res = { status: 200, body: { ok: true, step: 'connected' } };
+  } catch (err) {
+    context.res = {
+      status: 500,
+      body: { ok: false, where: 'connect', error: err.message, number: err.number ?? null }
+    };
+  } finally {
+    if (pool && pool.close) await pool.close();
+  }
 };
