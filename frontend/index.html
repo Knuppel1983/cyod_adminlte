@@ -704,6 +704,59 @@
                     </div>
                 </div>
               </div>
+              <div class="col-md-4 col-sm-6 col-12">
+                <div class="info-box text-bg-warning">
+                  <span class="info-box-icon">
+                    <!-- Eén SVG: phone (met scherm) + wrench, waarbij wrench in het scherm geclipt wordt -->
+                    <svg
+                      class="icon-phone-tools"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 16 16"
+                      aria-hidden="true"
+                      fill="currentColor"
+                      width="42" height="42"
+                    >
+                      <defs>
+                        <!-- Definieer het “scherm” als clipvlak (coördinaten binnen viewBox 16×16) -->
+                        <!-- Pas de waarden aan als je een andere schermmaat wilt -->
+                        <clipPath id="phoneScreenClip">
+                          <!-- x=4, y=3.4, breedte 8, hoogte 9.2 ~ scherm van een generieke telefoon -->
+                          <rect x="4" y="3.4" width="8" height="9.2" rx="1" ry="1" />
+                        </clipPath>
+                      </defs>
+
+                      <!-- Telefoon-body (rand + device) -->
+                      <!-- Simpel, neutraal telefoonpictogram; past in 16x16 -->
+                      <path d="M5 0h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2A2 2 0 0 1 5 0zm0 1a1 1 0 0 0-1 1v10.5h8V2a1 1 0 0 0-1-1H5z"/>
+                      <!-- Home-dot onderaan (optioneel) -->
+                      <circle cx="8" cy="14.2" r="0.7"/>
+
+                      <!-- (Onzichtbaar) schermkader: voor referentie; laat 'm weg of zet opacity als je ‘m wil zien) -->
+                      <!-- <rect x="4" y="3.4" width="8" height="9.2" rx="1" ry="1" opacity=".1"/> -->
+
+                      <!-- Wrench: geclipt tot het scherm -->
+                      <g clip-path="url(#phoneScreenClip)">
+                        <!-- Wrench pad: schaal & plaats binnen het scherm -->
+                        <!-- We gebruiken een neutrale, goed-werkende moersleutelvorm in 16x16-coördinaten,
+                             en transformeren ‘m zodat hij netjes in het scherm valt. -->
+                        <path
+                          d="M1.5 10.5l3 3a1 1 0 0 0 1.4 0l1.1-1.1a1 1 0 0 0 0-1.4l-.6-.6 2.8-2.8c.2-.2.2-.5 0-.7l-.8-.8c-.2-.2-.5-.2-.7 0L4.9 8.9l-.6-.6a1 1 0 0 0-1.4 0L1.5 9.4a1 1 0 0 0 0 1.1z"
+                          transform="translate(3.4,-0.2) scale(1.15)"
+                        />
+                      </g>
+                    </svg>
+                  </span>
+
+                  <div class="info-box-content">
+                    <span class="info-box-text">Overig</span>
+                    <span class="info-box-number" id="val-ovg">...</span>
+                    <div class="progress">
+                      <div class="progress-bar" style="width: 70%"></div>
+                    </div>
+                    <span class="progress-description">70% Increase in 30 Days</span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div><p></p></div>
             <div><p></p></div>
