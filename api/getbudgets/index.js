@@ -26,24 +26,35 @@ module.exports = async function (context, req) {
     const username = email.split('@')[0];
 
     pool = await sql.connect(connStr);
+
     const result = await pool.request()
       .input('Username', sql.NVarChar(256), username)
       .query(`
         SELECT TOP (1)
                u.[id]          AS user_id,
                b.[budget]      AS budget
-        FROM   dbo.[users]       AS u
+        FROM   dbo.[users] AS u
         LEFT JOIN dbo.[tst_budget] AS b
                ON b.[user_id] = u.[id]
         WHERE  LOWER(u.[username]) = LOWER(@Username);
       `);
 
     if (result.recordset.length === 0) {
-      context.res = { status: 404, body: { found: false, username, id: null } };
+      // geen user gevonden
+      context.res = { status: 404, body: { found: false, username, id: null, budget: null } };
       return;
     }
 
-    context.res = { status: 200, body: { found: true, username, id: result.recordset[0].id } };
+    const row = result.recordset[0];
+    context.res = {
+      status: 200,
+      body: {
+        found: true,
+        username,
+        id: row.user_id,
+        budget: row.budget // kan null zijn bij LEFT JOIN
+      }
+    };
   } catch (err) {
     context.log.error(err);
     context.res = { status: 500, body: 'Internal Server Error' };
