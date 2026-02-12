@@ -644,7 +644,7 @@
                   <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                 </ol>
               </div>
-              <div class="col-sm-6"><h2 id="uitleg" class="mb-0">Hieronder vind je jouw budgetten bijgewerkt tot 12-02-2026:</h2></div>
+              <div class="col-sm-6"><h3 id="uitleg" class="mb-0">Hieronder vind je jouw budgetten bijgewerkt tot 12-02-2026:</h3></div>
             </div>
             <!--end::Row-->
           </div>
@@ -1228,17 +1228,6 @@
       }
     })
     
-    (async function() {
-      const res = await fetch('/api/getbudgets', { credentials: 'include' });
-      const data = await res.json();
-      if (data.found) {
-        console.log('User row id:', data.id);
-      } else {
-        console.warn('Geen user gevonden voor', data.username);
-      }
-    })
-
-
     (async function () {
       try {
         const res = await fetch('/api/getbudgets', { credentials: 'include' });
@@ -1254,7 +1243,6 @@
         console.error(e);
       }
     })();
-
 
     </script>
     
