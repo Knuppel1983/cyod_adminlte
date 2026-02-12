@@ -29,9 +29,9 @@ jobs:
         working-directory: ./api
         run: |
           if [ -f package-lock.json ]; then
-            npm ci
+            npm ci --omit=dev
           else
-            npm install
+            npm install --omit=dev
           fi
 
       - name: Build And Deploy
