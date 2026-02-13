@@ -1075,6 +1075,16 @@
           elRepMsg.textContent = '\u00A0';
         }
       }
+      if (elOvgMsg) {
+        const ovgRaw = Number(data?.ovg_budget);
+        if (Number.isFinite(ovgRaw) && ovgRaw === 0) {
+          elOvgMsg.textContent = 'Inzetbaar voor toestel of reparaties.';
+        } else {
+          // Terug naar non‑breaking space (zelfde als &nbsp; in HTML)
+          elOvgMsg.textContent = 'Inzetbaar voor toestel of reparaties.';
+          // elOvgMsg.textContent = '\u00A0';
+        }
+      }
 
       // ── Nieuw: progress voor 'tst' ──────────────────────────────────────────────
       // 100% = 600
