@@ -15608,10 +15608,15 @@ fieldset legend {
     font-size: 16px;
 }
 
-.info-box .info-box-icon i.custom-icon-size1 {
-    font-size: 3.4rem !important; /* grootte van het phone icoon */
+
+/* Jouw maat op de container-class */
+.info-box .info-box-icon.custom-icon-size1 i {
+  font-size: 3.4rem !important;   /* groter */
+  line-height: 1;                  /* voorkomt extra vertical space */
 }
 
-.info-box .info-box-icon i.custom-icon-size2 {
-    font-size: 3rem !important; /* grootte van het phone icoon */
+/* Jouw maat op de container-class */
+.info-box .info-box-icon.custom-icon-size2 i {
+  font-size: 3.4rem !important;   /* groter */
+  line-height: 1;                  /* voorkomt extra vertical space */
 }
