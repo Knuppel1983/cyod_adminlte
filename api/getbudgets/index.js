@@ -63,11 +63,13 @@ module.exports = async function (context, req) {
              a.[id]            AS user_id,
              b.[budget]        AS tst_budget,
              c.[rep_budget]    AS rep_budget,
-             d.[ovg_budget]    AS ovg_budget
+             d.[ovg_budget]    AS ovg_budget,
+             CONVERT(VARCHAR(10), e.[peildatum], 105) AS peildatum  -- dd-mm-yyyy
       FROM   dbo.[users] AS a
       LEFT JOIN dbo.[tst_budget] AS b ON b.[user_id] = a.[id]
       LEFT JOIN dbo.[rep_budget] AS c ON c.[user_id] = a.[id]
       LEFT JOIN dbo.[ovg_budget] AS d ON d.[user_id] = a.[id]
+      LEFT JOIN dbo.[peildatum] AS e ON e.[user_id] = a.[id]
       WHERE  a.[username] = @Username;
 
       -- Resultset 2: globale waardes
@@ -103,6 +105,7 @@ module.exports = async function (context, req) {
         tst_budget: userRow.tst_budget,
         rep_budget: userRow.rep_budget,
         ovg_budget: userRow.ovg_budget,
+        peildatum: userRow.peildatum,
 
         // globale waardes (kunnen null zijn als er geen rij in dbo.waardes staat)
         tst_value:       valuesRow.tst_value       ?? null,

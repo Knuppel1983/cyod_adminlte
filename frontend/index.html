@@ -693,11 +693,10 @@
                     </span>
                     <div class="info-box-content">
                       <span class="info-box-text">Peildatum</span>
-                      <span class="info-box-number" id="val-peildatum">01-01-1960</span>
+                      <span class="info-box-number" id="val-peildatum">&nbsp;</span>
                       <div class="progress">
                         <!--<div class="progress-bar" id="val-rep-progress" style="..."></div>-->
                       </div>
-                      <!--<span class="progress-description" id="val-peildatum-message">&nbsp;</span>-->
                       <span class="progress-description" id="val-peildatum-message">Op deze datum komt je rep.budget vrij.</span>
                     </div>
                 </div>
@@ -909,6 +908,7 @@
       const elTst = document.getElementById('val-tst');
       const elRep = document.getElementById('val-rep');
       const elOvg = document.getElementById('val-ovg');
+      const elPeildatum = document.getElementById('val-peildatum');
       const elTstMsg = document.getElementById('val-tst-message');
       const elRepMsg = document.getElementById('val-rep-message');
       const elOvgMsg = document.getElementById('val-ovg-message');
@@ -932,6 +932,15 @@
       if (elTst) elTst.textContent = fmt(data.tst_budget);
       if (elRep) elRep.textContent = fmt(data.rep_budget);
       if (elOvg) elOvg.textContent = fmt(data.ovg_budget);
+      if (elPeildatum) {
+        const dateStr = data?.peildatum; // bv. "13-02-2026"
+        if (dateStr && String(dateStr).trim()) {
+          elQueryRun.textContent = `${dateStr}`;
+        } else {
+          // Geen datum beschikbaar → laat het leeg (nbsp)
+          elQueryRun.textContent = '\u00A0';
+        }
+      }
       
       if (elTstMsg) {
       const monthly = (data.tst_value / 36).toLocaleString('nl-NL', {
