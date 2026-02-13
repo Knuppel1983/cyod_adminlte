@@ -15601,3 +15601,14 @@ fieldset legend {
   /* zeker weten dat hij niet verdwijnt in flex-flow van een ouder */
   flex: 0 0 auto;
 }
+
+
+/* Zet op jouw specifieke row-klasse (voeg die class toe aan de row in HTML) */
+.welcome-header-row::after {
+  content: "";
+  display: block;
+  height: 100px;  /* jouw gewenste ruimte */
+  width: 100%;
+  /* Zorg dat hij niet per ongeluk krimpt in flex context */
+  flex: 0 0 auto;
+}
