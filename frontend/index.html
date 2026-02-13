@@ -922,11 +922,21 @@
           : `€ ${Number(n).toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
 
       // Bestaande waardes invullen
+      const elTstBase = document.getElementById('tstValue');
+      const elRepBase = document.getElementById('repValue');
+      const elMinUseBase = document.getElementById('minuseValue');
+      const elQueryRun = document.getElementById('queryrunValue');
       const elTst = document.getElementById('val-tst');
       const elRep = document.getElementById('val-rep');
       const elOvg = document.getElementById('val-ovg');
       const elRepMsg = document.getElementById('val-rep-message');
       const elOvgMsg = document.getElementById('val-ovg-message');
+
+      // Basiswaarden
+      if (elTstBase)    elTstBase.textContent    = data.tst_value ?? '';
+      if (elRepBase)    elRepBase.textContent    = data.rep_value ?? '';
+      if (elMinUseBase) elMinUseBase.textContent = data.minuse_value ?? '';
+      if (elQueryRun)   elQueryRun.textContent   = data.queryrun_value ?? '';
 
       if (elTst) elTst.textContent = fmt(data.tst_budget);
       if (elRep) elRep.textContent = fmt(data.rep_budget);

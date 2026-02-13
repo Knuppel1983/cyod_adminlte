@@ -1,6 +1,6 @@
 // /api/getbudgets/index.js
 module.exports = async function (context, req) {
-  // 0) Driver laden (blijft binnen de handler → als het faalt, sturen we nette JSON terug)
+  // 0) Driver laden
   let sql;
   try {
     sql = require('mssql');
@@ -9,7 +9,7 @@ module.exports = async function (context, req) {
     return;
   }
 
-  // 1) Claims uit SWA (SWA plaatst de claims in deze header als de gebruiker is ingelogd)
+  // 1) Claims uit SWA
   const p = req.headers['x-ms-client-principal'];
   if (!p) {
     context.res = { status: 401, body: { ok: false, error: 'Unauthorized' } };
@@ -33,7 +33,7 @@ module.exports = async function (context, req) {
     username = (email || '').split('@')[0];
 
     if (!username) {
-      context.res = { status: 400, body: { ok: false, error: 'Cannot derive username from claims' } };
+      context.res = { status: 400, body: { ok: false, where: 'claims', error: 'Cannot derive username from claims' } };
       return;
     }
   } catch (e) {
@@ -41,59 +41,78 @@ module.exports = async function (context, req) {
     return;
   }
 
-  // 2) Connection string ophalen (SWA → Settings → Configuration → Application settings)
+  // 2) Connection string
   const connStr = process.env.SqlConnectionString;
   if (!connStr) {
     context.res = { status: 500, body: { ok: false, error: 'SqlConnectionString missing' } };
     return;
   }
 
-  // 3) Query: username → user_id + budget (LEFT JOIN zodat budget optioneel is)
+  // 3) Queries (één batch, twee SELECTs)
   let pool;
   try {
     pool = await sql.connect(connStr);
 
-    const query = `
+    const request = pool.request();
+    request.multiple = true; // ← belangrijk voor meerdere recordsets
+    request.input('Username', sql.NVarChar(256), username);
+
+    const batch = `
+      -- Resultset 1: user + budgets
       SELECT TOP (1)
-             a.[id]     AS user_id,
-             b.[budget] AS tst_budget,
-             c.[rep_budget] AS rep_budget,
-             d.[ovg_budget] AS ovg_budget             
+             a.[id]            AS user_id,
+             b.[budget]        AS tst_budget,
+             c.[rep_budget]    AS rep_budget,
+             d.[ovg_budget]    AS ovg_budget
       FROM   dbo.[users] AS a
       LEFT JOIN dbo.[tst_budget] AS b ON b.[user_id] = a.[id]
       LEFT JOIN dbo.[rep_budget] AS c ON c.[user_id] = a.[id]
       LEFT JOIN dbo.[ovg_budget] AS d ON d.[user_id] = a.[id]
-      WHERE  a.[username] = @Username;  -- aanname: kolom is case-insensitief gecolloceerd
+      WHERE  a.[username] = @Username;
+
+      -- Resultset 2: globale waardes
+      SELECT TOP (1)
+             [telefoobedrag]   AS tst_value,
+             [reparatiebedrag] AS rep_value,
+             [min_gebruik]     AS minuse_value,
+             [query_gedraaid]  AS queryrun_value
+      FROM dbo.[waardes];
     `;
 
-    const r = await pool.request()
-      .input('Username', sql.NVarChar(256), username)
-      .query(query);
+    const result = await request.query(batch);
 
-    if (r.recordset.length === 0) {
-      // gebruiker niet gevonden
-      context.res = {
-        status: 404,
-        body: { ok: false, found: false, username }
-      };
+    const userRows   = result.recordsets?.[0] || [];
+    const valuesRows = result.recordsets?.[1] || [];
+
+    if (userRows.length === 0) {
+      context.res = { status: 404, body: { ok: false, found: false, username } };
       return;
     }
 
-    const row = r.recordset[0];
+    const userRow   = userRows[0];
+    const valuesRow = valuesRows[0] || {};
+
     context.res = {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
       body: {
         ok: true,
-        user: { id: row.user_id, username },
-        tst_budget: row.tst_budget,
-        rep_budget: row.rep_budget,
-        ovg_budget: row.ovg_budget
+        user: { id: userRow.user_id, username },
+
+        // budgets per gebruiker
+        tst_budget: userRow.tst_budget,
+        rep_budget: userRow.rep_budget,
+        ovg_budget: userRow.ovg_budget,
+
+        // globale waardes (kunnen null zijn als er geen rij in dbo.waardes staat)
+        tst_value:       valuesRow.tst_value       ?? null,
+        rep_value:       valuesRow.rep_value       ?? null,
+        minuse_value:    valuesRow.minuse_value    ?? null,
+        queryrun_value:  valuesRow.queryrun_value  ?? null
       }
     };
 
   } catch (err) {
-    // Gecontroleerde fout met diagnostiek (geen secrets)
     context.res = {
       status: 500,
       body: {
