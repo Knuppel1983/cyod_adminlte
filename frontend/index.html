@@ -645,9 +645,7 @@
                       <div class="progress">
                         <div class="progress-bar" id="val-tst-progress" style="..."></div>
                       </div>
-                      <span class="progress-description">
-                        Groeit met ~ €16,67 per maand.
-                      </span>
+                      <span class="progress-description" id="val-tst-message">&nbsp;</span>
                     </div>
                 </div>
               </div>            
@@ -896,6 +894,7 @@
       const elTst = document.getElementById('val-tst');
       const elRep = document.getElementById('val-rep');
       const elOvg = document.getElementById('val-ovg');
+      const elTstMsg = document.getElementById('val-tst-message');
       const elRepMsg = document.getElementById('val-rep-message');
       const elOvgMsg = document.getElementById('val-ovg-message');
 
@@ -918,6 +917,12 @@
       if (elTst) elTst.textContent = fmt(data.tst_budget);
       if (elRep) elRep.textContent = fmt(data.rep_budget);
       if (elOvg) elOvg.textContent = fmt(data.ovg_budget);
+      
+      if (elTstMsg) {
+        const monthly = data.tst_value / 36;
+        elTstMsg.textContent = `Groeit met ${monthly} per maand.`;
+      }
+      
       if (elRepMsg) {
         const repRaw = Number(data?.rep_budget);
         const repBaseValue = Number(data?.rep_value);
