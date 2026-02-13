@@ -75,7 +75,7 @@ module.exports = async function (context, req) {
              [telefoobedrag]   AS tst_value,
              [reparatiebedrag] AS rep_value,
              [min_gebruik]     AS minuse_value,
-             [query_gedraaid]  AS queryrun_value
+             CONVERT(VARCHAR(10), [query_gedraaid], 105) AS queryrun_value  -- dd-mm-yyyy
       FROM dbo.[waardes];
     `;
 
