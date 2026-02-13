@@ -15596,5 +15596,8 @@ fieldset legend {
 
 /* custom Verwol */
 
-/* alleen om te testen */
-.welcome-header-row { margin-bottom: 200px !important; }
+.spacer-100 {
+  height: 100px;
+  /* zeker weten dat hij niet verdwijnt in flex-flow van een ouder */
+  flex: 0 0 auto;
+}
