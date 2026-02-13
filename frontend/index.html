@@ -778,6 +778,32 @@
     ></script>
     <!-- jsvectormap -->
     <script>
+    
+(async function ensureAuth() {
+  // Detecteer iOS/standalone PWA
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                    || window.navigator.standalone === true;
+
+  // Haal principal op (SWA): geeft [] of principal terug
+  let principal = null;
+  try {
+    const res = await fetch('/.auth/me', { credentials: 'include', cache: 'no-store' });
+    if (res.ok) {
+      const arr = await res.json();
+      principal = Array.isArray(arr) && arr.length ? arr[0] : null;
+    }
+  } catch {}
+
+  // Als we in standalone zitten en geen principal hebben: naar login
+  if (isStandalone && !principal) {
+    // kies jouw provider (bijv. AAD)
+    const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.href = `/.auth/login/aad?post_login_redirect_url=${returnUrl}`;
+    return;
+  }
+
+  // … hierna kun je je normale paintUi() / fetch('/api/getbudgets') doen
+})();
    
     async function getPrincipal() {
       if (window.__principal) return window.__principal;
