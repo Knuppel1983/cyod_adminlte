@@ -901,11 +901,11 @@
       if (elQueryRun)   elQueryRun.textContent   = data.queryrun_value ?? '';
 
       if (elQueryRun) {
-        const queryrunRaw = Number(data?.queryrun_value);
-        if (Number.isFinite(queryrunRaw) && queryrunRaw === 0) {
-          elQueryRun.textContent = 'Onderstaand vind je jouw budgetten bijgewerkt tot queryrunRaw:';
+        const dateStr = data?.queryrun_value; // bv. "13-02-2026"
+        if (dateStr && String(dateStr).trim()) {
+          elQueryRun.textContent = `Onderstaand vind je jouw budgetten bijgewerkt tot ${dateStr}:`;
         } else {
-          // Terug naar non‑breaking space (zelfde als &nbsp; in HTML)
+          // Geen datum beschikbaar → laat het leeg (nbsp)
           elQueryRun.textContent = '\u00A0';
         }
       }
