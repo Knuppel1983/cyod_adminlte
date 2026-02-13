@@ -871,12 +871,17 @@
       }
     })();
     
-  (async function () {
-    try {
-      const res = await fetch('/api/getbudgets', { credentials: 'include' });
-      if (!res.ok) { console.error('API error', res.status); return; }
 
+    (async function () {
+      try {
+        const res = await fetch('/api/getbudgets', { credentials: 'include' });
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          console.error('API error', res.status, text);
+          return;
+        }
       const data = await res.json();
+      console.log('API ok', data);
       const fmt = (n) =>
         (n == null
           ? '—'
@@ -961,7 +966,7 @@
       // ───────────────────────────────────────────────────────────────────────────
 
     } catch (e) {
-      console.error(e);
+      console.error('Fetch failed', e);
     }
   })();
 
