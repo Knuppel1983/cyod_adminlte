@@ -668,11 +668,9 @@
                       <span class="info-box-text">Reparatie</span>
                       <span class="info-box-number" id="val-rep">...</span>
                       <div class="progress">
-                        <!--<div class="progress-bar" id="val-tst-progress" style="..."></div>-->
+                        <!--<div class="progress-bar" id="val-rep-progress" style="..."></div>-->
                       </div>
-                      <span class="progress-description">
-                      &nbsp;
-                      </span>
+                      <span class="progress-description" id="val-rep-message">&nbsp;</span>
                     </div>
                 </div>
               </div>
@@ -1070,10 +1068,20 @@
       const elTst = document.getElementById('val-tst');
       const elRep = document.getElementById('val-rep');
       const elOvg = document.getElementById('val-ovg');
+      const elRepMsg = document.getElementById('val-rep-message');
 
       if (elTst) elTst.textContent = fmt(data.tst_budget);
       if (elRep) elRep.textContent = fmt(data.rep_budget);
       if (elOvg) elOvg.textContent = fmt(data.ovg_budget);
+      if (elRepMsg) {
+        const repRaw = Number(data?.rep_budget);
+        if (Number.isFinite(repRaw) && repRaw === 250) {
+          elRepMsg.textContent = 'Goed bezig, nog geen reparaties!';
+        } else {
+          // Terug naar non‑breaking space (zelfde als &nbsp; in HTML)
+          elRepMsg.textContent = '\u00A0';
+        }
+      }
 
       // ── Nieuw: progress voor 'tst' ──────────────────────────────────────────────
       // 100% = 600
