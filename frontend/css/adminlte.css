@@ -15596,6 +15596,6 @@ fieldset legend {
 
 /* custom Verwol */
 
-.welcomeSpacer {
-  margin-top: 100px;
+#welcomeHeader {
+  margin-bottom: 100px;
 }
