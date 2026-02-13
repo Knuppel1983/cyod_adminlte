@@ -15597,6 +15597,4 @@ fieldset legend {
 /* custom Verwol */
 
 /* alleen om te testen */
-.col-sm-6:has(#welcomeHeader) {
-  padding-bottom: 100px;
-}
+.welcome-col { padding-bottom: 100px; }
