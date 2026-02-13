@@ -64,7 +64,7 @@ module.exports = async function (context, req) {
              b.[budget]        AS tst_budget,
              c.[rep_budget]    AS rep_budget,
              d.[ovg_budget]    AS ovg_budget,
-             CONVERT(VARCHAR(10), e.[peildatum], 105) AS peildatum  -- dd-mm-yyyy
+             CONVERT(VARCHAR(10), DATEADD(YEAR, 3, e.[peildatum]), 105) AS peildatum  -- dd-mm-yyyy
       FROM   dbo.[users] AS a
       LEFT JOIN dbo.[tst_budget] AS b ON b.[user_id] = a.[id]
       LEFT JOIN dbo.[rep_budget] AS c ON c.[user_id] = a.[id]
