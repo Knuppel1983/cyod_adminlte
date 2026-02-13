@@ -86,7 +86,7 @@
               </a>
             </li>
             <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
+            <!--<li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>-->
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -1032,15 +1032,17 @@
           welcomeHeader: !!header
         });
 
-        // 4) Schrijven naar navbar
+        // 4) Schrijven naar navbar (toon e-mail in plaats van naam)
         if (spanTop) {
-          const safe = (name && name.trim()) ? name : (p?.userDetails || 'Niet ingelogd');
+          const email = (p?.userDetails && String(p.userDetails).trim()) || '';
+          const safe = email || ((name && name.trim()) ? name : 'Niet ingelogd');
           spanTop.textContent = safe;
           spanTop.classList.remove('d-none');
-          console.log('[paintUi] userDisplay set to:', safe);
+          console.log('[paintUi] userDisplay (email) set to:', safe);
         } else {
           console.warn('[paintUi] #userDisplay not found in DOM');
         }
+
 
         // 5) Schrijven naar dropdown
         if (spanHdr)  { spanHdr.textContent  = name || ''; console.log('[paintUi] userDisplayHeader set'); }
