@@ -935,10 +935,10 @@
       if (elPeildatum) {
         const dateStr = data?.peildatum; // bv. "13-02-2026"
         if (dateStr && String(dateStr).trim()) {
-          elQueryRun.textContent = `${dateStr}`;
+          elPeildatum.textContent = `${dateStr}`;
         } else {
           // Geen datum beschikbaar → laat het leeg (nbsp)
-          elQueryRun.textContent = '\u00A0';
+          elPeildatum.textContent = '\u00A0';
         }
       }
       
