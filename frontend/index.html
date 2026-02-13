@@ -622,7 +622,7 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-            <div class="col-sm-6"><h6 id="uitleg">Onderstaand vind je jouw budgetten bijgewerkt tot 12-02-2026:</h6>
+            <div class="col-sm-6"><h6 id="budget_date">Onderstaand vind je jouw budgetten bijgewerkt tot 12-02-2026:</h6>
             <span id="tstValue">—</span>
             <span id="repValue">—</span>
             <span id="minuseValue">—</span>
@@ -766,46 +766,7 @@
     ></script>
     <!-- jsvectormap -->
     <script>
-    (async function loadBaseValues() {
-      try {
-        // In SWA worden cookies / auth doorgegeven via credentials: 'include'
-        const res = await fetch('/api/getbasevalues', { credentials: 'include' });
-        if (!res.ok) {
-          console.error('[getbasevalues] HTTP', res.status, res.statusText);
-          return;
-        }
-
-        const data = await res.json();
-        if (!data?.ok) {
-          console.warn('[getbasevalues] API returned ok=false', data);
-          return;
-        }
-
-        // Helper: Nederlands geldformaat (indien gewenst voor de eerste twee)
-        const fmt = (n) => (n == null || isNaN(Number(n))
-          ? '—'
-          : `€ ${Number(n).toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
-
-        // Elementen ophalen
-        const elTst    = document.getElementById('tstValue');
-        const elRep    = document.getElementById('repValue');
-        const elMinUse = document.getElementById('minuseValue');
-        const elQuery  = document.getElementById('queryrunValue');
-
-        // Waardes invullen
-        if (elTst)    elTst.textContent    = fmt(data.tst_value);
-        if (elRep)    elRep.textContent    = fmt(data.rep_value);
-        if (elMinUse) elMinUse.textContent = (data.minuse_value ?? '—');
-        if (elQuery)  elQuery.textContent  = (data.queryrun_value ?? '—');
-
-        // Eventueel: log ter controle
-        console.log('[getbasevalues] filled', data);
-
-      } catch (err) {
-        console.error('[getbasevalues] error', err);
-      }
-    })();
-    
+   
     async function getPrincipal() {
       if (window.__principal) return window.__principal;
 
@@ -925,7 +886,8 @@
       const elTstBase = document.getElementById('tstValue');
       const elRepBase = document.getElementById('repValue');
       const elMinUseBase = document.getElementById('minuseValue');
-      const elQueryRun = document.getElementById('queryrunValue');
+      const elQueryRun = document.getElementById('budget_date');
+      
       const elTst = document.getElementById('val-tst');
       const elRep = document.getElementById('val-rep');
       const elOvg = document.getElementById('val-ovg');
