@@ -622,7 +622,7 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-            <div class="col-sm-6"><h6 id="uitleg" class="mb-0">Onderstaand vind je jouw budgetten bijgewerkt tot 12-02-2026:</h6></div>
+            <div class="col-sm-6"><h6 id="uitleg">Onderstaand vind je jouw budgetten bijgewerkt tot 12-02-2026:</h6></div>
             </div>
             <div class="row">
               <div class="col-md-4 col-sm-6 col-12">
@@ -889,7 +889,7 @@
       if (elRepMsg) {
         const repRaw = Number(data?.rep_budget);
         if (Number.isFinite(repRaw) && repRaw === 250) {
-          elRepMsg.textContent = 'Geen reparaties, goed bezig!';
+          elRepMsg.textContent = 'Nog geen reparaties, goed bezig!';
         } else {
           // Terug naar non‑breaking space (zelfde als &nbsp; in HTML)
           elRepMsg.textContent = '\u00A0';
