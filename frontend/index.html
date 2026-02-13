@@ -691,9 +691,7 @@
                     <div class="progress">
                         <!--<div class="progress-bar" id="val-tst-progress" style="..."></div>-->
                     </div>
-                    <span class="progress-description">
-                      &nbsp;
-                    </span>
+                    <span class="progress-description" id="val-ovg-message">&nbsp;</span>
                 </div>
               </div>
             </div>
@@ -1069,6 +1067,7 @@
       const elRep = document.getElementById('val-rep');
       const elOvg = document.getElementById('val-ovg');
       const elRepMsg = document.getElementById('val-rep-message');
+      const elOvgMsg = document.getElementById('val-ovg-message');
 
       if (elTst) elTst.textContent = fmt(data.tst_budget);
       if (elRep) elRep.textContent = fmt(data.rep_budget);
