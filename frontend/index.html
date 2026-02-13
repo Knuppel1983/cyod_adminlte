@@ -933,8 +933,11 @@
       if (elOvg) elOvg.textContent = fmt(data.ovg_budget);
       
       if (elTstMsg) {
-        const monthly = data.tst_value / 36;
-        elTstMsg.textContent = `Groeit met ${monthly} per maand.`;
+      const monthly = (data.tst_value / 36).toLocaleString('nl-NL', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+        elTstMsg.textContent = `Groeit met € ${monthly} per maand.`;
       }
       
       if (elRepMsg) {
