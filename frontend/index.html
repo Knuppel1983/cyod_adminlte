@@ -943,7 +943,8 @@
       if (elOvg) elOvg.textContent = fmt(data.ovg_budget);
       if (elRepMsg) {
         const repRaw = Number(data?.rep_budget);
-        if (Number.isFinite(repRaw) && repRaw === 250) {
+        const repBaseValue = Number(data?.rep_value);
+        if (Number.isFinite(repRaw) && repRaw === repBaseValue) {
           elRepMsg.textContent = 'Nog geen reparaties, goed bezig!';
         } else {
           // Terug naar non‑breaking space (zelfde als &nbsp; in HTML)
