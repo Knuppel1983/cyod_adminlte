@@ -15591,38 +15591,3 @@ fieldset legend {
 }
 
 /*# sourceMappingURL=adminlte.css.map */
-
-
-/* custom Verwol */
-
-.phone-icon {
-    position: relative;
-    font-size: 3rem;
-}
-
-.phone-icon .tools-icon {
-    position: absolute;
-    top: 44%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px;
-}
-
-
-/* Jouw maat op de container-class */
-.custom-icon-size1 {
-  font-size: 3.4rem !important;   /* groter */
-  line-height: 1;                  /* voorkomt extra vertical space */
-}
-
-/* Jouw maat op de container-class */
-.info-box-icon.custom-icon-size1 i {
-  font-size: 3.4rem !important;   /* groter */
-  line-height: 1;                  /* voorkomt extra vertical space */
-}
-
-/* Jouw maat op de container-class */
-.info-box-icon.custom-icon-size2 i {
-  font-size: 3.4rem !important;   /* groter */
-  line-height: 1;                  /* voorkomt extra vertical space */
-}
