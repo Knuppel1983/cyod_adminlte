@@ -622,7 +622,7 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-            <div class="col-sm-6"><h6 id="budget_date">Onderstaand vind je jouw budgetten bijgewerkt tot 12-02-2026:</h6>
+            <div class="col-sm-6"><h6 id="budget_date">&nbsp;</h6>
             <span id="tstValue">—</span>
             <span id="repValue">—</span>
             <span id="minuseValue">—</span>
@@ -899,6 +899,15 @@
       if (elRepBase)    elRepBase.textContent    = data.rep_value ?? '';
       if (elMinUseBase) elMinUseBase.textContent = data.minuse_value ?? '';
       if (elQueryRun)   elQueryRun.textContent   = data.queryrun_value ?? '';
+
+      if (elQueryRun) {
+        const queryrunRaw = Number(data?.queryrun_value);
+        if (Number.isFinite(queryrunRaw) && queryrunRaw === 0) {
+          elQueryRun.textContent = 'Onderstaand vind je jouw budgetten bijgewerkt tot queryrunRaw:';
+        } else {
+          // Terug naar non‑breaking space (zelfde als &nbsp; in HTML)
+          elQueryRun.textContent = '\u00A0';
+        }
 
       if (elTst) elTst.textContent = fmt(data.tst_budget);
       if (elRep) elRep.textContent = fmt(data.rep_budget);
