@@ -15597,6 +15597,6 @@ fieldset legend {
 /* custom Verwol */
 
 /* alleen om te testen */
-#welcomeHeader.mb-0 { 
+#welcomeHeader { 
   margin-bottom: 100px !important; 
 }
