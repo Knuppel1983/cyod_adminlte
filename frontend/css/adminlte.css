@@ -15610,13 +15610,13 @@ fieldset legend {
 
 
 /* Jouw maat op de container-class */
-.info-box .info-box-icon.custom-icon-size1 i {
+..info-box-icon.custom-icon-size1 i {
   font-size: 3.4rem !important;   /* groter */
   line-height: 1;                  /* voorkomt extra vertical space */
 }
 
 /* Jouw maat op de container-class */
-.info-box .info-box-icon.custom-icon-size2 i {
+.info-box-icon.custom-icon-size2 i {
   font-size: 3.4rem !important;   /* groter */
   line-height: 1;                  /* voorkomt extra vertical space */
 }
