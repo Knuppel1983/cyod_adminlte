@@ -1,1 +1,3 @@
-{ "version": "2.0", "functions": ["getbudgets"] }
+{
+  "version": "2.0"
+}
