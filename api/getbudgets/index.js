@@ -72,7 +72,7 @@ module.exports = async function (context, req) {
 
       -- Resultset 2: globale waardes
       SELECT TOP (1)
-             [telefoobedrag]   AS tst_value,
+             [telefoonbedrag]   AS tst_value,
              [reparatiebedrag] AS rep_value,
              [min_gebruik]     AS minuse_value,
              CONVERT(VARCHAR(10), [query_gedraaid], 105) AS queryrun_value  -- dd-mm-yyyy
