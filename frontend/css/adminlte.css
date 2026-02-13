@@ -4683,7 +4683,7 @@ textarea.form-control-lg {
 
 .breadcrumb {
   --bs-breadcrumb-padding-x: 0;
-  --bs-breadcrumb-padding-y: 100px;
+  --bs-breadcrumb-padding-y: 0;
   --bs-breadcrumb-margin-bottom: 1rem;
   --bs-breadcrumb-bg: ;
   --bs-breadcrumb-border-radius: ;
@@ -15591,3 +15591,11 @@ fieldset legend {
 }
 
 /*# sourceMappingURL=adminlte.css.map */
+
+
+
+/* custom Verwol */
+
+.welcomeSpacer {
+  min-height: 10px;
+}
