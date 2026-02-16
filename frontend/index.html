@@ -601,6 +601,17 @@
       if (elMinUseBase) elMinUseBase.textContent = data.minuse_value ?? '';
       if (elQueryRun)   elQueryRun.textContent   = data.queryrun_value ?? '';
 
+
+// Inzetbaar budget huidig
+const elTotInz = Number(data.tst_budget + data.ovg_budget);
+console.log("[Budget] Totaal inzetbaar:", elTotInz);
+
+// Inzetbaar budget vanaf peildatum
+const elTotInzPD = Number(data.tst_budget + data.ovg_budget + data.rep_budget);
+console.log("[Budget] Totaal inzetbaar vanaf peildatum:", elTotInzPD);
+
+
+
       if (elQueryRun) {
         const dateStr = data?.queryrun_value; // bv. "13-02-2026"
         if (dateStr && String(dateStr).trim()) {
