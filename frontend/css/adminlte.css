@@ -13974,7 +13974,7 @@ body:not(.app-loaded) .app-footer {
   border-bottom-left-radius: 4px;
 }
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header {
-  min-height: 160px;
+  /* min-height: 160px; */
   padding: 6px;
   text-align: center;
 }
