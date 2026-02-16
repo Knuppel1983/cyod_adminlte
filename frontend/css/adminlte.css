@@ -15601,3 +15601,8 @@ fieldset legend {
 #uitleg {
   margin-bottom: 14px;
 }
+
+
+.budget_date {
+  margin-bottom: 140px !important;
+}
