@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>FAQ | AdminLTE 4</title>
+    <title>Verwol CYOD | Dashboard</title>
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <meta name="color-scheme" content="light dark" />
@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
     <!--end::Accessibility Meta Tags-->
     <!--begin::Primary Meta Tags-->
-    <meta name="title" content="FAQ | AdminLTE 4" />
+    <meta name="title" content="Verwol CYOD | Dashboard" />
     <meta name="author" content="ColorlibHQ" />
     <meta
       name="description"
@@ -25,7 +25,7 @@
     <!--begin::Accessibility Features-->
     <!-- Skip links will be dynamically added by accessibility.js -->
     <meta name="supported-color-schemes" content="light dark" />
-    <link rel="preload" href="../css/adminlte.css" as="style" />
+    <link rel="preload" href="./css/adminlte.css" as="style" />
     <!--end::Accessibility Features-->
     <!--begin::Fonts-->
     <link
@@ -52,8 +52,15 @@
     />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../css/adminlte.css" />
+    <link rel="stylesheet" href="./css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
+    <!-- jsvectormap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+      integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4="
+      crossorigin="anonymous"
+    />
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -72,182 +79,108 @@
               </a>
             </li>
             <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
+            <!--<li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>-->
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
           <ul class="navbar-nav ms-auto">
-            <!--begin::Navbar Search-->
-            <li class="nav-item">
-              <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                <i class="bi bi-search"></i>
-              </a>
-            </li>
-            <!--end::Navbar Search-->
-            <!--begin::Messages Dropdown Menu-->
-            <li class="nav-item dropdown">
-              <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                <i class="bi bi-chat-text"></i>
-                <span class="navbar-badge badge text-bg-danger">3</span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                <a href="#" class="dropdown-item">
-                  <!--begin::Message-->
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <img
-                        src="../assets/img/user1-128x128.jpg"
-                        alt="User Avatar"
-                        class="img-size-50 rounded-circle me-3"
-                      />
-                    </div>
-                    <div class="flex-grow-1">
-                      <h3 class="dropdown-item-title">
-                        Brad Diesel
-                        <span class="float-end fs-7 text-danger"
-                          ><i class="bi bi-star-fill"></i
-                        ></span>
-                      </h3>
-                      <p class="fs-7">Call me whenever you can...</p>
-                      <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                      </p>
-                    </div>
-                  </div>
-                  <!--end::Message-->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <!--begin::Message-->
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <img
-                        src="../assets/img/user8-128x128.jpg"
-                        alt="User Avatar"
-                        class="img-size-50 rounded-circle me-3"
-                      />
-                    </div>
-                    <div class="flex-grow-1">
-                      <h3 class="dropdown-item-title">
-                        John Pierce
-                        <span class="float-end fs-7 text-secondary">
-                          <i class="bi bi-star-fill"></i>
-                        </span>
-                      </h3>
-                      <p class="fs-7">I got your message bro</p>
-                      <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                      </p>
-                    </div>
-                  </div>
-                  <!--end::Message-->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <!--begin::Message-->
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <img
-                        src="../assets/img/user3-128x128.jpg"
-                        alt="User Avatar"
-                        class="img-size-50 rounded-circle me-3"
-                      />
-                    </div>
-                    <div class="flex-grow-1">
-                      <h3 class="dropdown-item-title">
-                        Nora Silvester
-                        <span class="float-end fs-7 text-warning">
-                          <i class="bi bi-star-fill"></i>
-                        </span>
-                      </h3>
-                      <p class="fs-7">The subject goes here</p>
-                      <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                      </p>
-                    </div>
-                  </div>
-                  <!--end::Message-->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-              </div>
-            </li>
-            <!--end::Messages Dropdown Menu-->
-            <!--begin::Notifications Dropdown Menu-->
-            <li class="nav-item dropdown">
-              <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                <i class="bi bi-bell-fill"></i>
-                <span class="navbar-badge badge text-bg-warning">15</span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                <span class="dropdown-item dropdown-header">15 Notifications</span>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="bi bi-envelope me-2"></i> 4 new messages
-                  <span class="float-end text-secondary fs-7">3 mins</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="bi bi-people-fill me-2"></i> 8 friend requests
-                  <span class="float-end text-secondary fs-7">12 hours</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
-                  <span class="float-end text-secondary fs-7">2 days</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
-              </div>
-            </li>
-            <!--end::Notifications Dropdown Menu-->
-            <!--begin::Fullscreen Toggle-->
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-lte-toggle="fullscreen">
-                <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
-                <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
-              </a>
-            </li>
-            <!--end::Fullscreen Toggle-->
+                    <ul class="navbar-nav ms-auto">
+                      <li class="nav-item dropdown">
+                        <button
+                          class="btn btn-link nav-link py-2 px-0 px-lg-2 dropdown-toggle d-flex align-items-center"
+                          id="bd-theme"
+                          type="button"
+                          aria-expanded="false"
+                          data-bs-toggle="dropdown"
+                          data-bs-display="static"
+                        >
+                          <span class="theme-icon-active"> <i class="my-1"></i> </span>
+                          <span class="d-lg-none ms-2" id="bd-theme-text"></span>
+                        </button>
+                        <ul
+                          class="dropdown-menu dropdown-menu-end"
+                          aria-labelledby="bd-theme-text"
+                          style="--bs-dropdown-min-width: 8rem"
+                        >
+                          <li>
+                            <button
+                              type="button"
+                              class="dropdown-item d-flex align-items-center active"
+                              data-bs-theme-value="light"
+                              aria-pressed="false"
+                            >
+                              <i class="bi bi-sun-fill me-2"></i>
+                              Light
+                              <i class="bi bi-check-lg ms-auto d-none"></i>
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              type="button"
+                              class="dropdown-item d-flex align-items-center"
+                              data-bs-theme-value="dark"
+                              aria-pressed="false"
+                            >
+                              <i class="bi bi-moon-fill me-2"></i>
+                              Dark
+                              <i class="bi bi-check-lg ms-auto d-none"></i>
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              type="button"
+                              class="dropdown-item d-flex align-items-center"
+                              data-bs-theme-value="auto"
+                              aria-pressed="true"
+                            >
+                              <i class="bi bi-circle-fill-half-stroke me-2"></i>
+                              Auto
+                              <i class="bi bi-check-lg ms-auto d-none"></i>
+                            </button>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
             <!--begin::User Menu Dropdown-->
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="../assets/img/user2-160x160.jpg"
-                  class="user-image rounded-circle shadow"
+                  src="./assets/img/logo__verwol.png"
+                  class="user-image"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
+                <span id="userDisplay" class="d-none d-md-inline"></span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
+
+                  <!-- Avatar (optioneel: vaste avatar tot Graph komt) -->
                   <img
-                    src="../assets/img/user2-160x160.jpg"
+                    src="./assets/img/logo__verwol.png"
                     class="rounded-circle shadow"
                     alt="User Image"
                   />
+
                   <p>
-                    Alexander Pierce - Web Developer
-                    <small>Member since Nov. 2023</small>
+                    <!-- Dynamische gebruikersnaam -->
+                    <span id="userDisplayHeader"></span>
+                    <br />
+                    <!-- Optionele ondertitel -->
+                    <small id="userEmailHeader"></small>
                   </p>
+
                 </li>
                 <!--end::User Image-->
                 <!--begin::Menu Body-->
                 <li class="user-body">
-                  <!--begin::Row-->
-                  <div class="row">
-                    <div class="col-4 text-center"><a href="#">Followers</a></div>
-                    <div class="col-4 text-center"><a href="#">Sales</a></div>
-                    <div class="col-4 text-center"><a href="#">Friends</a></div>
-                  </div>
-                  <!--end::Row-->
                 </li>
                 <!--end::Menu Body-->
                 <!--begin::Menu Footer-->
                 <li class="user-footer">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                  <!--<a href="#" class="btn btn-default btn-flat">Profile</a>-->
+                  <!--<a href="#" class="btn btn-default btn-flat float-end">Sign out</a>-->
+                  <a href="/.auth/logout" class="btn btn-default btn-flat float-end">Uitloggen</a>
                 </li>
                 <!--end::Menu Footer-->
               </ul>
@@ -264,16 +197,9 @@
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
-          <a href="../index.html" class="brand-link">
-            <!--begin::Brand Image-->
-            <img
-              src="../assets/img/AdminLTELogo.png"
-              alt="AdminLTE Logo"
-              class="brand-image opacity-75 shadow"
-            />
-            <!--end::Brand Image-->
+          <a href="./index.html" class="brand-link">
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light">AdminLTE 4</span>
+            <span class="brand-text fw-light">CYOD portal</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -292,433 +218,21 @@
               id="navigation"
             >
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="./index.html" class="nav-link">
                   <i class="nav-icon bi bi-speedometer"></i>
-                  <p>
-                    Dashboard
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="../index.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v1</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../index2.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../index3.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="../generate/theme.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Theme Generate</p>
+                  <p>Dashboard</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-box-seam-fill"></i>
-                  <p>
-                    Widgets
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="../widgets/small-box.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Small Box</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../widgets/info-box.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>info Box</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../widgets/cards.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Cards</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-clipboard-fill"></i>
-                  <p>
-                    Layout Options
-                    <span class="nav-badge badge text-bg-secondary me-3">6</span>
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="../layout/unfixed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Default Sidebar</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../layout/fixed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Fixed Sidebar</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../layout/fixed-header.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Fixed Header</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../layout/fixed-footer.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Fixed Footer</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../layout/fixed-complete.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Fixed Complete</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../layout/layout-custom-area.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Layout <small>+ Custom Area </small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../layout/sidebar-mini.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../layout/collapsed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini <small>+ Collapsed</small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../layout/logo-switch.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini <small>+ Logo Switch</small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../layout/layout-rtl.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Layout RTL</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-tree-fill"></i>
-                  <p>
-                    UI Elements
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="../UI/general.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>General</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../UI/icons.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Icons</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../UI/timeline.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Timeline</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    Forms
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="../forms/general.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>General Elements</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-table"></i>
-                  <p>
-                    Tables
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="../tables/simple.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Simple Tables</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-header">EXAMPLES</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                  <p>
-                    Auth
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                      <p>
-                        Version 1
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="../examples/login.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="../examples/register.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                      <p>
-                        Version 2
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="../examples/login-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="../examples/register-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../examples/lockscreen.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Lockscreen</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-header">DOCUMENTATIONS</li>
-              <li class="nav-item">
-                <a href="../docs/introduction.html" class="nav-link">
-                  <i class="nav-icon bi bi-download"></i>
-                  <p>Installation</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../docs/layout.html" class="nav-link">
-                  <i class="nav-icon bi bi-grip-horizontal"></i>
-                  <p>Layout</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../docs/color-mode.html" class="nav-link">
-                  <i class="nav-icon bi bi-star-half"></i>
-                  <p>Color Mode</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-ui-checks-grid"></i>
-                  <p>
-                    Components
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="../docs/components/main-header.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Main Header</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../docs/components/main-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Main Sidebar</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-filetype-js"></i>
-                  <p>
-                    Javascript
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="../docs/javascript/treeview.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Treeview</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="../docs/browser-support.html" class="nav-link">
-                  <i class="nav-icon bi bi-browser-edge"></i>
-                  <p>Browser Support</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../docs/how-to-contribute.html" class="nav-link">
-                  <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
-                  <p>How To Contribute</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../docs/faq.html" class="nav-link active">
+                <a href="./faq.html" class="nav-link active">
                   <i class="nav-icon bi bi-question-circle-fill"></i>
-                  <p>FAQ</p>
+                  <p>Uitleg</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="../docs/license.html" class="nav-link">
-                  <i class="nav-icon bi bi-patch-check-fill"></i>
-                  <p>License</p>
-                </a>
-              </li>
-              <li class="nav-header">MULTI LEVEL EXAMPLE</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>Level 1</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>
-                    Level 1
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Level 2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>
-                        Level 2
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Level 2</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>Level 1</p>
-                </a>
-              </li>
-              <li class="nav-header">LABELS</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-danger"></i>
-                  <p class="text">Important</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-warning"></i>
-                  <p>Warning</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-info"></i>
-                  <p>Informational</p>
+                <a href="./form.html" class="nav-link">
+                  <i class="nav-icon bi bi-pencil-square"></i>
+                  <p>Contact</p>
                 </a>
               </li>
             </ul>
@@ -736,13 +250,9 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">FAQ</h3></div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Docs</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">FAQ</li>
-                </ol>
-              </div>
+              <!--<div class="col-sm-6"><h3 class="mb-0">Dashboard</h3></div>-->
+              <!--<div class="col-sm-6"><h4 id="welcomeHeader" class="mb-0">Welkom</h4></div>-->
+              <div class="col-sm-6"><h5 id="welcomeHeader2">Welkom op de CYOD portal</h5></div>
             </div>
             <!--end::Row-->
           </div>
@@ -783,12 +293,12 @@
       <!--begin::Footer-->
       <footer class="app-footer">
         <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">Anything you want</div>
+        <div class="float-end d-none d-sm-inline">Verwol Projectafbouw BV</div>
         <!--end::To the end-->
         <!--begin::Copyright-->
         <strong>
-          Copyright &copy; 2014-2025&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
+          Copyright &copy; 2026-2026&nbsp Mark Destreel;
+          <!--<a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.-->
         </strong>
         All rights reserved.
         <!--end::Copyright-->
@@ -813,7 +323,7 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../js/adminlte.js"></script>
+    <script src="./js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -836,6 +346,327 @@
       });
     </script>
     <!--end::OverlayScrollbars Configure-->
+    <!-- OPTIONAL SCRIPTS -->
+    <!-- jsvectormap -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"
+      integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"
+      integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY="
+      crossorigin="anonymous"
+    ></script>
+    <!-- jsvectormap -->
+    <script>
+    
+    async function getPrincipal() {
+      if (window.__principal) return window.__principal;
+
+      const res  = await fetch('/.auth/me', { credentials: 'include' });
+      const json = await res.json();
+
+      const principal =
+        (json && json.clientPrincipal) ? json.clientPrincipal :
+        (Array.isArray(json) && json.length > 0) ? json[0] :
+        null;
+
+      // Normaliseer: zorg dat userClaims altijd bestaat
+      if (principal && !principal.userClaims && principal.claims) {
+        principal.userClaims = principal.claims;
+      }
+
+      window.__principal = principal;
+      return principal;
+    };
+
+    function getDisplayName(principal) {
+      if (!principal) return null;
+
+      // SWA kan 'claims' of 'userClaims' gebruiken afhankelijk van flow/config
+      const claims = principal.userClaims || principal.claims || [];
+
+      // exacte/robuste claim-lookup: match 'name' of URI die eindigt op '/name'
+      const get = (key) => {
+        const k = key.toLowerCase();
+        const hit = claims.find(c => {
+          const typ = (c.typ || '').toLowerCase();
+          return typ === k || typ.endsWith('/' + k);
+        });
+        return hit?.val?.trim() || '';
+      };
+
+      // 1) Voornaam + achternaam (als aanwezig)
+      const given  = get('given_name');
+      const family = get('family_name');
+      if (given || family) return [given, family].filter(Boolean).join(' ').trim();
+
+      // 2) Volledige weergavenaam
+      const full = get('name');
+      if (full) return full;
+
+      // 3) Geen zichtbare fallback naar e‑mail
+      return 'Gebruiker';
+    };
+
+    (async function paintUi() {
+      try {
+        console.log('[paintUi] start');
+
+        // 1) Principal ophalen
+        const p = await getPrincipal();
+        console.log('[paintUi] principal:', p);
+
+        // 2) Weergavenaam bepalen
+        const name = getDisplayName(p);
+        console.log('[paintUi] computed name:', name);
+
+        // 3) Doelelementen zoeken
+        const spanTop  = document.getElementById('userDisplay');
+        const spanHdr  = document.getElementById('userDisplayHeader');
+        const spanMail = document.getElementById('userEmailHeader');
+        const header   = document.getElementById('welcomeHeader');
+
+        console.log('[paintUi] nodes found:', {
+          userDisplay: !!spanTop,
+          userDisplayHeader: !!spanHdr,
+          userEmailHeader: !!spanMail,
+          welcomeHeader: !!header
+        });
+
+        // 4) Schrijven naar navbar (toon e-mail in plaats van naam)
+        if (spanTop) {
+          const email = (p?.userDetails && String(p.userDetails).trim()) || '';
+          const safe = email || ((name && name.trim()) ? name : 'Niet ingelogd');
+          spanTop.textContent = safe;
+          spanTop.classList.remove('d-none');
+          console.log('[paintUi] userDisplay (email) set to:', safe);
+        } else {
+          console.warn('[paintUi] #userDisplay not found in DOM');
+        }
+
+
+        // 5) Schrijven naar dropdown
+        if (spanHdr)  { spanHdr.textContent  = name || ''; console.log('[paintUi] userDisplayHeader set'); }
+        if (spanMail) { spanMail.textContent = (p?.userDetails) || ''; console.log('[paintUi] userEmailHeader set'); }
+
+        // 6) Welkom-kop
+        if (header) {
+          header.textContent = name ? `Welkom ${name}` : 'Welkom';
+          console.log('[paintUi] welcomeHeader set');
+        } else {
+          console.warn('[paintUi] #welcomeHeader not found in DOM');
+        }
+
+        console.log('[paintUi] done');
+      } catch (e) {
+        console.error('Auth paintUi error:', e);
+      }
+    })();
+    
+
+    (async function () {
+      try {
+        const res = await fetch('/api/getbudgets', { credentials: 'include' });
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          console.error('API error', res.status, text);
+          return;
+        }
+      const data = await res.json();
+      console.log('API ok', data);
+      const fmt = (n) =>
+        (n == null
+          ? '—'
+          : `€ ${Number(n).toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+
+      // Bestaande waardes invullen
+      const elTstBase = document.getElementById('tstValue');
+      const elRepBase = document.getElementById('repValue');
+      const elMinUseBase = document.getElementById('minuseValue');
+      const elQueryRun = document.getElementById('budget_date');
+      
+      const elTst = document.getElementById('val-tst');
+      const elRep = document.getElementById('val-rep');
+      const elOvg = document.getElementById('val-ovg');
+      const elPeildatum = document.getElementById('val-peildatum');
+      const elTstMsg = document.getElementById('val-tst-message');
+      const elRepMsg = document.getElementById('val-rep-message');
+      const elOvgMsg = document.getElementById('val-ovg-message');
+
+      // Basiswaarden
+      if (elTstBase)    elTstBase.textContent    = data.tst_value ?? '';
+      if (elRepBase)    elRepBase.textContent    = data.rep_value ?? '';
+      if (elMinUseBase) elMinUseBase.textContent = data.minuse_value ?? '';
+      if (elQueryRun)   elQueryRun.textContent   = data.queryrun_value ?? '';
+
+      if (elQueryRun) {
+        const dateStr = data?.queryrun_value; // bv. "13-02-2026"
+        if (dateStr && String(dateStr).trim()) {
+          elQueryRun.textContent = `Onderstaand vind je jouw budgetten bijgewerkt tot ${dateStr}:`;
+        } else {
+          // Geen datum beschikbaar → laat het leeg (nbsp)
+        elQueryRun.textContent = `Er ging iets mis. :(`;
+        }
+      }
+
+      if (elTst) elTst.textContent = fmt(data.tst_budget);
+      if (elRep) elRep.textContent = fmt(data.rep_budget);
+      if (elOvg) elOvg.textContent = fmt(data.ovg_budget);
+      if (elPeildatum) {
+        const dateStr = data?.peildatum; // bv. "13-02-2026"
+        if (dateStr && String(dateStr).trim()) {
+          elPeildatum.textContent = `${dateStr}`;
+        } else {
+          // Geen datum beschikbaar → laat het leeg (nbsp)
+          elPeildatum.textContent = '\u00A0';
+        }
+      }
+      
+      if (elTstMsg) {
+      const monthly = (data.tst_value / 36).toLocaleString('nl-NL', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+        elTstMsg.textContent = `Groeit met ~ € ${monthly} per maand.`;
+      }
+      
+      if (elRepMsg) {
+        const repRaw = Number(data?.rep_budget);
+        const repBaseValue = Number(data?.rep_value);
+        if (Number.isFinite(repRaw) && repRaw === repBaseValue) {
+          elRepMsg.textContent = 'Nog geen reparaties, goed bezig!';
+        } else {
+          // Terug naar non‑breaking space (zelfde als &nbsp; in HTML)
+          elRepMsg.textContent = '\u00A0';
+        }
+      }
+      if (elOvgMsg) {
+        const ovgRaw = Number(data?.ovg_budget);
+        if (Number.isFinite(ovgRaw) && ovgRaw === 0) {
+          elOvgMsg.textContent = 'Inzetbaar voor toestel of reparaties.';
+        } else {
+          // Terug naar non‑breaking space (zelfde als &nbsp; in HTML)
+          elOvgMsg.textContent = 'Inzetbaar voor toestel of reparaties.';
+          // elOvgMsg.textContent = '\u00A0';
+        }
+      }
+
+      // ── Nieuw: progress voor 'tst' ──────────────────────────────────────────────
+      // 100% = 600
+      const MAX_TST = 600;
+      const raw = Number(data?.tst_budget);
+      // als data.tst_budget geen getal is → 0
+      const ratio = isFinite(raw) && raw > 0 ? raw / MAX_TST : 0;
+      // clamp naar 0..100 en afronden naar integer
+      const pct = Math.max(0, Math.min(100, Math.round(ratio * 100)));
+
+      // Element met id 'val-tst-progress' verwacht (de binnenste .progress-bar)
+      const bar = document.getElementById('val-tst-progress');
+      if (bar) {
+        bar.style.width = `${pct}%`;
+        // optioneel: ook tekst tonen in de balk zelf
+        // bar.textContent = `${pct}%`;
+
+        // optioneel: ARIA updaten (als je progress via ARIA leest)
+        bar.setAttribute('aria-valuenow', String(pct));
+        bar.setAttribute('aria-valuemin', '0');
+        bar.setAttribute('aria-valuemax', '100');
+      } else {
+        // Handige waarschuwing als het element (nog) niet bestaat
+        console.warn("Element met id 'val-tst-progress' niet gevonden.");
+      }
+      // ───────────────────────────────────────────────────────────────────────────
+
+    } catch (e) {
+      console.error('Fetch failed', e);
+    }
+  })();
+  
+  // Color Mode Toggler
+      (() => {
+        'use strict';
+
+        let storedTheme = localStorage.getItem('theme');
+        // const storedTheme = localStorage.getItem('theme');
+
+
+        // NIEUW: bij eerste bezoek default naar 'auto'
+          if (storedTheme == null) {
+            localStorage.setItem('theme', 'auto');
+            storedTheme = 'auto';
+          }
+
+
+        const getPreferredTheme = () => {
+          if (storedTheme) {
+            return storedTheme;
+          }
+
+          return globalThis.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        };
+
+        const setTheme = function (theme) {
+          if (theme === 'auto' && globalThis.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark');
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+          }
+        };
+
+        setTheme(getPreferredTheme());
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme');
+
+          if (!themeSwitcher) {
+            return;
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text');
+          const activeThemeIcon = document.querySelector('.theme-icon-active i');
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`);
+          const svgOfActiveBtn = btnToActive.querySelector('i').getAttribute('class');
+
+          for (const element of document.querySelectorAll('[data-bs-theme-value]')) {
+            element.classList.remove('active');
+            element.setAttribute('aria-pressed', 'false');
+          }
+
+          btnToActive.classList.add('active');
+          btnToActive.setAttribute('aria-pressed', 'true');
+          activeThemeIcon.setAttribute('class', svgOfActiveBtn);
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`;
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel);
+
+          if (focus) {
+            themeSwitcher.focus();
+          }
+        };
+
+        globalThis.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          if (storedTheme !== 'light' || storedTheme !== 'dark') {
+            setTheme(getPreferredTheme());
+          }
+        });
+
+        globalThis.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme());
+
+          for (const toggle of document.querySelectorAll('[data-bs-theme-value]')) {
+            toggle.addEventListener('click', () => {
+              const theme = toggle.getAttribute('data-bs-theme-value');
+              localStorage.setItem('theme', theme);
+              setTheme(theme);
+              showActiveTheme(theme, true);
+            });
+          }
+        });
+      })();
+
+    </script>
+    
     <!--end::Script-->
   </body>
   <!--end::Body-->
