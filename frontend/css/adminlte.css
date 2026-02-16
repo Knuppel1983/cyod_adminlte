@@ -14651,7 +14651,8 @@ html.maximized-card {
   display: flex;
   width: 100%;
   min-height: 80px;
-  padding: 0.2rem;
+  /* padding: 0.2rem; */
+  padding: 4px 0 4px 0;
   margin-bottom: 1rem;
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);
