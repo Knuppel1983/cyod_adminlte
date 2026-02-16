@@ -673,6 +673,8 @@
         bar.setAttribute('aria-valuenow', String(pct));
         bar.setAttribute('aria-valuemin', '0');
         bar.setAttribute('aria-valuemax', '100');
+        
+        console.log("[Peildatum] Width van val-tst-progress gezet op:", pct + "%");
       } else {
         // Handige waarschuwing als het element (nog) niet bestaat
         console.warn("Element met id 'val-tst-progress' niet gevonden.");
@@ -717,7 +719,7 @@
         bar2.setAttribute('aria-valuemin', '0');
         bar2.setAttribute('aria-valuemax', '100');
 
-        console.log("[Peildatum] Width van progress-bar gezet op:", pctQuery + "%");
+        console.log("[Peildatum] Width van val-peildatum-progress gezet op:", pctQuery + "%");
       } else {
         console.warn("Element met id 'val-peildatum-progress' niet gevonden.");
       }
