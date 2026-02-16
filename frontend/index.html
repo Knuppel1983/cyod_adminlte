@@ -743,8 +743,8 @@ const sqlStr = data?.peildatum;
       
       
       // totalen
-      if (elTotaal) elTotaal.textContent = `Totaal inzetbaar: fmt(data.totaal_inzetbaar)`;
-      if (elTotaalPD) elTotaalPD.textContent = `Totaal inzetbaar vanaf ${dateStr}: fmt(data.totaal_inzetbaar_pd)`;
+      if (elTotaal) elTotaal.textContent = `Totaal inzetbaar: ${fmt(data.totaal_inzetbaar)}`;
+      if (elTotaalPD) elTotaalPD.textContent = `Totaal inzetbaar vanaf ${sqlStr}: ${fmt(data.totaal_inzetbaar_pd)}`;
       //Je kunt op dit moment ${elTotInz} inzetten, en vanaf ${sqlStr}, ${elTotInz}.
       
       
