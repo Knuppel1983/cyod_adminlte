@@ -684,47 +684,19 @@
 
       // ── Nieuw: progress voor 'peildatum' ──────────────────────────────────────────────
       const sqlStr = data?.peildatum;
-      console.log("[Peildatum] Ruwe string uit database:", sqlStr);
-
       const sqlDate = parseDutchDate(sqlStr);
-      console.log("[Peildatum] Geparseerd als Date object:", sqlDate);
 
       let pctQuery = 0;
 
       if (sqlDate) {
-        // Correcte definitie:
-        // Start = peildatum - 3 jaar
-        // Eind = peildatum
-        // Waarde = vandaag (00:00) → clamp 0..100
         const end = new Date(sqlDate.getFullYear(), sqlDate.getMonth(), sqlDate.getDate());
         const start = addYears(end, -3);
 
         const now = new Date();
         const today0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-        // Log alle referentiepunten
-        console.log("[Peildatum] Start (peildatum - 3 jaar):", start);
-        console.log("[Peildatum] Einde (peildatum):", end);
-        console.log("[Peildatum] Vandaag (00:00):", today0);
-
         pctQuery = percentBetween(today0, start, end);
 
-        // Extra inzicht: ruwe ratio-info
-        const totalMs = end - start;
-        const progressedMs = today0 - start;
-        console.log("[Peildatum] Totaal venster (dagen):", Math.round(totalMs / (1000*60*60*24)));
-        console.log("[Peildatum] Gevorderd (dagen):", Math.round(Math.max(0, Math.min(totalMs, progressedMs)) / (1000*60*60*24)));
-        console.log("[Peildatum] Berekend percentage:", pctQuery + "%");
-
-        // Edge-case logs
-        if (today0 < start) {
-          console.log("[Peildatum] Vandaag ligt vóór het startvenster → 0% (geclamped).");
-        } else if (today0 > end) {
-          console.log("[Peildatum] Vandaag ligt ná het eindvenster → 100% (geclamped).");
-        }
-      } else {
-        console.warn("[Peildatum] Kon SQL-datum niet parsen → pctQuery = 0%");
-      }
 
       // Element met id 'val-peildatum-progress' (de binnenste .progress-bar)
       const bar2 = document.getElementById('val-peildatum-progress');
@@ -735,8 +707,6 @@
         bar2.setAttribute('aria-valuenow', String(pctQuery));
         bar2.setAttribute('aria-valuemin', '0');
         bar2.setAttribute('aria-valuemax', '100');
-
-        console.log("[Peildatum] Width van val-peildatum-progress gezet op:", pctQuery + "%");
       } else {
         console.warn("Element met id 'val-peildatum-progress' niet gevonden.");
       }
