@@ -15601,6 +15601,6 @@ fieldset legend {
   margin-bottom: 14px;
 }
 
-.table_dashboard {
+.card-body.p-0 .dashboard .table thead > tr > th:first-of-type, .card-body.p-0 .dashboard .table thead > tr > td:first-of-type, .card-body.p-0 .dashboard .table tfoot > tr > th:first-of-type, .card-body.p-0 .dashboard .table tfoot > tr > td:first-of-type, .card-body.p-0 .dashboard .table tbody > tr > th:first-of-type, .card-body.p-0 .table .dashboard tbody > tr > td:first-of-type {
 padding-left: 0.4rem !important;
 }
