@@ -15603,5 +15603,9 @@ fieldset legend {
 }
 
 .budget_date {
-  margin-bottom: 10px !important;
+  margin-bottom: 16px !important;
+}
+
+.spacer {
+  margin-bottom: 16px !important;
 }
