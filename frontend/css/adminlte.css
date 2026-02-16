@@ -13865,7 +13865,7 @@ body:not(.app-loaded) .app-footer {
 }
 
 .dropdown-menu-lg {
-  min-width: 280px;
+  min-width: 200px;
   max-width: 300px;
   padding: 0;
 }
@@ -13974,7 +13974,7 @@ body:not(.app-loaded) .app-footer {
   border-bottom-left-radius: 4px;
 }
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header {
-  min-height: 175px;
+  min-height: 160px;
   padding: 10px;
   text-align: center;
 }
