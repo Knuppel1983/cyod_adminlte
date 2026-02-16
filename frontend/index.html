@@ -681,10 +681,14 @@
 
 
       // ── Nieuw: progress voor 'peildatum' ──────────────────────────────────────────────
-      const sqlStr = data?.queryrun_value;
+      const sqlStr = data?.peildatum;
+      console.log("[Peildatum] Ruwe string uit database:", sqlStr);
+
       const sqlDate = parseDutchDate(sqlStr);
+      console.log("[Peildatum] Geparseerd als Date object:", sqlDate);
 
       let pctQuery = 0;
+
       if (sqlDate) {
         const start = sqlDate;               // 0% = SQL-datum
         const end = addYears(sqlDate, 3);    // 100% = SQL-datum + 3 jaar
@@ -693,11 +697,17 @@
         const today = new Date();
         const today0 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-        pctQuery = percentBetween(today0, start, end); // clamp 0..100 binnen helper
+        console.log("[Peildatum] Start (SQL-datum):", start);
+        console.log("[Peildatum] Einde (SQL-datum + 3 jaar):", end);
+        console.log("[Peildatum] Vandaag (00:00 uur):", today0);
+
+        pctQuery = percentBetween(today0, start, end);
+        console.log("[Peildatum] Berekend percentage:", pctQuery + "%");
+      } else {
+        console.warn("[Peildatum] Kon SQL-datum niet parsen → pctQuery = 0%");
       }
 
-
-      // Element met id 'val-peildatum-progress' verwacht (de binnenste .progress-bar)
+      // Element met id 'val-peildatum-progress' (de binnenste .progress-bar)
       const bar2 = document.getElementById('val-peildatum-progress');
       if (bar2) {
         bar2.style.width = `${pctQuery}%`;
@@ -706,8 +716,9 @@
         bar2.setAttribute('aria-valuenow', String(pctQuery));
         bar2.setAttribute('aria-valuemin', '0');
         bar2.setAttribute('aria-valuemax', '100');
+
+        console.log("[Peildatum] Width van progress-bar gezet op:", pctQuery + "%");
       } else {
-        // Handige waarschuwing als het element (nog) niet bestaat
         console.warn("Element met id 'val-peildatum-progress' niet gevonden.");
       }
       // ───────────────────────────────────────────────────────────────────────────
