@@ -15600,3 +15600,7 @@ fieldset legend {
 #uitleg {
   margin-bottom: 14px;
 }
+
+.table_dashboard {
+padding-left: 0.4rem !important;
+}
