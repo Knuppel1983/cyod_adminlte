@@ -338,7 +338,7 @@
                       <span class="info-box-text">Peildatum</span>
                       <span class="info-box-number" id="val-peildatum">&nbsp;</span>
                       <div class="progress">
-                        <!--<div class="progress-bar" id="val-rep-progress" style="..."></div>-->
+                        <div class="progress-bar" id="val-peildatum-progress" style="..."></div>
                       </div>
                       <span class="progress-description" id="val-peildatum-message">Op deze datum komt je rep.budget vrij.</span>
                     </div>
@@ -639,6 +639,41 @@
         console.warn("Element met id 'val-tst-progress' niet gevonden.");
       }
       // ───────────────────────────────────────────────────────────────────────────
+
+
+
+      // ── Nieuw: progress voor 'peildatum' ──────────────────────────────────────────────
+      const sqlStr = data?.queryrun_value;
+      const sqlDate = parseDutchDate(sqlStr);
+
+      let pctQuery = 0;
+      if (sqlDate) {
+        const start = sqlDate;               // 0% = SQL-datum
+        const end = addYears(sqlDate, 3);    // 100% = SQL-datum + 3 jaar
+
+        // waarde = vandaag
+        const today = new Date();
+        const today0 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        pctQuery = percentBetween(today0, start, end); // clamp 0..100 binnen helper
+      }
+
+      // bar vullen naar #val-queryrun-progress
+      const barQuery = document.getElementById('val-peildatum-progress');
+      if (barQuery) {
+        barQuery.style.width = `${pctQuery}%`;
+        barQuery.setAttribute('aria-valuenow', String(pctQuery));
+        barQuery.setAttribute('aria-valuemin', '0');
+        barQuery.setAttribute('aria-valuemax', '100');
+      }
+      // ───────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
 
     } catch (e) {
       console.error('Fetch failed', e);
