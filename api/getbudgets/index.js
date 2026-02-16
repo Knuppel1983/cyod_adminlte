@@ -109,6 +109,8 @@ module.exports = async function (context, req) {
         tst_budget: userRow.tst_budget,
         rep_budget: userRow.rep_budget,
         ovg_budget: userRow.ovg_budget,
+        totaal_inzetbaar: userRow.totaal_inzetbaar,
+        totaal_inzetbaar_pd: userRow.totaal_inzetbaar_pd,
         peildatum: userRow.peildatum,
 
         // globale waardes (kunnen null zijn als er geen rij in dbo.waardes staat)
