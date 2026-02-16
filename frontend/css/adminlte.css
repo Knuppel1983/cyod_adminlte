@@ -14016,7 +14016,7 @@ body:not(.app-loaded) .app-footer {
   }
 }
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
-  padding: 10px;
+  padding: 4px;
   background-color: var(--bs-light-bg);
 }
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer::after {
