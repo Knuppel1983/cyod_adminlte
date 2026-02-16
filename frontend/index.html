@@ -697,6 +697,15 @@
 
         pctQuery = percentBetween(today0, start, end);
 
+        // Extra inzicht: ruwe ratio-info
+        const totalMs = end - start;
+        const progressedMs = today0 - start;
+
+
+        // Edge-case logs
+      } else {
+        console.warn("[Peildatum] Kon SQL-datum niet parsen → pctQuery = 0%");
+      }
 
       // Element met id 'val-peildatum-progress' (de binnenste .progress-bar)
       const bar2 = document.getElementById('val-peildatum-progress');
@@ -707,6 +716,8 @@
         bar2.setAttribute('aria-valuenow', String(pctQuery));
         bar2.setAttribute('aria-valuemin', '0');
         bar2.setAttribute('aria-valuemax', '100');
+
+        console.log("[Peildatum] Width van val-peildatum-progress gezet op:", pctQuery + "%");
       } else {
         console.warn("Element met id 'val-peildatum-progress' niet gevonden.");
       }
