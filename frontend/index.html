@@ -768,12 +768,12 @@ const sqlStr = data?.peildatum;
       
       
       // totalen
-      const totinzpd = data.totaal_inzetbaar_pd + ((data.tst_value / (data.minuse_value * 365)) * data.days_to_peildatum)
+      const totinzpd = (data.totaal_inzetbaar_pd + ((data.tst_value / (data.minuse_value * 365)) * data.days_to_peildatum)).toFixed(2)
       
       if (elTotaal) elTotaal.textContent = `${fmt(data.totaal_inzetbaar)}`;
       if (elTotaalPDtitle) elTotaalPDtitle.textContent = `Totaal inzetbaar per ${sqlStr}:`;
       // if (elTotaalPD) elTotaalPD.textContent = `${fmt(data.totaal_inzetbaar_pd)}`;
-      if (elTotaalPD) elTotaalPD.textContent = `${totinzpd}`;
+      if (elTotaalPD) elTotaalPD.textContent = `${fmt(totinzpd)}`;
       //Je kunt op dit moment ${elTotInz} inzetten, en vanaf ${sqlStr}, ${elTotInz}.
 
       
