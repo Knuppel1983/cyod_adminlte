@@ -13965,7 +13965,7 @@ body:not(.app-loaded) .app-footer {
 .navbar-nav > .user-menu > .dropdown-menu {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  width: 280px;
+  width: 200px;
   padding: 0;
 }
 .navbar-nav > .user-menu > .dropdown-menu,
@@ -13975,7 +13975,7 @@ body:not(.app-loaded) .app-footer {
 }
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header {
   min-height: 160px;
-  padding: 10px;
+  padding: 6px;
   text-align: center;
 }
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
