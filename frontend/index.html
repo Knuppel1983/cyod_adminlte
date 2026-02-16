@@ -422,6 +422,47 @@
     <!-- jsvectormap -->
     <script>
     
+    // ---- Helpers: 1x toevoegen ----
+
+    // Parse "DD-MM-YYYY" veilig naar een Date in lokale tijd (00:00)
+    function parseDutchDate(ddmmyyyy) {
+      if (!ddmmyyyy) return null;
+      const parts = String(ddmmyyyy).trim().split('-');
+      if (parts.length !== 3) return null;
+      const [ddStr, mmStr, yyyyStr] = parts;
+      const dd = parseInt(ddStr, 10);
+      const mm = parseInt(mmStr, 10);
+      const yyyy = parseInt(yyyyStr, 10);
+      if (!yyyy || !mm || !dd) return null;
+
+      // Let op: maand is 0-based in JS
+      const d = new Date(yyyy, mm - 1, dd, 0, 0, 0, 0);
+
+      // Validatie: JS corrigeert automatisch out-of-range; check componenten
+      if (d.getFullYear() !== yyyy || d.getMonth() !== (mm - 1) || d.getDate() !== dd) {
+        return null;
+      }
+      return d;
+    }
+
+    // Kalenderjaren optellen/aftrekken: houdt rekening met schrikkeldagen
+    function addYears(date, years) {
+      const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      d.setFullYear(d.getFullYear() + years);
+      return d;
+    }
+
+    // Percentage van 'value' tussen start en end. Clamp 0..100 en rond op hele %
+    function percentBetween(value, start, end) {
+      const startMs = +start;
+      const endMs = +end;
+      const valueMs = +value;
+      if (!isFinite(startMs) || !isFinite(endMs) || !isFinite(valueMs)) return 0;
+      if (endMs <= startMs) return 100; // fallback: voorkom /0; hoort niet voor te komen
+      const ratio = (valueMs - startMs) / (endMs - startMs);
+      return Math.round(Math.max(0, Math.min(1, ratio)) * 100);
+    }
+    
     async function getPrincipal() {
       if (window.__principal) return window.__principal;
 
