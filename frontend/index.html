@@ -277,7 +277,7 @@
                       <td id="totaal"></td>
                     </tr>
                     <tr class="align-middle">
-                      <td id="totaal_pd_title">Totaal inzetbaar per ...</td>
+                      <td id="totaal_pd_title">Op peildatum:</td>
                       <td id="totaal_pd"></td>
                     </tr>
                   </tbody>
@@ -765,7 +765,7 @@ const sqlStr = data?.peildatum;
       const totinzpd = (data.totaal_inzetbaar_pd + ((data.tst_value / (data.minuse_value * 365)) * data.days_to_peildatum)).toFixed(2)
       
       if (elTotaal) elTotaal.textContent = `${fmt(data.totaal_inzetbaar)}`;
-      if (elTotaalPDtitle) elTotaalPDtitle.textContent = `Totaal inzetbaar per ${sqlStr}:`;
+      if (elTotaalPDtitle) elTotaalPDtitle.textContent = `Op peildatum (${sqlStr}):`;
       // if (elTotaalPD) elTotaalPD.textContent = `${fmt(data.totaal_inzetbaar_pd)}`;
       if (elTotaalPD) elTotaalPD.textContent = `${fmt(totinzpd)}`;
       //Je kunt op dit moment ${elTotInz} inzetten, en vanaf ${sqlStr}, ${elTotInz}.
