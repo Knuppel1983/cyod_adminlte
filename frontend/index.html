@@ -617,7 +617,7 @@ const sqlStr = data?.peildatum;
       if (elQueryRun) {
         const dateStr = data?.queryrun_value; // bv. "13-02-2026"
         if (dateStr && String(dateStr).trim()) {
-          elQueryRun.textContent = `Onderstaand vind je jouw budgetten bijgewerkt tot ${dateStr}. Je kunt op dit moment ${elTotInz} inzetten, en vanaf ${sqlStr}, ${elTotInz}.`;
+          elQueryRun.textContent = `Onderstaand vind je jouw budgetten bijgewerkt tot ${dateStr}:`;
         } else {
           // Geen datum beschikbaar → laat het leeg (nbsp)
         elQueryRun.textContent = `Er ging iets mis. :(`;
@@ -733,6 +733,12 @@ const sqlStr = data?.peildatum;
         console.warn("Element met id 'val-peildatum-progress' niet gevonden.");
       }
       // ───────────────────────────────────────────────────────────────────────────
+      
+      
+      
+      //Je kunt op dit moment ${elTotInz} inzetten, en vanaf ${sqlStr}, ${elTotInz}.
+      
+      
 
 
     } catch (e) {
