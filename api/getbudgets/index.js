@@ -68,7 +68,14 @@ module.exports = async function (context, req) {
                   AS DECIMAL(18,2)) AS totaal_inzetbaar,           -- tst + ovg
              CAST(COALESCE(b.[budget], 0) + COALESCE(d.[ovg_budget], 0) + COALESCE(c.[rep_budget], 0)
                   AS DECIMAL(18,2)) AS totaal_inzetbaar_pd,        -- tst + ovg + rep
-             CONVERT(VARCHAR(10), DATEADD(YEAR, 3, e.[peildatum]), 105) AS peildatum  -- dd-mm-yyyy
+             CONVERT(VARCHAR(10), DATEADD(YEAR, 3, e.[peildatum]), 105) AS peildatum,  -- dd-mm-yyyy
+             -- Dagen tot peildatum (vandaag 00:00 als referentie, nooit < 0)
+             CASE 
+               WHEN CAST(e.[peildatum] AS date) IS NULL THEN NULL
+               WHEN CAST(e.[peildatum] AS date) <= CAST(GETDATE() AS date) THEN 0
+               ELSE DATEDIFF(day, CAST(GETDATE() AS date), CAST(e.[peildatum] AS date))
+             END
+             AS days_to_peildatum
       FROM   dbo.[users] AS a
       LEFT JOIN dbo.[tst_budget] AS b ON b.[user_id] = a.[id]
       LEFT JOIN dbo.[rep_budget] AS c ON c.[user_id] = a.[id]
@@ -112,6 +119,7 @@ module.exports = async function (context, req) {
         totaal_inzetbaar: userRow.totaal_inzetbaar,
         totaal_inzetbaar_pd: userRow.totaal_inzetbaar_pd,
         peildatum: userRow.peildatum,
+        days_to_peildatum: userRow.days_to_peildatum,
 
         // globale waardes (kunnen null zijn als er geen rij in dbo.waardes staat)
         tst_value:       valuesRow.tst_value       ?? null,
