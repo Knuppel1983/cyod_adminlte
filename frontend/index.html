@@ -362,7 +362,7 @@
                       <td id="totaal"></td>
                     </tr>
                     <tr class="align-middle">
-                      <td>Totaal inzetbaar per datum:</td>
+                      <td id="totaal_pd_title">Totaal inzetbaar per ...</td>
                       <td id="totaal_pd"></td>
                     </tr>
                   </tbody>
@@ -626,6 +626,7 @@
       const elOvgMsg = document.getElementById('val-ovg-message');
       const elTotaal = document.getElementById('totaal');
       const elTotaalPD = document.getElementById('totaal_pd');
+      const elTotaalPDtitle = document.getElementById('totaal_pd_title');
 
       // Basiswaarden
       if (elTstBase)    elTstBase.textContent    = data.tst_value ?? '';
@@ -768,8 +769,9 @@ const sqlStr = data?.peildatum;
       
       
       // totalen
-      if (elTotaal) elTotaal.textContent = `Totaal inzetbaar: ${fmt(data.totaal_inzetbaar)}`;
-      if (elTotaalPD) elTotaalPD.textContent = `Totaal inzetbaar vanaf ${sqlStr}: ${fmt(data.totaal_inzetbaar_pd)}`;
+      if (elTotaal) elTotaal.textContent = `${fmt(data.totaal_inzetbaar)}`;
+      if (elTotaalPDtitle) elTotaalPDtitle.textContent = `Totaal inzetbaar per ${sqlStr}:`;
+      if (elTotaalPD) elTotaalPD.textContent = `${fmt(data.totaal_inzetbaar_pd)}`;
       //Je kunt op dit moment ${elTotInz} inzetten, en vanaf ${sqlStr}, ${elTotInz}.
       
       
