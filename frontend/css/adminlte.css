@@ -14514,7 +14514,7 @@ html.maximized-card {
 .card-body.p-0 .table tfoot > tr > td:first-of-type,
 .card-body.p-0 .table tbody > tr > th:first-of-type,
 .card-body.p-0 .table tbody > tr > td:first-of-type {
-  padding-left: 1.5rem;
+  padding-left: 0.4rem;
 }
 .card-body.p-0 .table thead > tr > th:last-of-type,
 .card-body.p-0 .table thead > tr > td:last-of-type,
@@ -14522,7 +14522,7 @@ html.maximized-card {
 .card-body.p-0 .table tfoot > tr > td:last-of-type,
 .card-body.p-0 .table tbody > tr > th:last-of-type,
 .card-body.p-0 .table tbody > tr > td:last-of-type {
-  padding-right: 1.5rem;
+  padding-right: 0.4rem;
 }
 
 .small-box {
@@ -15599,8 +15599,4 @@ fieldset legend {
 
 #uitleg {
   margin-bottom: 14px;
-}
-
-.card-body.p-0 .dashboard .table thead > tr > th:first-of-type, .card-body.p-0 .dashboard .table thead > tr > td:first-of-type, .card-body.p-0 .dashboard .table tfoot > tr > th:first-of-type, .card-body.p-0 .dashboard .table tfoot > tr > td:first-of-type, .card-body.p-0 .dashboard .table tbody > tr > th:first-of-type, .card-body.p-0 .table .dashboard tbody > tr > td:first-of-type {
-padding-left: 0.4rem !important;
 }
