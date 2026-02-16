@@ -643,7 +643,7 @@ const sqlStr = data?.peildatum;
       if (elQueryRun) {
         const dateStr = data?.queryrun_value; // bv. "13-02-2026"
         if (dateStr && String(dateStr).trim()) {
-          elQueryRun.textContent = `Onderstaand vind je jouw budgetten bijgewerkt tot ${dateStr}.`;
+          elQueryRun.textContent = `Onderstaand jouw budgetten bijgewerkt tot ${dateStr}.`;
         } else {
           // Geen datum beschikbaar → laat het leeg (nbsp)
         elQueryRun.textContent = `Er ging iets mis. :(`;
