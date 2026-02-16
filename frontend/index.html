@@ -265,7 +265,7 @@
           <div class="container-fluid">
             <!--begin::Row-->
             <div class="row">
-            <div class="col-sm-6"><h6 id="budget_date">&nbsp;</h6>
+            <div class="col-sm-6"><h6 id="budget_date">Bezig met ophalen van gegevens...</h6>
             </div>
             </div>
             <div class="row">
@@ -568,7 +568,7 @@
           elQueryRun.textContent = `Onderstaand vind je jouw budgetten bijgewerkt tot ${dateStr}:`;
         } else {
           // Geen datum beschikbaar → laat het leeg (nbsp)
-        elQueryRun.textContent = `Bezig met ophalen van gegevens...`;
+        elQueryRun.textContent = `Er ging iets mis. :(`;
         }
       }
 
