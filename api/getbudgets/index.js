@@ -64,6 +64,10 @@ module.exports = async function (context, req) {
              b.[budget]        AS tst_budget,
              c.[rep_budget]    AS rep_budget,
              d.[ovg_budget]    AS ovg_budget,
+             CAST(COALESCE(b.[budget], 0) + COALESCE(d.[ovg_budget], 0) 
+                  AS DECIMAL(18,2)) AS totaal_inzetbaar,           -- tst + ovg
+             CAST(COALESCE(b.[budget], 0) + COALESCE(d.[ovg_budget], 0) + COALESCE(c.[rep_budget], 0)
+                  AS DECIMAL(18,2)) AS totaal_inzetbaar_pd,        -- tst + ovg + rep
              CONVERT(VARCHAR(10), DATEADD(YEAR, 3, e.[peildatum]), 105) AS peildatum  -- dd-mm-yyyy
       FROM   dbo.[users] AS a
       LEFT JOIN dbo.[tst_budget] AS b ON b.[user_id] = a.[id]
