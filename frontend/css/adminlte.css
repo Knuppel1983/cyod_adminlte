@@ -14682,7 +14682,7 @@ html.maximized-card {
   flex-direction: column;
   justify-content: center;
   padding: 0 10px;
-  line-height: 1.8;
+  line-height: 1.6;
 }
 .info-box .info-box-number {
   display: block;
