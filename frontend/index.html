@@ -267,7 +267,7 @@
             </div>
           <div class="row">          
             <div class="col-md-4 col-sm-6 col-12">           
-            <div class="card mb-4">
+            <div class="card">
               <!-- /.card-header -->
               <div class="card-body p-0 dashboard">
                 <table class="table table-sm">
@@ -644,7 +644,7 @@ const sqlStr = data?.peildatum;
       if (elQueryRun) {
         const dateStr = data?.queryrun_value; // bv. "13-02-2026"
         if (dateStr && String(dateStr).trim()) {
-          elQueryRun.textContent = `Onderstaand vind je jouw budgetten bijgewerkt tot ${dateStr}:`;
+          elQueryRun.textContent = `Onderstaand vind je jouw budgetten bijgewerkt tot ${dateStr}.`;
         } else {
           // Geen datum beschikbaar → laat het leeg (nbsp)
         elQueryRun.textContent = `Er ging iets mis. :(`;
