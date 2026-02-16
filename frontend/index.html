@@ -1046,7 +1046,16 @@
       (() => {
         'use strict';
 
-        const storedTheme = localStorage.getItem('theme');
+        let storedTheme = localStorage.getItem('theme');
+        // const storedTheme = localStorage.getItem('theme');
+
+
+        // NIEUW: bij eerste bezoek default naar 'auto'
+          if (storedTheme == null) {
+            localStorage.setItem('theme', 'auto');
+            storedTheme = 'auto';
+          }
+
 
         const getPreferredTheme = () => {
           if (storedTheme) {
