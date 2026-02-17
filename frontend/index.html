@@ -452,16 +452,36 @@
         .filter(c => (c.typ || '').toLowerCase().endsWith('/groups'))
         .map(c => (c.val || '').toLowerCase());
       return groups.includes(groupObjectId.toLowerCase());
-      const isSupport = hasGroup(principal, '00000000-0000-0000-0000-000000000000'); // jouw groep‑objectId
-      console.log("[isSupport]", isSupport);
     };
     
+    async function getPrincipal() {
+      if (window.__principal) return window.__principal;
+
+      const res  = await fetch('/.auth/me', { credentials: 'include' });
+      const json = await res.json();
+
+      const principal =
+        (json && json.clientPrincipal) ? json.clientPrincipal :
+        (Array.isArray(json) && json.length > 0) ? json[0] :
+        null;
+
+      // Normaliseer: zorg dat userClaims altijd bestaat
+      if (principal && !principal.userClaims && principal.claims) {
+        principal.userClaims = principal.claims;
+      }
+
+      window.__principal = principal;
+      return principal;
+    };
     
     (async function boot() {
       const principal = await getPrincipal();
       const isSupport = hasGroup(principal, '...groupId...');
       document.documentElement.classList.toggle('layout--support', isSupport);
     })();
+
+    const isSupport = hasGroup(principal, '00000000-0000-0000-0000-000000000000'); // jouw groep‑objectId
+    console.log("[isSupport]", isSupport);
     
     // Parse "DD-MM-YYYY" veilig naar een Date in lokale tijd (00:00)
     function parseDutchDate(ddmmyyyy) {
@@ -502,26 +522,6 @@
       return Math.round(Math.max(0, Math.min(1, ratio)) * 100);
     }
     
-    async function getPrincipal() {
-      if (window.__principal) return window.__principal;
-
-      const res  = await fetch('/.auth/me', { credentials: 'include' });
-      const json = await res.json();
-
-      const principal =
-        (json && json.clientPrincipal) ? json.clientPrincipal :
-        (Array.isArray(json) && json.length > 0) ? json[0] :
-        null;
-
-      // Normaliseer: zorg dat userClaims altijd bestaat
-      if (principal && !principal.userClaims && principal.claims) {
-        principal.userClaims = principal.claims;
-      }
-
-      window.__principal = principal;
-      return principal;
-    };
-
     function getDisplayName(principal) {
       if (!principal) return null;
 
