@@ -543,7 +543,7 @@
       if (isSupport) {
         $(function () {
             $('#userdata').DataTable({
-                ajax: '/api/support/getuserdata',
+                ajax: '/api/getuserdata',
                 columns: [
                     { data: 'user_id' },
                     { data: 'username' },
@@ -694,7 +694,7 @@
 
     (async function () {
       try {
-        const res = await fetch('/api/default/getbudgets', { credentials: 'include' });
+        const res = await fetch('/api/getbudgets', { credentials: 'include' });
         if (!res.ok) {
           const text = await res.text().catch(() => '');
           console.error('API error', res.status, text);
