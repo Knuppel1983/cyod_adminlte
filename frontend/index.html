@@ -445,8 +445,6 @@
     
     // ---- Helpers: 1x toevoegen ----
     
-    // Get groupid
-   
     async function getPrincipal() {
       if (window.__principal) return window.__principal;
 
@@ -458,28 +456,39 @@
         (Array.isArray(json) && json.length > 0) ? json[0] :
         null;
 
-      // Normaliseer: zorg dat userClaims altijd bestaat
+      // Normaliseer: claims naar userClaims voor compat
       if (principal && !principal.userClaims && principal.claims) {
         principal.userClaims = principal.claims;
       }
 
       window.__principal = principal;
       return principal;
-    };
+    }
 
-    function hasGroup(principal, groupObjectId) {
-      const claims = principal?.userClaims || principal?.claims || [];
-      const groups = claims
-        .filter(c => (c.typ || '').toLowerCase().endsWith('/groups'))
-        .map(c => (c.val || '').toLowerCase());
-      return groups.includes(groupObjectId.toLowerCase());
-    };
-    
+    // 👉 Nieuwe helper: check op SWA role
+    function hasRole(principal, roleName) {
+      const roles = principal?.userRoles || [];
+      return roles.includes(roleName);
+    }
+
+    // Gate-before-paint (optioneel): voorkom flikkering
+    document.documentElement.classList.add('app-booting');
+
     (async function boot() {
-      const principal = await getPrincipal();
-      const isSupport = hasGroup(principal, 'd509c6a1-59be-4273-a570-34c367b370a2');
-      console.log("[isSupport]", isSupport);
-      document.documentElement.classList.toggle('layout--support', isSupport);
+      try {
+        const principal = await getPrincipal();
+        const isSupport = hasRole(principal, 'support');   // <— SWA role i.p.v. Entra group
+
+        console.log('[isSupport role]', isSupport, principal?.userRoles);
+        document.documentElement.classList.toggle('layout--support', isSupport);
+
+        // Eventueel nav-items verbergen
+        document.querySelectorAll('[data-nav="support"]')
+          .forEach(el => el.style.display = isSupport ? '' : 'none');
+
+      } finally {
+        document.documentElement.classList.remove('app-booting');
+      }
     })();
 
     // Parse "DD-MM-YYYY" veilig naar een Date in lokale tijd (00:00)
