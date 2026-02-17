@@ -484,6 +484,18 @@
       return Math.round(Math.max(0, Math.min(1, ratio)) * 100);
     }
     
+    // Get groupid
+    function hasGroup(principal, groupObjectId) {
+      const claims = principal?.userClaims || principal?.claims || [];
+      const groups = claims
+        .filter(c => (c.typ || '').toLowerCase().endsWith('/groups'))
+        .map(c => (c.val || '').toLowerCase());
+      return groups.includes(groupObjectId.toLowerCase());
+      const isSupport = hasGroup(principal, '00000000-0000-0000-0000-000000000000'); // jouw groep‑objectId
+      console.log("[isSupport]" isSupport);
+    }();
+
+    
     async function getPrincipal() {
       if (window.__principal) return window.__principal;
 
