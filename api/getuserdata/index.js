@@ -46,7 +46,7 @@ module.exports = async function (context, req) {
       LEFT JOIN dbo.[rep_budget] AS c ON c.[user_id] = a.[id]
       LEFT JOIN dbo.[ovg_budget] AS d ON d.[user_id] = a.[id]
       LEFT JOIN dbo.[peildatum]  AS e ON e.[user_id] = a.[id]
-      -- geen WHERE (dus alle users)
+      WHERE a.[active] = 1
       ORDER BY a.[username];
     `;
 
