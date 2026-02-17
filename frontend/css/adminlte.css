@@ -15605,15 +15605,19 @@ fieldset legend {
 
 html.app-booting { visibility: hidden; }
 
-/* Verberg alles conditioneel tot je rol bekend is */
-html.app-booting [data-role="default"],
-html.app-booting [data-role="support"] {
+/* Tijdens boot even geen rol-gebonden content tonen om FOUC te voorkomen */
+html.app-booting [data-role="support"],
+html.app-booting [data-role="default"] {
   display: none !important;
 }
 
-/* Zodra rol bekend is ~> laat rol-afhankelijke blokken zien */
+/* Als iemand support is */
 html.support [data-role="support"] { display: block; }
-html.support [data-role="default"]  { display: none; }
+html.support [data-role="default"] { display: none; }
 
-html:not(.support) [data-role="default"] { display: none; }
-html:not(.support) [data-role="support"]  { display: block; }
+/* Als iemand géén support is (default) */
+html.default [data-role="support"] { display: none; }
+html.default [data-role="default"] { display: block; }
+
+/* Optioneel: baseline zodat block-level elementen ook echt blocks zijn */
+[data-role="support"], [data-role="default"] { display: block; }
