@@ -16,7 +16,7 @@
   "routes": [
     { "route": "/support/*", "allowedRoles": ["support"] },
     { "route": "/api/support/*", "allowedRoles": ["support"] },
-    { "route": "/api/getbudgets", "allowedRoles": [ "authenticated" ] },
+    { "route": "/api/*", "allowedRoles": [ "authenticated" ] },
     { "route": "/*", "allowedRoles": ["authenticated"] }
   ],
   "responseOverrides": {
