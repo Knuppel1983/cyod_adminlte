@@ -630,6 +630,8 @@
       }
     })();
 
+    console.log('[isSupport role]', isSupport, principal?.userRoles);
+
     // Parse "DD-MM-YYYY" veilig naar een Date in lokale tijd (00:00)
     function parseDutchDate(ddmmyyyy) {
       if (!ddmmyyyy) return null;
