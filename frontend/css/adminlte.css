@@ -15602,3 +15602,5 @@ fieldset legend {
 #uitleg {
   margin-bottom: 14px;
 }
+
+html.app-booting { visibility: hidden; }
