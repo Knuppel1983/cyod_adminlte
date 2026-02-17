@@ -545,6 +545,7 @@
             $('#userdata').DataTable({
                 processing: true,
                 deferRender: true,
+                pageLength: 100,
                 ajax: {
                   url: '/api/getuserdata',   // of '/api/support/getuserdata' als jouw function.json zo route
                   type: 'GET',
