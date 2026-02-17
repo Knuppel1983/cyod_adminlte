@@ -12846,7 +12846,7 @@ textarea.form-control-lg {
   grid-gap: 0;
   align-content: stretch;
   align-items: stretch;
-  max-width: 120vw;
+  max-width: 100vw;
   min-height: 100vh;
 }
 .app-wrapper > * {
