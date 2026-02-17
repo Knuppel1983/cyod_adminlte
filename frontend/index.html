@@ -561,8 +561,21 @@
                   { data: 'rep_budget',           render: $.fn.dataTable.render.number('.', ',', 2, '€ '), className: 'text-end' },
                   { data: 'ovg_budget',           render: $.fn.dataTable.render.number('.', ',', 2, '€ '), className: 'text-end' },
                   { data: 'totaal_inzetbaar',     render: $.fn.dataTable.render.number('.', ',', 2, '€ '), className: 'text-end' },
-                  { data: 'totaal_inzetbaar_pd',  render: $.fn.dataTable.render.number('.', ',', 2, '€ '), className: 'text-end' },
-                  { data: 'peildatum' },
+                  { data: 'totaal_inzetbaar_pd',  render: $.fn.dataTable.render.number('.', ',', 2, '€ '), className: 'text-end' },        
+                  
+                  // Peildatum: toon NL, sorteer op ISO
+                  {
+                  data: 'peildatum',
+                    render: function (data, type, row) {
+                      if (!data) return data; // safety
+                      // data = '31-12-2025'
+                      const [d, m, y] = data.split('-');
+                      const iso = `${y}-${m}-${d}`; // '2025-12-31'
+
+                      if (type === 'sort' || type === 'type') return iso; // sorteren op ISO
+                      return data; // weergave blijft NL-formaat
+                    }
+                  },
                   { data: 'days_to_peildatum', className: 'text-end' }
                 ]
             });
