@@ -427,7 +427,11 @@
                       <div class="card-body">
                         <div class="form-group select2-info mb-3">
                           <label for="userSelect" class="mb-1">Gebruiker</label>
-                          <select id="userSelect" class="form-control" style="width:100%"></select>
+                          <select id="userSelect"
+                                  class="form-control select2bs4"
+                                  data-dropdown-css-class="select2-info"
+                                  style="width:100%">
+                          </select>
                         </div>
 
                         <div class="form-group mb-1">
@@ -1134,6 +1138,20 @@
           if (submitBtn) submitBtn.disabled = false;
         }
       }
+      
+      $(function () {
+        // basis
+        $('.select2').select2();
+
+        // Bootstrap 4 theme + info-kleur in dropdown
+        $('.select2bs4').select2({
+          theme: 'bootstrap4',
+          placeholder: 'Kies een gebruiker',
+          allowClear: true
+          // je kunt dit ook hier zetten i.p.v. data-attribute:
+          // dropdownCssClass: 'select2-info'
+        });
+      });
 
     </script>
     
