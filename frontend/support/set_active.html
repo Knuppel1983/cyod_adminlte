@@ -1051,59 +1051,40 @@
       async function onSubmit(e) {
         e.preventDefault();
 
-        const userId = parseInt($('#userSelect').val(), 10);
-        const active = parseInt(document.querySelector('input[name="active"]:checked').value, 10);
-        const reason = document.getElementById('reason').value || '';
-
+        var userId = parseInt($('#userSelect').val(), 10);
         if (!userId) {
           showAlert('warning', 'Selecteer een gebruiker.');
           return;
         }
 
+        // Haal wat info op voor de bevestiging
+        var selectedText = $('#userSelect option:selected').text();    // "jansen (actief)"
+        var active = parseInt(document.querySelector('input[name="active"]:checked').value, 10);
+        var actionText = active === 1 ? 'ACTIVEREN' : 'DEACTIVEREN';
+
+        var confirmMsg = 'Weet je zeker dat je de gebruiker "' + selectedText + '" wilt ' + actionText + '?';
+        var ok = window.confirm(confirmMsg);
+        if (!ok) return; // gebruiker annuleert
+
+        // ... hier jouw bestaande submit-logic (fetch naar /api/user-set-active etc.) ...
+        // voorbeeld:
         try {
-          const res = await fetch('/api/user-set-active', {
+          var res = await fetch('/api/user-set-active', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ userId, active, reason })
+            body: JSON.stringify({ userId: userId, active: active })
           });
-
           if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
+            var err = await res.json().catch(function(){ return {};});
             throw new Error(err.error || 'Onbekende fout');
           }
-
           showAlert('success', 'Status opgeslagen.');
-          await loadUsers(); // refresh labels met (actief)/(inactief)
-        } catch (e) {
-          showAlert('danger', e.message);
+          await loadUsers(0); // refresh lijst, evt. toggle doorgeven
+        } catch (err) {
+          showAlert('danger', err.message);
         }
       }
-
-      function showAlert(type, msg) {
-        const id = 'alert-' + Date.now();
-        const html = `
-          <div id="${id}" class="alert alert-${type} alert-dismissible fade show" role="alert">
-            ${msg}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>`;
-        document.getElementById('alertContainer').insertAdjacentHTML('beforeend', html);
-        setTimeout(() => {
-          const el = document.getElementById(id);
-          if (el) $(el).alert('close');
-        }, 6000);
-      }
-
-
-
-
-
-
-
-
-
 
     </script>
     
