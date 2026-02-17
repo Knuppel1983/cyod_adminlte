@@ -1069,7 +1069,7 @@
         if (submitBtn) submitBtn.disabled = true;
 
         try {
-          const resp = await fetch('/api/user-set-active', {
+          const resp = await fetch('/api/user_setactive', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -1077,7 +1077,7 @@
           });
 
           // Debug logging naar console
-          console.log('user-set-active status:', resp.status);
+          console.log('user_setactive status:', resp.status);
 
           let payloadText = '';
           try {
@@ -1103,7 +1103,7 @@
           showAlert('success', 'Status opgeslagen.');
           await loadUsers(0);
         } catch (err) {
-          console.error('user-set-active error:', err);
+          console.error('user_setactive error:', err);
           showAlert('danger', err.message || 'Onbekende fout bij opslaan');
         } finally {
           if (submitBtn) submitBtn.disabled = false;
