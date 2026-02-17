@@ -543,7 +543,13 @@
       if (isSupport) {
         $(function () {
             $('#userdata').DataTable({
-                ajax: '/api/getuserdata',
+                processing: true,
+                deferRender: true,
+                ajax: {
+                  url: '/api/getuserdata',   // of '/api/support/getuserdata' als jouw function.json zo route
+                  type: 'GET',
+                  dataSrc: ''                // <<< BELANGRIJK: omdat de API een root-array retourneert
+                },
                 columns: [
                     { data: 'user_id' },
                     { data: 'username' },
