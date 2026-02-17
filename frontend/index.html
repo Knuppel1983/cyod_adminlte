@@ -620,7 +620,7 @@
         console.log('[isSupport role]', isSupport, principal?.userRoles);
 
         // 1) Toggle layout class voor CSS-varianten
-        document.documentElement.classList.toggle('layout--support', isSupport);
+        document.documentElement.classList.toggle('support', isSupport);
 
         // 2) Eventueel specifieke nav-items (fallback als je geen data-role gebruikt)
         document.querySelectorAll('[data-nav="support"]')

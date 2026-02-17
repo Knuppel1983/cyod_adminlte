@@ -15612,8 +15612,8 @@ html.app-booting [data-role="support"] {
 }
 
 /* Zodra rol bekend is ~> laat rol-afhankelijke blokken zien */
-html.layout--support [data-role="default"] { display: block; }
-html.layout--support [data-role="support"]  { display: none; }
+html.support [data-role="default"] { display: block; }
+html.support [data-role="support"]  { display: none; }
 
-html:not(.layout--support) [data-role="support"] { display: none; }
-html:not(.layout--support) [data-role="default"]  { display: block; }
+html:not(.support) [data-role="support"] { display: none; }
+html:not(.support) [data-role="default"]  { display: block; }
