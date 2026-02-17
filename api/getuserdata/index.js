@@ -18,7 +18,7 @@ module.exports = async function (context, req) {
     // }
 
     // 2) Verbind met SQL
-    const connStr = process.env.SQL_CONNECTION_STRING;
+    const connStr = process.env.SqlConnectionString;
     if (!connStr) {
       throw new Error('SQL_CONNECTION_STRING ontbreekt in app settings');
     }
