@@ -12834,7 +12834,7 @@ textarea.form-control-lg {
 }
 :root,
 [data-bs-theme=light] {
-  --lte-sidebar-width: 250px;
+  --lte-sidebar-width: 280px;
 }
 
 .app-wrapper {
