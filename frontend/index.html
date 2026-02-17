@@ -513,10 +513,7 @@
 
         // 1) Toggle layout class voor CSS-varianten
         document.documentElement.classList.toggle('support', isSupport);
-
-        // 2) Eventueel specifieke nav-items (fallback als je geen data-role gebruikt)
-        document.querySelectorAll('[data-nav="support"]')
-          .forEach(el => { el.style.display = isSupport ? '' : 'none'; });
+        document.documentElement.classList.toggle('default', !isSupport);
 
       } finally {
         document.documentElement.classList.remove('app-booting');
