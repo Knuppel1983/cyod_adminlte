@@ -522,6 +522,54 @@
         document.documentElement.classList.remove('app-booting');
       }
     })();
+    
+    
+    
+    
+    async function initSupportOnly() {
+      // Eventueel je UI verbergen/tonen
+      document.querySelectorAll('[data-role="support"]').forEach(el => {
+        el.style.display = isSupport ? '' : 'none';
+      });
+
+      // **Belangrijk**: alleen fetchen als support
+      if (isSupport) {
+        await loadUserTable();
+      } else {
+        console.info('Gebruiker heeft geen support-rol; query wordt niet uitgevoerd.');
+      }
+    }
+
+    async function loadUserTable() {
+      const response = await fetch('/api/getuserdata', { credentials: 'include' });
+      if (!response.ok) {
+        console.error('API gaf een fout', response.status);
+        return;
+      }
+      const data = await response.json();
+
+      const tbody = document.querySelector('#userdata tbody');
+      tbody.innerHTML = '';
+
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.user_id}</td>
+          <td>${row.username}</td>
+          <td>${row.tst_budget ?? 0}</td>
+          <td>${row.rep_budget ?? 0}</td>
+          <td>${row.ovg_budget ?? 0}</td>
+          <td>${row.totaal_inzetbaar}</td>
+          <td>${row.totaal_inzetbaar_pd}</td>
+          <td>${row.peildatum ?? ''}</td>
+          <td>${row.days_to_peildatum ?? ''}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initSupportOnly);
+
 
     // Parse "DD-MM-YYYY" veilig naar een Date in lokale tijd (00:00)
     function parseDutchDate(ddmmyyyy) {
@@ -649,7 +697,7 @@
 
     (async function () {
       try {
-        const res = await fetch('/api/getbudgets', { credentials: 'include' });
+        const res = await fetch('/api/default/getbudgets', { credentials: 'include' });
         if (!res.ok) {
           const text = await res.text().catch(() => '');
           console.error('API error', res.status, text);
