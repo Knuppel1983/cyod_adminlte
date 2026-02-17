@@ -522,47 +522,32 @@
         document.documentElement.classList.toggle('support', isSupport);
         document.documentElement.classList.toggle('default', !isSupport);
 
+      if (isSupport) {
+        $(function () {
+            $('#userdata').DataTable({
+                ajax: '/api/getuserdata',
+                columns: [
+                    { data: 'user_id' },
+                    { data: 'username' },
+                    { data: 'tst_budget' },
+                    { data: 'rep_budget' },
+                    { data: 'ovg_budget' },
+                    { data: 'totaal_inzetbaar' },
+                    { data: 'totaal_inzetbaar_pd' },
+                    { data: 'peildatum' },
+                    { data: 'days_to_peildatum' }
+                ]
+            });
+        });
+      }
+
+
+
       } finally {
         document.documentElement.classList.remove('app-booting');
       }
     })();
     
-    
-    if (isSupport) {
-      $(function () {
-          $('#userdata').DataTable({
-              ajax: '/api/getuserdata',
-              columns: [
-                  { data: 'user_id' },
-                  { data: 'username' },
-                  { data: 'tst_budget' },
-                  { data: 'rep_budget' },
-                  { data: 'ovg_budget' },
-                  { data: 'totaal_inzetbaar' },
-                  { data: 'totaal_inzetbaar_pd' },
-                  { data: 'peildatum' },
-                  { data: 'days_to_peildatum' }
-              ]
-          });
-      });
-    }
-
-    
-    
-    async function initSupportOnly() {
-      // Eventueel je UI verbergen/tonen
-      document.querySelectorAll('[data-role="support"]').forEach(el => {
-        el.style.display = isSupport ? '' : 'none';
-      });
-
-      // **Belangrijk**: alleen fetchen als support
-      if (isSupport) {
-        await loadUserTable();
-      } else {
-        console.info('Gebruiker heeft geen support-rol; query wordt niet uitgevoerd.');
-      }
-    }
-
 
 
     // Parse "DD-MM-YYYY" veilig naar een Date in lokale tijd (00:00)
