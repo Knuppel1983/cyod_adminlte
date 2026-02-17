@@ -411,7 +411,7 @@
           <!--begin::Container-->
           <div class="container-fluid">
             <!--begin::Row-->
-            <dsiv class="row">
+            <div class="row">
               <table id="userdata" class="table table-striped">
                 <thead>
                     <tr>
@@ -551,20 +551,21 @@
                   dataSrc: ''                // <<< BELANGRIJK: omdat de API een root-array retourneert
                 },
                 columns: [
-                    { data: 'user_id' },
-                    { data: 'username' },
-                    { data: 'tst_budget' },
-                    { data: 'rep_budget' },
-                    { data: 'ovg_budget' },
-                    { data: 'totaal_inzetbaar' },
-                    { data: 'totaal_inzetbaar_pd' },
-                    { data: 'peildatum' },
-                    { data: 'days_to_peildatum' }
+                  { data: 'user_id' },
+                  { data: 'username' },
+
+                  // €-kolommen met NL-opmaak
+                  { data: 'tst_budget',           render: $.fn.dataTable.render.number('.', ',', 2, '€ '), className: 'text-end' },
+                  { data: 'rep_budget',           render: $.fn.dataTable.render.number('.', ',', 2, '€ '), className: 'text-end' },
+                  { data: 'ovg_budget',           render: $.fn.dataTable.render.number('.', ',', 2, '€ '), className: 'text-end' },
+                  { data: 'totaal_inzetbaar',     render: $.fn.dataTable.render.number('.', ',', 2, '€ '), className: 'text-end' },
+                  { data: 'totaal_inzetbaar_pd',  render: $.fn.dataTable.render.number('.', ',', 2, '€ '), className: 'text-end' },
+                  { data: 'peildatum' },
+                  { data: 'days_to_peildatum', className: 'text-end' }
                 ]
             });
         });
       }
-
 
 
       } finally {
