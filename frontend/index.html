@@ -1,9 +1,15 @@
 <!doctype html>
-<html lang="en" class="app-booting">>
+<html lang="en">
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Verwol CYOD | Dashboard</title>
+    
+    <script>
+      // Gate-before-paint — moet als allereerste
+      document.documentElement.classList.add('app-booting');
+    </script>
+    
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <meta name="color-scheme" content="light dark" />
@@ -501,9 +507,6 @@
       const roles = principal?.userRoles || [];
       return roles.includes(roleName);
     }
-
-    // Gate-before-paint (optioneel): voorkom flikkering
-    document.documentElement.classList.add('app-booting');
 
     (async function boot() {
       try {
