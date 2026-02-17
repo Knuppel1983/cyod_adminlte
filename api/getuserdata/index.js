@@ -3,6 +3,8 @@ const sql = require('mssql');
 
 module.exports = async function (context, req) {
   
+  const onlyActiveFlag = req.query && req.query.onlyActive === '1' ? 1 : 0;
+  
   try {
     // 1) (Optioneel) extra defense: rol check via header x-ms-client-principal
     //    Alleen doen als je dit echt wilt afdwingen in de function zelf
@@ -31,8 +33,8 @@ module.exports = async function (context, req) {
 
     // 3) SQL: let op dat hier GEEN HTML-entities in staan (<=, >=, <, >)
     const result = await pool.request()
-      .input('onlyActive', sql.Bit, onlyActive ? 1 : 0)
-      .execute('dbo.UserBudgets_List');
+      .input('onlyActive', sql.Bit, onlyActiveFlag)
+      .execute('dbo.userbudgets_list');
 
     context.res = {
       status: 200,
