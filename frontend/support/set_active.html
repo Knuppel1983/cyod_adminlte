@@ -1025,24 +1025,28 @@
         document.getElementById('userActiveForm').addEventListener('submit', onSubmit);
       }
 
-      async function loadUsers() {
+
+      async function loadUsers(onlyActive = 0) {
         try {
-          const res = await fetch('/api/users-get?onlyActive=0', { credentials: 'include' });
+          const res = await fetch(`/api/getuserdata?onlyActive=${onlyActive ? 1 : 0}`, { credentials: 'include' });
           if (!res.ok) throw new Error('Kon gebruikers niet laden');
           const users = await res.json();
 
           const $sel = $('#userSelect');
           $sel.empty();
+
           users.forEach(u => {
             const text = `${u.username} ${u.active ? '(actief)' : '(inactief)'}`;
-            const option = new Option(text, u.id, false, false);
+            const option = new Option(text, u.user_id, false, false);
             $sel.append(option);
           });
+
           $sel.trigger('change');
         } catch (e) {
           showAlert('danger', e.message);
         }
       }
+
 
       async function onSubmit(e) {
         e.preventDefault();
