@@ -728,16 +728,16 @@
       if (elQueryRun)   elQueryRun.textContent   = data.queryrun_value ?? '';
 
 
-// Inzetbaar budget huidig
-// const elTotInz = Number(data.tst_budget + data.ovg_budget);
-const elTotInz = Number(data.totaal_inzetbaar);
-console.log("[Budget2] Totaal inzetbaar:", elTotInz);
+      // Inzetbaar budget huidig
+      // const elTotInz = Number(data.tst_budget + data.ovg_budget);
+      const elTotInz = Number(data.totaal_inzetbaar);
+      console.log("[Budget2] Totaal inzetbaar:", elTotInz);
 
-// Inzetbaar budget vanaf peildatum
-// const elTotInzPD = Number(data.tst_budget + data.ovg_budget + data.rep_budget);
-const elTotInzPD = Number(data.totaal_inzetbaar_pd);
-console.log("[Budget2] Totaal inzetbaar vanaf peildatum:", elTotInzPD);
-const sqlStr = data?.peildatum;
+      // Inzetbaar budget vanaf peildatum
+      // const elTotInzPD = Number(data.tst_budget + data.ovg_budget + data.rep_budget);
+      const elTotInzPD = Number(data.totaal_inzetbaar_pd);
+      console.log("[Budget2] Totaal inzetbaar vanaf peildatum:", elTotInzPD);
+      const sqlStr = data?.peildatum;
 
 
       if (elQueryRun) {
@@ -746,7 +746,7 @@ const sqlStr = data?.peildatum;
           elQueryRun.textContent = `Onderstaand jouw budgetten bijgewerkt tot ${dateStr}.`;
         } else {
           // Geen datum beschikbaar → laat het leeg (nbsp)
-        elQueryRun.textContent = `Er ging iets mis. :(`;
+        elQueryRun.textContent = `Er ging iets mis.`;
         }
       }
 
