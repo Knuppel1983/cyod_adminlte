@@ -446,14 +446,7 @@
     // ---- Helpers: 1x toevoegen ----
     
     // Get groupid
-    function hasGroup(principal, groupObjectId) {
-      const claims = principal?.userClaims || principal?.claims || [];
-      const groups = claims
-        .filter(c => (c.typ || '').toLowerCase().endsWith('/groups'))
-        .map(c => (c.val || '').toLowerCase());
-      return groups.includes(groupObjectId.toLowerCase());
-    };
-    
+   
     async function getPrincipal() {
       if (window.__principal) return window.__principal;
 
@@ -472,6 +465,14 @@
 
       window.__principal = principal;
       return principal;
+    };
+
+    function hasGroup(principal, groupObjectId) {
+      const claims = principal?.userClaims || principal?.claims || [];
+      const groups = claims
+        .filter(c => (c.typ || '').toLowerCase().endsWith('/groups'))
+        .map(c => (c.val || '').toLowerCase());
+      return groups.includes(groupObjectId.toLowerCase());
     };
     
     (async function boot() {
