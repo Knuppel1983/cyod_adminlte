@@ -617,6 +617,7 @@
       try {
         const principal = await getPrincipal();
         const isSupport = hasRole(principal, 'support');
+        console.log('[isSupport role]', isSupport, principal?.userRoles);
 
         // 1) Toggle layout class voor CSS-varianten
         document.documentElement.classList.toggle('layout--support', isSupport);
@@ -629,8 +630,6 @@
         document.documentElement.classList.remove('app-booting');
       }
     })();
-
-    console.log('[isSupport role]', isSupport, principal?.userRoles);
 
     // Parse "DD-MM-YYYY" veilig naar een Date in lokale tijd (00:00)
     function parseDutchDate(ddmmyyyy) {
