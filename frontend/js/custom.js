@@ -534,7 +534,7 @@ async function init() {
     // Init Select2
     if (typeof window.jQuery !== 'undefined' && $('#userSelect').length) {
       $('#userSelect').select2({
-        placeholder: 'Kies een gebruiker',
+        placeholder: 'Gebruikers ophalen...',
         allowClear: true
       });
     }
