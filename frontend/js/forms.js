@@ -1,36 +1,37 @@
+
+      // Bind éénmalig een submit-handler aan een formulier-id (als het bestaat)
+      function bindFormSubmit(formId, handler) {
+        const form = document.getElementById(formId);
+        if (!form) return;                           // formulier ontbreekt op deze pagina → klaar
+        if (form.__onSubmitBound) return;            // voorkom dubbele binding
+        form.addEventListener('submit', handler);
+        form.__onSubmitBound = true;
+      }
+
+
       async function init() {
-        // === Minimale check: element + jQuery + plugin ===
+        // === Select2 init (ongewijzigd) ===
         const hasJQ = typeof window.jQuery !== 'undefined';
         const $userSelect = hasJQ ? $('#userSelect') : null;
         const hasUserSelect = !!($userSelect && $userSelect.length);
 
         if (hasUserSelect && typeof $.fn.select2 === 'function') {
-          // Init Select2
-          $userSelect.select2({
-            placeholder: 'Bezig met ophalen gebruikers...',
-            allowClear: true
-          });
-
-          // Alleen users laden als de select er ook is
-          try {
-            await loadUsers();
-          } catch (e) {
-            console.error('[init] loadUsers() faalde:', e);
-            window.showAlert?.('danger', 'Kon gebruikers niet ophalen.');
-          }
+          $userSelect.select2({ placeholder: 'Bezig met ophalen gebruikers...', allowClear: true });
+          try { await loadUsers(); }
+          catch (e) { console.error('[init] loadUsers() faalde:', e); window.showAlert?.('danger', 'Kon gebruikers niet ophalen.'); }
         } else {
-          // Optioneel: logging zodat je weet waarom er niets gebeurde
           if (!hasUserSelect) console.debug('[init] #userSelect niet aanwezig — sla Select2/init over');
           else console.warn('[init] Select2 plugin niet beschikbaar — sla Select2/init over');
         }
 
-        // Event‑handler alleen als formulier bestaat (kleine extra hardening)
-        const form = document.getElementById('userActiveForm');
-        if (form && !form.__onSubmitBound) {
-          form.addEventListener('submit', onSubmit);
-          form.__onSubmitBound = true; // voorkom dubbele binding bij herhaaldelijke inits
-        }
+        // === Form bindings ===
+        bindFormSubmit('userActiveForm', onSubmitUserActive); // jouw bestaande pagina
+        bindFormSubmit('newUserForm', onSubmitNewUser);       // nieuwe pagina
+
+        // Je kunt hier zonder zorgen meerdere bindFormSubmit-aanroepen doen; als het formulier
+        // niet bestaat op deze pagina, gebeurt er niets.
       }
+
 
       async function loadUsers(onlyActive = 0) {
         try {
@@ -57,7 +58,9 @@
         }
       }
 
-      async function onSubmit(e) {
+
+      // === A) Bestaande handler voor user activeren/deactiveren ===
+      async function onSubmitUserActive(e) {
         e.preventDefault();
 
         // Defensief: jQuery + element check
@@ -66,30 +69,23 @@
           return;
         }
 
-        var userId = parseInt($('#userSelect').val(), 10);
+        const userId = parseInt($('#userSelect').val(), 10);
         if (!userId) {
           window.showAlert?.('warning', 'Selecteer een gebruiker.');
           return;
         }
 
-        var selectedText = $('#userSelect option:selected').text();
-        var active = parseInt(document.querySelector('input[name="active"]:checked').value, 10);
-        var actionText = active === 1 ? 'ACTIVEREN' : 'DEACTIVEREN';
-
+        const selectedText = $('#userSelect option:selected').text();
+        const active = parseInt(document.querySelector('input[name="active"]:checked').value, 10);
+        const actionText = active === 1 ? 'ACTIVEREN' : 'DEACTIVEREN';
 
         const ok = await confirmModal(
           `Weet je zeker dat je de gebruiker "${selectedText}" wilt ${actionText}?`,
-          {
-            title: 'Bevestigen',
-            confirmText: 'Ja, uitvoeren',
-            cancelText: 'Nee, annuleren',
-            size: 'modal-sm' // of '' / 'modal-lg' / 'modal-xl'
-          }
+          { title: 'Bevestigen', confirmText: 'Ja, uitvoeren', cancelText: 'Nee, annuleren', size: 'modal-sm' }
         );
         if (!ok) return;
 
-
-        var submitBtn = document.querySelector('#userActiveForm button[type="submit"]');
+        const submitBtn = e.submitter || e.target.querySelector('button[type="submit"]');
         if (submitBtn) submitBtn.disabled = true;
 
         try {
@@ -97,22 +93,18 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ userId: userId, active: active })
+            body: JSON.stringify({ userId, active })
           });
 
-          console.log('user_setactive status:', resp.status);
-
           let payloadText = '';
-          try { payloadText = await resp.text(); } catch (_) {}
-
-          console.log('response headers:', [...resp.headers.entries()]);
+          try { payloadText = await resp.text(); } catch {}
 
           if (!resp.ok) {
             let errMsg = '';
             try {
               const maybeJson = JSON.parse(payloadText || '{}');
               errMsg = maybeJson.error || maybeJson.message || payloadText || 'Onbekende fout';
-            } catch (e2) {
+            } catch {
               errMsg = payloadText || ('HTTP ' + resp.status);
             }
             throw new Error(errMsg);
@@ -128,4 +120,64 @@
         }
       }
 
+      // === B) Nieuwe handler voor "Nieuwe gebruiker" formulier ===
+      async function onSubmitNewUser(e) {
+        e.preventDefault();
+
+        const form = e.currentTarget;
+        const submitBtn = e.submitter || form.querySelector('button[type="submit"]');
+
+        const username = (form.querySelector('#username')?.value || '').trim();
+        if (!username) {
+          window.showAlert?.('warning', 'Vul een gebruikersnaam in (formaat: voornaam.achternaam).');
+          form.querySelector('#username')?.focus();
+          return;
+        }
+
+        // Optioneel: basisvalidatie op het gewenste formaat
+        // if (!/^[a-z0-9]+(?:\.[a-z0-9]+)+$/i.test(username)) {
+        //   window.showAlert?.('warning', 'Gebruik het formaat voornaam.achternaam');
+        //   return;
+        // }
+
+        const ok = await confirmModal(
+          `Nieuwe gebruiker "${username}" aanmaken?`,
+          { title: 'Bevestigen', confirmText: 'Aanmaken', cancelText: 'Annuleren', size: 'modal-sm' }
+        );
+        if (!ok) return;
+
+        if (submitBtn) submitBtn.disabled = true;
+
+        try {
+          const resp = await fetch('/api/user_create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ username })
+          });
+
+          let payloadText = '';
+          try { payloadText = await resp.text(); } catch {}
+
+          if (!resp.ok) {
+            let errMsg = '';
+            try {
+              const maybeJson = JSON.parse(payloadText || '{}');
+              errMsg = maybeJson.error || maybeJson.message || payloadText || 'Onbekende fout';
+            } catch {
+              errMsg = payloadText || ('HTTP ' + resp.status);
+            }
+            throw new Error(errMsg);
+          }
+
+          window.showAlert?.('success', `Gebruiker "${username}" is aangemaakt.`);
+          // formulier leegmaken
+          form.reset();
+        } catch (err) {
+          console.error('user_create error:', err);
+          window.showAlert?.('danger', err.message || 'Aanmaken is mislukt');
+        } finally {
+          if (submitBtn) submitBtn.disabled = false;
+        }
+      }
       document.addEventListener('DOMContentLoaded', init);
