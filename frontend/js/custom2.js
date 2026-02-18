@@ -515,18 +515,40 @@ const __APP_VERSION__ = '20260218';
         }, 6000);
       };
 
-      document.addEventListener('DOMContentLoaded', init);
+      
 
       async function init() {
-        // Init Select2
-        $('#userSelect').select2({
-          placeholder: 'Bezig met ophalen gebruikers...',
-          allowClear: true
-        });
+        // === Minimale check: element + jQuery + plugin ===
+        const hasJQ = typeof window.jQuery !== 'undefined';
+        const $userSelect = hasJQ ? $('#userSelect') : null;
+        const hasUserSelect = !!($userSelect && $userSelect.length);
 
-        await loadUsers();
+        if (hasUserSelect && typeof $.fn.select2 === 'function') {
+          // Init Select2
+          $userSelect.select2({
+            placeholder: 'Bezig met ophalen gebruikers...',
+            allowClear: true
+          });
 
-        document.getElementById('userActiveForm').addEventListener('submit', onSubmit);
+          // Alleen users laden als de select er ook is
+          try {
+            await loadUsers();
+          } catch (e) {
+            console.error('[init] loadUsers() faalde:', e);
+            window.showAlert?.('danger', 'Kon gebruikers niet ophalen.');
+          }
+        } else {
+          // Optioneel: logging zodat je weet waarom er niets gebeurde
+          if (!hasUserSelect) console.debug('[init] #userSelect niet aanwezig — sla Select2/init over');
+          else console.warn('[init] Select2 plugin niet beschikbaar — sla Select2/init over');
+        }
+
+        // Event‑handler alleen als formulier bestaat (kleine extra hardening)
+        const form = document.getElementById('userActiveForm');
+        if (form && !form.__onSubmitBound) {
+          form.addEventListener('submit', onSubmit);
+          form.__onSubmitBound = true; // voorkom dubbele binding bij herhaaldelijke inits
+        }
       }
 
       async function loadUsers(onlyActive = 0) {
@@ -535,7 +557,11 @@ const __APP_VERSION__ = '20260218';
           if (!res.ok) throw new Error('Kon gebruikers niet laden');
           const users = await res.json();
 
+          // Defensief: element opnieuw ophalen en checken
+          if (typeof window.jQuery === 'undefined') return;
           const $sel = $('#userSelect');
+          if (!$sel.length) return; // als element niet bestaat, niets doen
+
           $sel.empty();
 
           users.forEach(u => {
@@ -546,17 +572,22 @@ const __APP_VERSION__ = '20260218';
 
           $sel.trigger('change');
         } catch (e) {
-          showAlert('danger', e.message);
+          window.showAlert?.('danger', e.message);
         }
       }
-
 
       async function onSubmit(e) {
         e.preventDefault();
 
+        // Defensief: jQuery + element check
+        if (typeof window.jQuery === 'undefined' || !$('#userSelect').length) {
+          window.showAlert?.('warning', 'Selecteer een gebruiker.');
+          return;
+        }
+
         var userId = parseInt($('#userSelect').val(), 10);
         if (!userId) {
-          showAlert('warning', 'Selecteer een gebruiker.');
+          window.showAlert?.('warning', 'Selecteer een gebruiker.');
           return;
         }
 
@@ -567,7 +598,6 @@ const __APP_VERSION__ = '20260218';
         var ok = window.confirm('Weet je zeker dat je de gebruiker "' + selectedText + '" wilt ' + actionText + '?');
         if (!ok) return;
 
-        // UI: knop disablen
         var submitBtn = document.querySelector('#userActiveForm button[type="submit"]');
         if (submitBtn) submitBtn.disabled = true;
 
@@ -579,19 +609,14 @@ const __APP_VERSION__ = '20260218';
             body: JSON.stringify({ userId: userId, active: active })
           });
 
-          // Debug logging naar console
           console.log('user_setactive status:', resp.status);
 
           let payloadText = '';
-          try {
-            payloadText = await resp.text(); // eerst tekst ophalen
-          } catch (_) {}
+          try { payloadText = await resp.text(); } catch (_) {}
 
-          // Nog meer debug: headers
           console.log('response headers:', [...resp.headers.entries()]);
 
           if (!resp.ok) {
-            // Probeer tekst als JSON te parsen; zo niet, toon tekst direct
             let errMsg = '';
             try {
               const maybeJson = JSON.parse(payloadText || '{}');
@@ -602,17 +627,17 @@ const __APP_VERSION__ = '20260218';
             throw new Error(errMsg);
           }
 
-          // Succes
-          showAlert('success', 'Status opgeslagen.');
+          window.showAlert?.('success', 'Status opgeslagen.');
           await loadUsers(0);
         } catch (err) {
           console.error('user_setactive error:', err);
-          showAlert('danger', err.message || 'Onbekende fout bij opslaan');
+          window.showAlert?.('danger', err.message || 'Onbekende fout bij opslaan');
         } finally {
           if (submitBtn) submitBtn.disabled = false;
         }
       }
-      
+
+      document.addEventListener('DOMContentLoaded', init);
 
       async function loadSidebar(hostId, url) {
         const host = document.getElementById(hostId);
