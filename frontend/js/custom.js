@@ -520,7 +520,7 @@ const __APP_VERSION__ = '20260218';
       async function init() {
         // Init Select2
         $('#userSelect').select2({
-          placeholder: 'Kies een gebruiker',
+          placeholder: 'Bezig met ophalen gebruikers...',
           allowClear: true
         });
 
