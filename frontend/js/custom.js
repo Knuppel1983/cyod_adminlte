@@ -405,6 +405,91 @@ const __APP_VERSION__ = '20260218';
     }
   })();
   
+  
+      /**
+     * Toont een Bootstrap 5 modal als bevestigingsdialoog.
+     * Returnt een Promise<boolean>: true = bevestigd, false = geannuleerd.
+     *
+     * Valt terug op window.confirm als Bootstrap modal niet beschikbaar is.
+     */
+    function confirmModal(message, {
+      title = 'Bevestigen',
+      confirmText = 'Ja',
+      cancelText = 'Nee',
+      size = '',        // 'modal-sm' | 'modal-lg' | 'modal-xl' of leeg
+      iconHtml = '<i class="fas fa-question-circle me-2"></i>'
+    } = {}) {
+      // Fallback als Bootstrap JS niet geladen is
+      const hasBS = typeof bootstrap !== 'undefined' && bootstrap.Modal;
+      if (!hasBS) {
+        try { return Promise.resolve(window.confirm(message)); }
+        catch { return Promise.resolve(false); }
+      }
+
+      // Zoek of maak de modal container
+      let host = document.getElementById('app-confirm-modal');
+      if (!host) {
+        host = document.createElement('div');
+        host.id = 'app-confirm-modal';
+        host.className = 'modal fade';
+        host.tabIndex = -1;
+        host.setAttribute('aria-hidden', 'true');
+
+        host.innerHTML = `
+          <div class="modal-dialog ${size}">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title d-flex align-items-center">${iconHtml}<span class="title"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+              </div>
+              <div class="modal-body">
+                <p class="message mb-0"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-cancel" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn btn-primary btn-confirm"></button>
+              </div>
+            </div>
+          </div>`;
+        document.body.appendChild(host);
+      }
+
+      // Vul content
+      host.querySelector('.title').textContent = title;
+      host.querySelector('.message').textContent = message;
+      host.querySelector('.btn-confirm').textContent = confirmText;
+      host.querySelector('.btn-cancel').textContent = cancelText;
+
+      const bsModal = bootstrap.Modal.getOrCreateInstance(host, { backdrop: 'static', keyboard: false });
+
+      return new Promise((resolve) => {
+        const btnConfirm = host.querySelector('.btn-confirm');
+        const btnCancel  = host.querySelector('.btn-cancel');
+
+        const done = (val) => {
+          // cleanup listeners
+          btnConfirm.removeEventListener('click', onConfirm);
+          btnCancel .removeEventListener('click', onCancel);
+          host.removeEventListener('hidden.bs.modal', onHidden);
+          resolve(val);
+        };
+        const onConfirm = () => { bsModal.hide(); done(true); };
+        const onCancel  = () => { /* hide event volgt via data-bs-dismiss */ };
+        const onHidden  = () => { done(false); };
+
+        btnConfirm.addEventListener('click', onConfirm, { once: true });
+        btnCancel .addEventListener('click', onCancel,  { once: true });
+        host.addEventListener('hidden.bs.modal', onHidden, { once: true });
+
+        // Toon modal en zet focus op confirm-knop
+        bsModal.show();
+        setTimeout(() => btnConfirm.focus(), 50);
+      });
+    }
+  
+  
+  
+  
   // Color Mode Toggler
       (() => {
         'use strict';
@@ -595,8 +680,18 @@ const __APP_VERSION__ = '20260218';
         var active = parseInt(document.querySelector('input[name="active"]:checked').value, 10);
         var actionText = active === 1 ? 'ACTIVEREN' : 'DEACTIVEREN';
 
-        var ok = window.confirm('Weet je zeker dat je de gebruiker "' + selectedText + '" wilt ' + actionText + '?');
+
+        const ok = await confirmModal(
+          `Weet je zeker dat je de gebruiker "${selectedText}" wilt ${actionText}?`,
+          {
+            title: 'Bevestigen',
+            confirmText: 'Ja, uitvoeren',
+            cancelText: 'Nee, annuleren',
+            size: 'modal-sm' // of '' / 'modal-lg' / 'modal-xl'
+          }
+        );
         if (!ok) return;
+
 
         var submitBtn = document.querySelector('#userActiveForm button[type="submit"]');
         if (submitBtn) submitBtn.disabled = true;
