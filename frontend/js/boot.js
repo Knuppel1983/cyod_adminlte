@@ -102,6 +102,8 @@
       }
       return d;
     }
+    
+    window.parseDutchDate = parseDutchDate;
 
     // Kalenderjaren optellen/aftrekken: houdt rekening met schrikkeldagen
     function addYears(date, years) {
