@@ -2,6 +2,20 @@
 // Versie voor cache-busting (optioneel te gebruiken in fetch-urls)
 const __APP_VERSION__ = '20260218';
 
+
+// Toon elke error en verwijder 'app-booting' zodat je nooit wit blijft
+window.addEventListener('error', (e) => {
+  console.error('[GLOBAL ERROR]', e.error || e.message, e);
+  document.documentElement.classList.remove('app-booting');
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+  console.error('[GLOBAL PROMISE REJECTION]', e.reason);
+  document.documentElement.classList.remove('app-booting');
+});
+
+
+
 // ---- Helpers: 1x toevoegen ----
 async function getPrincipal() {
   if (window.__principal) return window.__principal;
