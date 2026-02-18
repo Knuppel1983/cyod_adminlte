@@ -81,3 +81,126 @@
         document.documentElement.classList.remove('app-booting');
       }
     })();
+    
+    // Parse "DD-MM-YYYY" veilig naar een Date in lokale tijd (00:00)
+    function parseDutchDate(ddmmyyyy) {
+      if (!ddmmyyyy) return null;
+      const parts = String(ddmmyyyy).trim().split('-');
+      if (parts.length !== 3) return null;
+      const [ddStr, mmStr, yyyyStr] = parts;
+      const dd = parseInt(ddStr, 10);
+      const mm = parseInt(mmStr, 10);
+      const yyyy = parseInt(yyyyStr, 10);
+      if (!yyyy || !mm || !dd) return null;
+
+      // Let op: maand is 0-based in JS
+      const d = new Date(yyyy, mm - 1, dd, 0, 0, 0, 0);
+
+      // Validatie: JS corrigeert automatisch out-of-range; check componenten
+      if (d.getFullYear() !== yyyy || d.getMonth() !== (mm - 1) || d.getDate() !== dd) {
+        return null;
+      }
+      return d;
+    }
+
+    // Kalenderjaren optellen/aftrekken: houdt rekening met schrikkeldagen
+    function addYears(date, years) {
+      const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      d.setFullYear(d.getFullYear() + years);
+      return d;
+    }
+
+    // Percentage van 'value' tussen start en end. Clamp 0..100 en rond op hele %
+    function percentBetween(value, start, end) {
+      const startMs = +start;
+      const endMs = +end;
+      const valueMs = +value;
+      if (!isFinite(startMs) || !isFinite(endMs) || !isFinite(valueMs)) return 0;
+      if (endMs <= startMs) return 100; // fallback: voorkom /0; hoort niet voor te komen
+      const ratio = (valueMs - startMs) / (endMs - startMs);
+      return Math.round(Math.max(0, Math.min(1, ratio)) * 100);
+    }
+    
+    function getDisplayName(principal) {
+      if (!principal) return null;
+
+      // SWA kan 'claims' of 'userClaims' gebruiken afhankelijk van flow/config
+      const claims = principal.userClaims || principal.claims || [];
+
+      // exacte/robuste claim-lookup: match 'name' of URI die eindigt op '/name'
+      const get = (key) => {
+        const k = key.toLowerCase();
+        const hit = claims.find(c => {
+          const typ = (c.typ || '').toLowerCase();
+          return typ === k || typ.endsWith('/' + k);
+        });
+        return hit?.val?.trim() || '';
+      };
+
+      // 1) Voornaam + achternaam (als aanwezig)
+      const given  = get('given_name');
+      const family = get('family_name');
+      if (given || family) return [given, family].filter(Boolean).join(' ').trim();
+
+      // 2) Volledige weergavenaam
+      const full = get('name');
+      if (full) return full;
+
+      // 3) Geen zichtbare fallback naar e‑mail
+      return 'Gebruiker';
+    };
+
+    (async function paintUi() {
+      try {
+        console.log('[paintUi] start');
+
+        // 1) Principal ophalen
+        const p = await getPrincipal();
+        console.log('[paintUi] principal:', p);
+
+        // 2) Weergavenaam bepalen
+        const name = getDisplayName(p);
+        console.log('[paintUi] computed name:', name);
+
+        // 3) Doelelementen zoeken
+        const spanTop  = document.getElementById('userDisplay');
+        const spanHdr  = document.getElementById('userDisplayHeader');
+        const spanMail = document.getElementById('userEmailHeader');
+        const header   = document.getElementById('welcomeHeader');
+
+        console.log('[paintUi] nodes found:', {
+          userDisplay: !!spanTop,
+          userDisplayHeader: !!spanHdr,
+          userEmailHeader: !!spanMail,
+          welcomeHeader: !!header
+        });
+
+        // 4) Schrijven naar navbar (toon e-mail in plaats van naam)
+        if (spanTop) {
+          const email = (p?.userDetails && String(p.userDetails).trim()) || '';
+          const safe = email || ((name && name.trim()) ? name : 'Niet ingelogd');
+          spanTop.textContent = safe;
+          spanTop.classList.remove('d-none');
+          console.log('[paintUi] userDisplay (email) set to:', safe);
+        } else {
+          console.warn('[paintUi] #userDisplay not found in DOM');
+        }
+
+
+        // 5) Schrijven naar dropdown
+        if (spanHdr)  { spanHdr.textContent  = name || ''; console.log('[paintUi] userDisplayHeader set'); }
+        if (spanMail) { spanMail.textContent = (p?.userDetails) || ''; console.log('[paintUi] userEmailHeader set'); }
+
+        // 6) Welkom-kop
+        if (header) {
+          header.textContent = name ? `Welkom ${name}` : 'Welkom';
+          console.log('[paintUi] welcomeHeader set');
+        } else {
+          console.warn('[paintUi] #welcomeHeader not found in DOM');
+        }
+
+        console.log('[paintUi] done');
+      } catch (e) {
+        console.error('Auth paintUi error:', e);
+      }
+    })();
