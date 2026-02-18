@@ -84,3 +84,24 @@
             </div>`;
         }
       }
+      
+      
+      function normalizePath(pathname) {
+        // Verwijder query/hash en normaliseer '/index.html' en trailing slash
+        try {
+          const url = new URL(pathname, location.origin);
+          let p = url.pathname;
+          p = p.replace(/\/index\.html?$/i, '/'); // index.html -> /
+          if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1); // trailing slash weg (behalve root)
+          return p || '/';
+        } catch {
+          // Fallback als URL constructor faalt
+          let p = String(pathname || '/');
+          p = p.replace(/\/index\.html?$/i, '/');
+          if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
+          return p || '/';
+        }
+      }
+
+      // Laad de sidebar
+      loadSidebar('sidebar', '/partials/sidebar.html');
