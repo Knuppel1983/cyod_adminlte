@@ -578,9 +578,6 @@ const __APP_VERSION__ = '20260218';
         var html =
           '<div id="' + id + '" class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
             msg +
-            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-              '<span aria-hidden="true">&times;</span>' +
-            '</button>' +
           '</div>';
 
         var container = document.getElementById('alertContainer');
