@@ -48,7 +48,7 @@ const __APP_VERSION__ = '20260218';
                 pageLength: 100,
                 order: [[1, 'asc']],
                 ajax: {
-                  url: '/api/getuserdata',   // of '/api/support/getuserdata' als jouw function.json zo route
+                  url: '/api/getuserdata?onlyActive=1',   // of '/api/support/getuserdata' als jouw function.json zo route
                   type: 'GET',
                   dataSrc: ''                // <<< BELANGRIJK: omdat de API een root-array retourneert
                 },
