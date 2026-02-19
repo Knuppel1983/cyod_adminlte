@@ -102,6 +102,49 @@
       
       
       
+      function updateToggleButtonFromSelection() {
+        const $sel = (typeof window.jQuery !== 'undefined') ? $('#userSelect') : null;
+        const btn = document.getElementById('toggleActiveBtn');
+        const target = document.getElementById('targetActive');
+        if (!$sel || !$sel.length || !btn || !target) return;
+
+        const userId = parseInt($sel.val(), 10);
+        if (!userId) {
+          // geen selectie: terug naar default
+          btn.textContent = 'Activeren';
+          btn.classList.remove('btn-outline-success');
+          btn.classList.add('btn-outline-danger');
+          target.value = '1';
+          return;
+        }
+
+        // 1) eerst kijken of het option data-active heeft
+        const opt = $sel.find('option:selected')[0];
+        let isActive = false;
+        if (opt && typeof opt.dataset?.active !== 'undefined') {
+          isActive = opt.dataset.active === '1';
+        } else if (window.__usersById && window.__usersById[userId]) {
+          // 2) anders uit de map
+          isActive = !!window.__usersById[userId].active;
+        }
+
+        if (isActive) {
+          // user is actief -> knop voor "Deactiveren" en targetActive=0
+          btn.textContent = 'Deactiveren';
+          btn.classList.remove('btn-outline-danger');
+          btn.classList.add('btn-outline-success');
+          target.value = '0';
+        } else {
+          // user is inactief -> knop voor "Activeren" en targetActive=1
+          btn.textContent = 'Activeren';
+          btn.classList.remove('btn-outline-success');
+          btn.classList.add('btn-outline-danger');
+          target.value = '1';
+        }
+      }
+      
+      
+      
       
       
       
