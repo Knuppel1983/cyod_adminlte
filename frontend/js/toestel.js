@@ -84,9 +84,6 @@ function recalcManual() {
   const controle =  amount - (usedT + usedO + own);
   setText('sum-amount', controle);
 
-  // Som (aanschaf) is gewoon het amount
-  const controle = amount - (usedT + usedO + own);
-
   // Toon het controlebedrag (afgerond op 2 decimalen)
   setText('sum-amount', Number((controle).toFixed(2)));
 
