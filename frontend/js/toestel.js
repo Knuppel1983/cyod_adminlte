@@ -4,7 +4,7 @@
 
 (function(){
   const API_SAVE = '/api/toestel_aankoop_save'; // << wijzig indien jouw API anders heet
-  const API_USER_SINGLE = ['/api/getuserdata', '/api/getuser']; // probeert op volgorde
+  const API_USER_SINGLE = ['/api/getuser']; // probeert op volgorde
 
   let lastPrefilledFor = null; // onthoud voor welke userId we velden hebben vooringevuld
   let budgets = { tst_budget: 0, ovg_budget: 0 };

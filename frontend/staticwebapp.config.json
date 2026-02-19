@@ -15,6 +15,7 @@
   },
   "routes": [
     { "route": "/support/*", "allowedRoles": [ "support" ] },
+    { "route": "/api/getuser", "allowedRoles": [ "support" ] },
     { "route": "/api/getuserdata", "allowedRoles": [ "support" ] },
     { "route": "/api/user_setactive", "allowedRoles": [ "support" ] },
     { "route": "/api/getbudgets", "allowedRoles": [ "authenticated" ] },
