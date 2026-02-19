@@ -101,7 +101,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', recalcManual);
   });
+    const btn = document.getElementById('btnUsedTMax');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const el = document.getElementById('used-tst-input');
+      const max = Number(budgets?.tst_budget ?? 0);
+      if (el) {
+        el.value = max.toFixed(2);
+        recalcManual();
+      }
+    });
+  }
 });
+
+
 
   async function fetchUserBudgets(userId){
     for (const base of API_USER_SINGLE){
