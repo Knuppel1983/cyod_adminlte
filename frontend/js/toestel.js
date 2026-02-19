@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // recalc bij input
     const amountEl = document.getElementById('amount');
-    if(amountEl) amountEl.addEventListener('input', recalc);
+    if(amountEl) amountEl.addEventListener('input', recalcManual);
 
     // reset
     const btnReset = document.getElementById('btnReset');
