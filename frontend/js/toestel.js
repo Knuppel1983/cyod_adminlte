@@ -100,8 +100,8 @@ function recalcManual() {
   }
 
   // Restbudget na aankoop: alleen t.o.v. beschikbare budgetten
-  const restBudgetT = (availT + usedT);
-  const restBudgetO = (availO + usedO);
+  const restBudgetT = (availT - usedT);
+  const restBudgetO = (availO - usedO);
   setText('rest-budgetT', restBudgetT);
   setText('rest-budgetO', restBudgetO);
 
