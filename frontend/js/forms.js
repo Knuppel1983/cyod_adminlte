@@ -33,6 +33,36 @@
       }
 
 
+
+      async function init() {
+        const hasJQ = typeof window.jQuery !== 'undefined';
+        const $userSelect = hasJQ ? $('#userSelect') : null;
+        const hasUserSelect = !!($userSelect && $userSelect.length);
+
+        if (hasUserSelect && typeof $.fn.select2 === 'function') {
+          // 👉 lees de flag uit de host-wrapper
+          const host = document.getElementById('userSelectHost');
+          const onlyActive = host?.dataset?.onlyActive === '1';
+
+          $userSelect.select2({ placeholder: 'Bezig met ophalen gebruikers...', allowClear: true });
+          try {
+            // 👉 roep je bestaande loader aan met de juiste flag
+            await loadUsers(onlyActive ? 1 : 0);
+          } catch (e) {
+            console.error('[init] loadUsers() faalde:', e);
+            window.showAlert?.('danger', 'Kon gebruikers niet ophalen.');
+          }
+        } else {
+          if (!hasUserSelect) console.debug('[init] #userSelect niet aanwezig — sla Select2/init over');
+          else console.warn('[init] Select2 plugin niet beschikbaar — sla Select2/init over');
+        }
+
+        // Bestaande form-bindings mogen blijven staan
+        bindFormSubmit('userActiveForm', onSubmitUserActive);
+        bindFormSubmit('newUserForm', onSubmitNewUser);
+      }
+
+
       async function loadUsers(onlyActive = 0) {
         try {
           const res = await fetch(`/api/getuserdata?onlyActive=${onlyActive ? 1 : 0}`, { credentials: 'include' });
