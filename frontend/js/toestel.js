@@ -84,6 +84,24 @@ function recalcManual() {
   const controle =  amount - (usedT + usedO + own);
   setText('sum-amount', controle);
 
+  // Som (aanschaf) is gewoon het amount
+  const controle = amount - (usedT + usedO + own);
+
+  // Toon het controlebedrag (afgerond op 2 decimalen)
+  setText('sum-amount', Number((controle).toFixed(2)));
+
+  // === Kleur van de kaart aanpassen op basis van controle ===
+  // Gebruik een kleine epsilon om float-afwijkingen op te vangen (0.01 = 1 cent)
+  const epsilon = 0.01;
+  const isZero = (isFinite(controle) && Math.abs(controle) < epsilon);
+
+  const sumCard = document.getElementById('sum-card');
+  if (sumCard) {
+    // als niet 0,00 → rood; anders info-blauw
+    sumCard.classList.toggle('bg-danger-subtle', !isZero);
+    sumCard.classList.toggle('bg-info-subtle',  isZero);
+  }
+
   // Restbudget na aankoop: alleen t.o.v. beschikbare budgetten
   const restBudget = (availT + availO) - (usedT + usedO);
   setText('rest-budget', restBudget);
