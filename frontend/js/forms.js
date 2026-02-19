@@ -52,6 +52,9 @@
             console.error('[init] loadUsers() faalde:', e);
             window.showAlert?.('danger', 'Kon gebruikers niet ophalen.');
           }
+         // initialiseer de knop en update bij selectie
+         updateToggleButtonFromSelection();
+         $userSelect.on('change', updateToggleButtonFromSelection);
         } else {
           if (!hasUserSelect) console.debug('[init] #userSelect niet aanwezig — sla Select2/init over');
           else console.warn('[init] Select2 plugin niet beschikbaar — sla Select2/init over');
@@ -168,7 +171,8 @@
         }
 
         const selectedText = $('#userSelect option:selected').text();
-        const active = parseInt(document.querySelector('input[name="active"]:checked').value, 10);
+        // const active = parseInt(document.querySelector('input[name="active"]:checked').value, 10);
+        const active = parseInt(document.getElementById('targetActive').value, 10);
         const actionText = active === 1 ? 'ACTIVEREN' : 'DEACTIVEREN';
 
         const ok = await confirmModal(
