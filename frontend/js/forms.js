@@ -87,13 +87,19 @@
           window.__usersById = Object.create(null);
 
           users.forEach(u => {
-            const text = `${u.username} ${u.active ? '(actief)' : '(inactief)'}`;
-            const opt = new Option(text, u.user_id, false, false);
+            // Alleen wanneer onlyActive = 0 de status tonen
+            const label = onlyActive
+              ? u.username
+              : `${u.username} ${u.active ? '(actief)' : '(inactief)'}`;
+
+            const opt = new Option(label, u.user_id, false, false);
             // status zichtbaar maken aan de client
             opt.dataset.active = u.active ? '1' : '0';
+
             $sel.append(opt);
             window.__usersById[u.user_id] = u;
           });
+
 
            $sel.trigger('change');
          } catch (e) {
