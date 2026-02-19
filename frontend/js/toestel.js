@@ -171,7 +171,8 @@ async function fetchUserBudgets(userId){
 
         // (A) Alleen 'ingezet toestelbudget' automatisch vullen met beschikbaar TST:
         const elUsedT = document.getElementById('used-tst-input');
-        if (elUsedT) elUsedT.value = t.toFixed(2);
+        if (elUsedT) elUsedO.value = '0.00';
+        // if (elUsedT) elUsedT.value = t.toFixed(2);
 
         // Optioneel: de andere twee leeg/0 maken
         const elUsedO = document.getElementById('used-ovg-input');
