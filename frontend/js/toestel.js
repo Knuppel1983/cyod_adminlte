@@ -98,23 +98,19 @@
     const useO = Math.min(Math.max(0, amount - useT), availO);
     const own = Math.max(0, amount - useT - useO);
 
-    const username = ($sel && $sel.length) ? jQuery('#userSelect option:selected').text() : '';
-    const summary = 'Gebruiker: ' + username + '
-' +
-                    'Toestel: ' + device + '
-' +
-                    'Datum: ' + orderDate + '
-' +
-                    'Bedrag (ex. btw): € ' + fmt(amount) + '
-' +
-                    'Ingezet: toestel € ' + fmt(useT) + ' · overig € ' + fmt(useO) + '
-' +
-                    'Eigen bijdrage: € ' + fmt(own) + '
-' +
-                    'Status: ' + contractStatus;
-    if(!confirm('Bevestigen?
+    const username = ($sel && $sel.length)
+      ? jQuery('#userSelect option:selected').text()
+      : '';
 
-'+summary)) return;
+    const summary = `Gebruiker: ${username}
+    Toestel: ${device}
+    Datum: ${orderDate}
+    Bedrag (ex. btw): € ${fmt(amount)}
+    Ingezet: toestel € ${fmt(useT)} · overig € ${fmt(useO)}
+    Eigen bijdrage: € ${fmt(own)}
+    Status: ${contractStatus}`;
+
+    if (!confirm('Bevestigen?\n\n' + summary)) return;
 
     if(submitBtn) submitBtn.disabled = true;
     try{
