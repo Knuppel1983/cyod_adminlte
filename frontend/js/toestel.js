@@ -6,7 +6,9 @@
   const API_SAVE = '/api/toestel_aankoop_save'; // << wijzig indien jouw API anders heet
   const API_USER_SINGLE = ['/api/getuserdata', '/api/getuser']; // probeert op volgorde
 
+  let lastPrefilledFor = null; // onthoud voor welke userId we velden hebben vooringevuld
   let budgets = { tst_budget: 0, ovg_budget: 0 };
+
 
   function fmt(n){
     if(n == null || isNaN(n)) return '—';
@@ -127,35 +129,75 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+async function fetchUserBudgets(userId){
+  for (const base of API_USER_SINGLE){
+    try{
+      const url = `${base}?userId=${encodeURIComponent(userId)}`;
+      const res = await fetch(url, {credentials:'include'});
+      if(!res.ok) continue;
 
-  async function fetchUserBudgets(userId){
-    for (const base of API_USER_SINGLE){
-      try{
-        const url = `${base}?userId=${encodeURIComponent(userId)}`;
-        const res = await fetch(url, {credentials:'include'});
-        if(!res.ok) continue;
-        const data = await res.json();
-        // data kan object of array zijn
-        const u = Array.isArray(data) ? (data.length ? data[0] : null) : data;
-        if(!u) continue;
-        const t = Number(u.tst_budget ?? 0);
-        const o = Number(u.ovg_budget ?? 0);
-        budgets = { tst_budget: t, ovg_budget: o };
-        setText('avail-tst', t);
-        setText('avail-ovg', o);
-        recalcManual();
-        return;
-      }catch(e){
-        // probeer volgende endpoint
+      const data = await res.json();
+      const u = Array.isArray(data) ? (data.length ? data[0] : null) : data;
+      if(!u) continue;
+
+      const t = Number(u.tst_budget ?? 0);
+      const o = Number(u.ovg_budget ?? 0);
+
+      budgets = { tst_budget: t, ovg_budget: o };
+      setText('avail-tst', t);
+      setText('avail-ovg', o);
+
+      // PREFILL OP ÉCHTE GEBRUIKERSWISSEL
+      if (userId !== lastPrefilledFor) {
+        // — KIES ÉÉN VAN DEZE BLOCJES —
+
+        // (A) Alleen 'ingezet toestelbudget' automatisch vullen met beschikbaar TST:
+        const elUsedT = document.getElementById('used-tst-input');
+        if (elUsedT) elUsedT.value = t.toFixed(2);
+
+        // Optioneel: de andere twee leeg/0 maken
+        const elUsedO = document.getElementById('used-ovg-input');
+        const elOwn   = document.getElementById('own-contrib-input');
+        if (elUsedO) elUsedO.value = '0.00';
+        if (elOwn)   elOwn.value   = '0.00';
+
+        // (B) Wil je liever alle drie prefillen (bijv. toestel = TST, rest = 0):
+        // const elUsedT = document.getElementById('used-tst-input');
+        // const elUsedO = document.getElementById('used-ovg-input');
+        // const elOwn   = document.getElementById('own-contrib-input');
+        // if (elUsedT) elUsedT.value = t.toFixed(2);
+        // if (elUsedO) elUsedO.value = '0.00';
+        // if (elOwn)   elOwn.value   = '0.00';
+
+        lastPrefilledFor = userId;
       }
+      // PREFILL OP ÉCHTE GEBRUIKERSWISSEL
+
+      recalcManual();
+      return;
+    }catch(e){
+      // probeer volgende endpoint
     }
-    // Als alles faalt
-    budgets = { tst_budget: 0, ovg_budget: 0 };
-    setText('avail-tst', 0);
-    setText('avail-ovg', 0);
-    recalcManual();
-    window.showAlert?.('danger', 'Kon budgetgegevens voor de gebruiker niet ophalen.');
   }
+  // Als alles faalt
+  budgets = { tst_budget: 0, ovg_budget: 0 };
+  setText('avail-tst', 0);
+  setText('avail-ovg', 0);
+
+  // Reset inputs bij fout (je kunt dit ook leeg laten)
+  const elUsedT = document.getElementById('used-tst-input');
+  const elUsedO = document.getElementById('used-ovg-input');
+  const elOwn   = document.getElementById('own-contrib-input');
+  if (elUsedT) elUsedT.value = '';
+  if (elUsedO) elUsedO.value = '';
+  if (elOwn)   elOwn.value   = '';
+
+  lastPrefilledFor = null;
+  recalcManual();
+  window.showAlert?.('danger', 'Kon budgetgegevens voor de gebruiker niet ophalen.');
+}
+
+
 
   async function onSubmitToestel(e){
     e.preventDefault();
