@@ -101,11 +101,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', recalcManual);
   });
-    const btn = document.getElementById('btnUsedTMax');
-  if (btn) {
+  
+  const btnT = document.getElementById('btnUsedTMax');
+  if (btnT) {
     btn.addEventListener('click', () => {
       const el = document.getElementById('used-tst-input');
       const max = Number(budgets?.tst_budget ?? 0);
+      if (el) {
+        el.value = max.toFixed(2);
+        recalcManual();
+      }
+    });
+  }
+  const btnO = document.getElementById('btnUsedOMax');
+  if (btnO) {
+    btn.addEventListener('click', () => {
+      const el = document.getElementById('used-ovg-input');
+      const max = Number(budgets?.ovg_budget ?? 0);
       if (el) {
         el.value = max.toFixed(2);
         recalcManual();
