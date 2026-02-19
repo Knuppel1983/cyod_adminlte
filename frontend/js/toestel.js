@@ -147,73 +147,47 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-async function fetchUserBudgets(userId){
-  for (const base of API_USER_SINGLE){
-    try{
-      const url = `${base}?userId=${encodeURIComponent(userId)}`;
-      const res = await fetch(url, {credentials:'include'});
-      if(!res.ok) continue;
+async function fetchUserBudgets(userId) {
+  if (!userId) return;
 
-      const data = await res.json();
-      const u = Array.isArray(data) ? (data.length ? data[0] : null) : data;
-      if(!u) continue;
+  // Gebruik jouw werkende endpoint
+  const url = `/api/getuser?userId=${encodeURIComponent(userId)}`;
 
-      const t = Number(u.tst_budget ?? 0);
-      const o = Number(u.ovg_budget ?? 0);
-
-      budgets = { tst_budget: t, ovg_budget: o };
-      setText('avail-tst', t);
-      setText('avail-ovg', o);
-
-      // PREFILL OP ÉCHTE GEBRUIKERSWISSEL
-      if (userId !== lastPrefilledFor) {
-        // — KIES ÉÉN VAN DEZE BLOCJES —
-
-        // (A) Alleen 'ingezet toestelbudget' automatisch vullen met beschikbaar TST:
-        const elUsedT = document.getElementById('used-tst-input');
-        if (elUsedT) elUsedO.value = '0.00';
-        // if (elUsedT) elUsedT.value = t.toFixed(2);
-
-        // Optioneel: de andere twee leeg/0 maken
-        const elUsedO = document.getElementById('used-ovg-input');
-        const elOwn   = document.getElementById('own-contrib-input');
-        if (elUsedO) elUsedO.value = '0.00';
-        if (elOwn)   elOwn.value   = '0.00';
-
-        // (B) Wil je liever alle drie prefillen (bijv. toestel = TST, rest = 0):
-        // const elUsedT = document.getElementById('used-tst-input');
-        // const elUsedO = document.getElementById('used-ovg-input');
-        // const elOwn   = document.getElementById('own-contrib-input');
-        // if (elUsedT) elUsedT.value = t.toFixed(2);
-        // if (elUsedO) elUsedO.value = '0.00';
-        // if (elOwn)   elOwn.value   = '0.00';
-
-        lastPrefilledFor = userId;
-      }
-      // PREFILL OP ÉCHTE GEBRUIKERSWISSEL
-
-      recalcManual();
-      return;
-    }catch(e){
-      // probeer volgende endpoint
+  try {
+    const res = await fetch(url, { credentials: 'include' });
+    const text = await res.text().catch(() => '');
+    if (!res.ok) {
+      let msg = `HTTP ${res.status}`;
+      try { const j = JSON.parse(text || '{}'); msg = j.message || j.error || msg; } catch {}
+      throw new Error(msg);
     }
+
+    // Sta zowel een object als een array toe
+    const data = text ? JSON.parse(text) : null;
+    const u = Array.isArray(data) ? (data.length ? data[0] : null) : data;
+    if (!u) throw new Error('Lege response');
+
+    // >>> PAS DEZE 2 REGELS AAN ALS JE ANDERE NAAMGEVING HEBT IN DE API <<<
+    const t = Number(u.tst_budget ?? u.budget ?? 0);  // toestelbudget
+    const o = Number(u.ovg_budget ?? 0);              // overig budget
+
+    // Bewaar voor verdere berekeningen (recalcManual gebruikt 'budgets')
+    budgets = { tst_budget: t, ovg_budget: o };
+
+    // Alleen de beschikbare waarden tonen
+    setText('avail-tst', t);  // <-- dit is jouw span
+    setText('avail-ovg', o);  // (als je dit in de UI hebt)
+
+    // Niets automatisch invullen in inputs; gebruiker blijft leidend
+    recalcManual();           // herbereken restvelden op basis van huidige inputs
+  } catch (err) {
+    console.error('fetchUserBudgets error:', err);
+    budgets = { tst_budget: 0, ovg_budget: 0 };
+    setText('avail-tst', 0);
+    setText('avail-ovg', 0);
+    recalcManual();
+    window.showAlert?.('danger', `Kon budgetgegevens niet ophalen: ${err.message || err}`);
   }
-  // Als alles faalt
-  budgets = { tst_budget: 0, ovg_budget: 0 };
-  setText('avail-tst', 0);
-  setText('avail-ovg', 0);
-
-  // Reset inputs bij fout (je kunt dit ook leeg laten)
-  const elUsedT = document.getElementById('used-tst-input');
-  const elUsedO = document.getElementById('used-ovg-input');
-  const elOwn   = document.getElementById('own-contrib-input');
-  if (elUsedT) elUsedT.value = '';
-  if (elUsedO) elUsedO.value = '';
-  if (elOwn)   elOwn.value   = '';
-
-  lastPrefilledFor = null;
-  recalcManual();
-  window.showAlert?.('danger', 'Kon budgetgegevens voor de gebruiker niet ophalen.');
 }
 
 
