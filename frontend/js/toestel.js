@@ -81,7 +81,8 @@ function recalcManual() {
   showHelp('own-contrib-help', warnOwn);
 
   // Som (aanschaf) is gewoon het amount
-  setText('sum-amount', amount);
+  const controle =  amount - (usedT + usedO + own);
+  setText('sum-amount', controle);
 
   // Restbudget na aankoop: alleen t.o.v. beschikbare budgetten
   const restBudget = (availT + availO) - (usedT + usedO);
