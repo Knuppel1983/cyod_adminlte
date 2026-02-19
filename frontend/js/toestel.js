@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const btnT = document.getElementById('btnUsedTMax');
   if (btnT) {
-    btn.addEventListener('click', () => {
+    btnT.addEventListener('click', () => {
       const el = document.getElementById('used-tst-input');
       const max = Number(budgets?.tst_budget ?? 0);
       if (el) {
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   const btnO = document.getElementById('btnUsedOMax');
   if (btnO) {
-    btn.addEventListener('click', () => {
+    btnO.addEventListener('click', () => {
       const el = document.getElementById('used-ovg-input');
       const max = Number(budgets?.ovg_budget ?? 0);
       if (el) {
