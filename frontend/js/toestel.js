@@ -58,7 +58,7 @@
 
     let usedT = euro(document.getElementById('used-tst-input')?.value);
     let usedO = euro(document.getElementById('used-ovg-input')?.value);
-    let own = euro(document.getElementById('own-contrib-input')?.value);
+    let usedE = euro(document.getElementById('used-eig-input')?.value);
 
     // Validaties & clamps
     let warnT = '',
@@ -79,7 +79,7 @@
     }
 
     // 2) Totale inzet mag niet boven aankoopbedrag
-    const totalUse = usedT + usedO + own;
+    const totalUse = usedT + usedO + usedE;
     if (amount > 0 && totalUse > amount) {
       let overflow = totalUse - amount;
 
@@ -111,10 +111,10 @@
     // Helpteksten
     showHelp('used-tst-help', warnT);
     showHelp('used-ovg-help', warnO);
-    showHelp('own-contrib-help', warnOwn);
+    showHelp('used-eig-help', warnOwn);
 
     // Som‑controle en kaartkleur
-    const controle = amount - (usedT + usedO + own);
+    const controle = amount - (usedT + usedO + usedE);
     setText('sum-amount', Number(controle.toFixed(2)));
 
     const epsilon = 0.01; // 1 cent marge tegen floating-point ruis
@@ -139,10 +139,10 @@
       const f2 = (v) => Number(v).toFixed(2);
       const elT = document.getElementById('used-tst-input');
       const elO = document.getElementById('used-ovg-input');
-      const elW = document.getElementById('own-contrib-input');
+      const elW = document.getElementById('used-eig-input');
       if (elT && elT.value !== f2(usedT)) elT.value = f2(usedT);
       if (elO && elO.value !== f2(usedO)) elO.value = f2(usedO);
-      if (elW && elW.value !== f2(own)) elW.value = f2(own);
+      if (elW && elW.value !== f2(usedE)) elW.value = f2(usedE);
     }
   }
 
@@ -228,7 +228,7 @@
     // Handmatige velden gebruiken (niet automatisch berekenen)
     const useT = euro(document.getElementById('used-tst-input')?.value);
     const useO = euro(document.getElementById('used-ovg-input')?.value);
-    const own = euro(document.getElementById('own-contrib-input')?.value);
+    const useE = euro(document.getElementById('used-eig-input')?.value);
 
     const username = $sel && $sel.length ? jQuery('#userSelect option:selected').text() : '';
     const summary = `Gebruiker: ${username}
@@ -307,7 +307,7 @@ Status: ${contractStatus}`;
     }
 
     // Invoer-events: input = geen formatting; blur = wel formatting
-    ['amount', 'used-tst-input', 'used-ovg-input', 'own-contrib-input'].forEach((id) => {
+    ['amount', 'used-tst-input', 'used-ovg-input', 'used-eig-input'].forEach((id) => {
       const el = document.getElementById(id);
       if (!el) return;
       el.addEventListener('input', () => recalcManual({ formatInputs: false }));
