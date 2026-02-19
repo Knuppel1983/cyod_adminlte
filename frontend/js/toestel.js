@@ -83,14 +83,14 @@
     if (amount > 0 && totalUse > amount) {
       let overflow = totalUse - amount;
 
-      if (own >= overflow) {
-        own -= overflow;
+      if (usedE >= overflow) {
+        usedE -= overflow;
         changed = true;
         overflow = 0;
         warnOwn = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
       } else {
         overflow -= own;
-        own = 0;
+        usedE = 0;
         changed = true;
 
         if (usedO >= overflow) {
