@@ -13,11 +13,6 @@
     return Number(n).toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2});
   }
 
-  function setText(id, value){
-    const el = document.getElementById(id);
-    if(el) el.textContent = (typeof value === 'number') ? `€ ${fmt(value)}` : value;
-  }
-
 // Helpers
 function euro(val) {
   const n = Number(val);
@@ -123,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         budgets = { tst_budget: t, ovg_budget: o };
         setText('avail-tst', t);
         setText('avail-ovg', o);
-        recalc();
+        recalcManual();
         return;
       }catch(e){
         // probeer volgende endpoint
@@ -133,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     budgets = { tst_budget: 0, ovg_budget: 0 };
     setText('avail-tst', 0);
     setText('avail-ovg', 0);
-    recalc();
+    recalcManual();
     window.showAlert?.('danger', 'Kon budgetgegevens voor de gebruiker niet ophalen.');
   }
 
@@ -206,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       window.showAlert?.('success', 'Aankoop is opgeslagen.');
       form.reset();
-      recalc();
+      recalcManual();
     }catch(err){
       console.error('toestel_aankoop_save error:', err);
       window.showAlert?.('danger', err.message || 'Opslaan mislukt');
@@ -251,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(btnReset){ btnReset.addEventListener('click', function(){
       const form = document.getElementById('toestelForm');
       if(form) form.reset();
-      recalc();
+      recalcManual();
     }); }
   }
 
