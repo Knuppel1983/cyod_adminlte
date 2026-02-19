@@ -369,23 +369,21 @@
                     </div>
                     <form id="userActiveForm" class="form-horizontal" autocomplete="off">
                       <div class="card-body">
-                        <div id="userSelectHost" data-only-active="1" class="form-group select2-info mb-4">
+                        <div id="userSelectHost" data-only-active="0" class="form-group select2-info mb-4">
                           <label for="userSelect" class="mb-1">Gebruiker</label>
                           <select id="userSelect" class="form-control" style="width:100%"></select>
                         </div>
 
+                        <!-- Status-blok vervangen door één knop -->
                         <div class="form-group mb-3">
-                          <label class="mb-1">Status</label><br/>
-
-                          <!-- Deactiveren -->
-                          <input type="radio" class="btn-check" name="active" id="active0" value="0" autocomplete="off" checked>
-                          <label class="btn btn-outline-success" for="active0">Deactiveren</label>
-
-                          <!-- Activeren -->
-                          <input type="radio" class="btn-check" name="active" id="active1" value="1" autocomplete="off">
-                          <label class="btn btn-outline-danger" for="active1">Activeren</label>
+                          <label class="mb-1">Status</label><br />
+                          <!-- De knop krijgt zijn tekst/kleur dynamisch op basis van de huidige status -->
+                          <button type="submit" id="toggleActiveBtn" class="btn btn-outline-danger">
+                            Activeren
+                          </button>
+                          <!-- we bewaren het doel (0=deactiveren, 1=activeren) in een hidden input -->
+                          <input type="hidden" id="targetActive" name="active" value="1" />
                         </div>
-                        
                       </div>
                       <div class="card-footer">
                         <button type="submit" class="btn btn-info">Opslaan</button>

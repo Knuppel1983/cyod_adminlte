@@ -63,30 +63,49 @@
       }
 
 
-      async function loadUsers(onlyActive = 0) {
-        try {
-          const res = await fetch(`/api/getuserdata?onlyActive=${onlyActive ? 1 : 0}`, { credentials: 'include' });
-          if (!res.ok) throw new Error('Kon gebruikers niet laden');
-          const users = await res.json();
 
-          // Defensief: element opnieuw ophalen en checken
-          if (typeof window.jQuery === 'undefined') return;
-          const $sel = $('#userSelect');
-          if (!$sel.length) return; // als element niet bestaat, niets doen
+      
+      
+      
+       async function loadUsers(onlyActive = 0) {
+         try {
+           const res = await fetch(`/api/getuserdata?onlyActive=${onlyActive ? 1 : 0}`, { credentials: 'include' });
+           if (!res.ok) throw new Error('Kon gebruikers niet laden');
+          let users = await res.json();
+          // (optioneel maar robuust) client-side filter als extra vangnet:
+          if (onlyActive) { users = users.filter(u => u.active); }
 
-          $sel.empty();
+           if (typeof window.jQuery === 'undefined') return;
+           const $sel = $('#userSelect');
+           if (!$sel.length) return;
+
+           $sel.empty();
+          // Map voor snelle lookup (globaal opslaan)
+          window.__usersById = Object.create(null);
 
           users.forEach(u => {
             const text = `${u.username} ${u.active ? '(actief)' : '(inactief)'}`;
-            const option = new Option(text, u.user_id, false, false);
-            $sel.append(option);
+            const opt = new Option(text, u.user_id, false, false);
+            // status zichtbaar maken aan de client
+            opt.dataset.active = u.active ? '1' : '0';
+            $sel.append(opt);
+            window.__usersById[u.user_id] = u;
           });
 
-          $sel.trigger('change');
-        } catch (e) {
-          window.showAlert?.('danger', e.message);
-        }
-      }
+           $sel.trigger('change');
+         } catch (e) {
+           window.showAlert?.('danger', e.message);
+         }
+       }
+            
+      
+      
+      
+      
+      
+      
+      
+      
 
 
       // === A) Bestaande handler voor user activeren/deactiveren ===
