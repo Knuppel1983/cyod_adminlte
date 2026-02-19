@@ -18,29 +18,95 @@
     if(el) el.textContent = (typeof value === 'number') ? `€ ${fmt(value)}` : value;
   }
 
-  function euro(val){
-    const n = Number(val);
-    return Number.isFinite(n) ? n : 0;
+// Helpers
+function euro(val) {
+  const n = Number(val);
+  return Number.isFinite(n) ? n : 0;
+}
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = (typeof value === 'number')
+    ? `€ ${Number(value).toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    : value;
+}
+function showHelp(id, msg) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = msg || '';
+}
+
+// Aangenomen dat je ergens budgets bijhoudt (zoals eerder):
+// let budgets = { tst_budget: 0, ovg_budget: 0 };
+
+function recalcManual() {
+  const amount = euro(document.getElementById('amount')?.value); // Som (aanschaf)
+  const availT = euro(document.getElementById('avail-tst')?.textContent?.replace(/[^\d,.-]/g, '').replace('.', '').replace(',', '.')) || euro(budgets.tst_budget);
+  const availO = euro(document.getElementById('avail-ovg')?.textContent?.replace(/[^\d,.-]/g, '').replace('.', '').replace(',', '.')) || euro(budgets.ovg_budget);
+
+  let usedT = euro(document.getElementById('used-tst-input')?.value);
+  let usedO = euro(document.getElementById('used-ovg-input')?.value);
+  let own   = euro(document.getElementById('own-contrib-input')?.value);
+
+  // Basis validaties & clamps
+  let warnT = '', warnO = '', warnOwn = '';
+
+  // 1) Niet meer inzetten dan beschikbaar
+  if (usedT > availT) { usedT = availT; warnT = 'Max. inzet toestelbudget bereikt.'; }
+  if (usedO > availO) { usedO = availO; warnO = 'Max. inzet overig budget bereikt.'; }
+
+  // 2) Totale inzet mag niet boven aankoopbedrag
+  const totalUse = usedT + usedO + own;
+  if (amount > 0 && totalUse > amount) {
+    // Eerst eigen bijdrage terugschalen, dan overig, dan toestel (zachte prioriteit)
+    let overflow = totalUse - amount;
+
+    if (own >= overflow) {
+      own -= overflow; overflow = 0;
+      warnOwn = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
+    } else {
+      overflow -= own;
+      own = 0;
+      if (usedO >= overflow) {
+        usedO -= overflow; overflow = 0;
+        warnO = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
+      } else {
+        overflow -= usedO;
+        usedO = 0;
+        // Wat resteert, trim van usedT
+        usedT = Math.max(0, usedT - overflow);
+        warnT = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
+      }
+    }
   }
 
-  function recalc(){
-    const amount = euro(document.getElementById('amount')?.value);
-    // beschikbare budgets
-    const availT = euro(budgets.tst_budget);
-    const availO = euro(budgets.ovg_budget);
+  // Schrijf helpteksten
+  showHelp('used-tst-help', warnT);
+  showHelp('used-ovg-help', warnO);
+  showHelp('own-contrib-help', warnOwn);
 
-    let useT = Math.min(amount, availT);
-    let remaining = amount - useT;
-    let useO = Math.min(remaining, availO);
-    let own = Math.max(0, amount - useT - useO);
-    const restBudget = (availT + availO) - (useT + useO);
+  // Som (aanschaf) is gewoon het amount
+  setText('sum-amount', amount);
 
-    setText('sum-amount', amount);
-    setText('used-tst', useT);
-    setText('used-ovg', useO);
-    setText('own-contrib', own);
-    setText('rest-budget', restBudget);
-  }
+  // Restbudget na aankoop: alleen t.o.v. beschikbare budgetten
+  const restBudget = (availT + availO) - (usedT + usedO);
+  setText('rest-budget', restBudget);
+
+  // Zorg dat de inputs de (eventueel getrimde) waarden tonen
+  const f2 = v => (Number(v).toFixed(2));
+  const elT = document.getElementById('used-tst-input');
+  const elO = document.getElementById('used-ovg-input');
+  const elW = document.getElementById('own-contrib-input');
+  if (elT && elT.value !== f2(usedT)) elT.value = f2(usedT);
+  if (elO && elO.value !== f2(usedO)) elO.value = f2(usedO);
+  if (elW && elW.value !== f2(own))   elW.value = f2(own);
+}
+
+// Bind events (in jouw bestaande bind()/init)
+document.addEventListener('DOMContentLoaded', () => {
+  ['amount', 'used-tst-input', 'used-ovg-input', 'own-contrib-input'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', recalcManual);
+  });
+});
 
   async function fetchUserBudgets(userId){
     for (const base of API_USER_SINGLE){
