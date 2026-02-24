@@ -89,7 +89,7 @@
         overflow = 0;
         warnOwn = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
       } else {
-        overflow -= 0;
+        overflow -= usedE;
         usedE = 0;
         changed = true;
 
