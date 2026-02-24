@@ -292,6 +292,7 @@ Status: ${contractStatus}`;
       if ($sel.length) {
         // forms.js roept loadUsers(1) aan op basis van data-only-active
         $sel.on('change', function () {
+          clearUserFields();
           const id = parseInt($sel.val(), 10);
           if (id) fetchUserBudgets(id);
         });
@@ -354,6 +355,7 @@ Status: ${contractStatus}`;
         el.dispatchEvent(new Event('input', { bubbles: true }));
       }
     });
+    recalcManual({ formatInputs: true });
   }  
 
   document.getElementById('userSelect')
