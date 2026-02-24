@@ -89,7 +89,7 @@
         overflow = 0;
         warnOwn = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
       } else {
-        overflow -= own;
+        overflow -= 0;
         usedE = 0;
         changed = true;
 
@@ -236,7 +236,7 @@ Toestel: ${device}
 Datum: ${orderDate}
 Bedrag (ex. btw): € ${fmt(amount)}
 Ingezet: toestel € ${fmt(useT)} · overig € ${fmt(useO)}
-Eigen bijdrage: € ${fmt(own)}
+Eigen bijdrage: € ${fmt(useE)}
 Status: ${contractStatus}`;
 
     if (!confirm('Bevestigen?\n\n' + summary)) return;
