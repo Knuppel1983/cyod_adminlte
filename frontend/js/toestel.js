@@ -338,6 +338,26 @@ Status: ${contractStatus}`;
       });
     }
   }
+  
+  function clearUserFields() {
+    // Voeg hier jouw eigen veld-ID's toe
+    const fieldsToClear = [
+      'used-tst-input',
+      'used-ovg-input'
+    ];
+
+    fieldsToClear.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.value = '';
+        // optioneel: ook input event afvuren als jouw berekening daarop reageert
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
+  }  
+
+  document.getElementById('userSelect')
+    ?.addEventListener('change', clearUserFields);
 
   document.addEventListener('DOMContentLoaded', bind);
 })();
