@@ -361,5 +361,16 @@ Status: ${contractStatus}`;
   document.getElementById('userSelect')
     ?.addEventListener('change', clearUserFields);
 
+  document.getElementById('btnUsedEMax').addEventListener('click', function () {
+    const sumSpan = document.getElementById('sum-amount');
+    const eigInput = document.getElementById('used-eig-input');
+
+    // Tekst uit de span halen
+    const rawText = sumSpan.textContent.trim();
+
+    // Direct in het inputveld zetten
+    eigInput.value = rawText;
+  });
+
   document.addEventListener('DOMContentLoaded', bind);
 })();
