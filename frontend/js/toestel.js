@@ -362,14 +362,24 @@ Status: ${contractStatus}`;
     ?.addEventListener('change', clearUserFields);
 
   document.getElementById('btnUsedEMax').addEventListener('click', function () {
-    const sumSpan = document.getElementById('sum-amount');
-    const eigInput = document.getElementById('used-eig-input');
+    // Gebruik dezelfde euro() helper als in recalcManual
+    const amount = euro(document.getElementById('amount')?.value) || 0;
 
-    // Tekst uit de span halen
-    const rawText = sumSpan.textContent.trim();
+    let usedT = euro(document.getElementById('used-tst-input')?.value) || 0;
+    let usedO = euro(document.getElementById('used-ovg-input')?.value) || 0;
 
-    // Direct in het inputveld zetten
-    eigInput.value = rawText;
+    // Wat er nog ontbreekt t.o.v. het aankoopbedrag
+    let remaining = amount - usedT - usedO;
+
+    if (remaining < 0) remaining = 0; // geen negatieve eigen bijdrage
+
+    const elE = document.getElementById('used-eig-input');
+    if (elE) {
+      elE.value = Number(remaining).toFixed(2);
+    }
+
+    // Laat jouw volledige validatie + formatting opnieuw lopen
+    recalcManual({ formatInputs: true });
   });
 
   document.addEventListener('DOMContentLoaded', bind);
