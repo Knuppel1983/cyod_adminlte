@@ -284,20 +284,19 @@ const summaryHtml = [
   `Ingezet: toestel € ${fmt(useT)} · overig € ${fmt(useO)}`,
   `Eigen bijdrage: € ${fmt(useE)}`,
   `Status: ${contractStatus}`
-].join('<br>');
+].join('\n');
 
   // 🔔 Vervang window.confirm door confirmModal uit /js/modal.js
 if (typeof window.confirmModal === 'function') {
-  const ok = await window.confirmModal(
-    `Bevestigen?<br><br>${summaryHtml}`,
-    {
-      title: 'Aankoop bevestigen',
-      confirmText: 'Opslaan',
-      cancelText: 'Annuleren',
-      size: 'modal-md',
-      html: true   // of allowHtml: true, afhankelijk van hoe modal.js is gebouwd
-    }
-  );
+const ok = await window.confirmModal(
+  'Bevestigen?\n\n' + summaryHtml,
+  {
+    title: 'Aankoop bevestigen',
+    confirmText: 'Opslaan',
+    cancelText: 'Annuleren',
+    size: 'modal-md'
+  }
+);
   if (!ok) return;
 } else {
   // Fallback naar window.confirm (zonder HTML)
