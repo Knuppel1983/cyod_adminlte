@@ -410,6 +410,25 @@ Status: ${contractStatus}`;
     recalcManual({ formatInputs: true });
   });
 
+document.addEventListener('DOMContentLoaded', function () {
+  const amountField        = document.getElementById('amount');
+  const toestelbudgetField = document.getElementById('used-tst-input');
+  const overigBudgetField  = document.getElementById('used-ovg-input');
+  const eigenBijdrageField = document.getElementById('used-eig-input');
+
+  if (!amountField) {
+    console.warn("Veld met id 'amount' niet gevonden.");
+    return;
+  }
+
+  amountField.addEventListener('input', function () {
+    // Zodra amount wordt gewijzigd: andere velden leeg
+    if (toestelbudgetField) toestelbudgetField.value = '';
+    if (overigBudgetField)  overigBudgetField.value  = '';
+    if (eigenBijdrageField) eigenBijdrageField.value = '';
+  });
+});
+
   document.addEventListener('DOMContentLoaded', bind);
   
   
