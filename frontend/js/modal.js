@@ -1,25 +1,27 @@
       // Maak showAlert globaal (werkt ook met type="module")
-      window.showAlert = function (type, msg) {
-        // type: 'success' | 'danger' | 'warning' | 'info' | ...
-        var id = 'alert-' + Date.now();
-        var html =
-          '<div id="' + id + '" class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
-            msg +
-          '</div>';
+window.showAlert = function (type, msg) {
+  var id = 'alert-' + Date.now();
 
-        var container = document.getElementById('alertContainer');
-        if (!container) {
-          // Als de container er niet is, val terug op native alert
-          alert(msg);
-          return;
-        }
-        container.insertAdjacentHTML('beforeend', html);
+  // Nieuwe regels omzetten naar <br>
+  var htmlMsg = String(msg).replace(/\n/g, '<br>');
 
-        // Automatisch sluiten na 6 sec
-        setTimeout(function () {
-          var el = document.getElementById(id);
-          if (el) {
-            try { $(el).alert('close'); } catch (_) { el.remove(); }
-          }
-        }, 6000);
-      };
+  var html =
+    '<div id="' + id + '" class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+      htmlMsg +
+    '</div>';
+
+  var container = document.getElementById('alertContainer');
+  if (!container) {
+    alert(msg);
+    return;
+  }
+  container.insertAdjacentHTML('beforeend', html);
+
+  setTimeout(function () {
+    var el = document.getElementById(id);
+    if (el) {
+      try { $(el).alert('close'); } catch (_) { el.remove(); }
+    }
+  }, 6000);
+};
+``
