@@ -3,7 +3,7 @@
 // Gebruikt helpers uit forms.js (loadUsers, bindFormSubmit) en modal.js (showAlert)
 
 (function () {
-  const API_SAVE = '/api/toestel_aankoop_save';
+  const API_SAVE = '/api/post_newphone';
   const API_USER_SINGLE = ['/api/getuser']; // jouw werkende endpoint
 
   let budgets = { tst_budget: 0, ovg_budget: 0 };
@@ -188,50 +188,75 @@
     window.showAlert?.('danger', 'Kon budgetgegevens voor de gebruiker niet ophalen.');
   }
 
-  // ───────────────────────────────────────────────────────────────────────────────
-  // Submit
-  async function onSubmitToestel(e) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const submitBtn = e.submitter || form.querySelector('button[type="submit"]');
+// ───────────────────────────────────────────────────────────────────────────────
+// Submit
+async function onSubmitToestel(e) {
+  e.preventDefault();
+  const form = e.currentTarget;
+  const submitBtn = e.submitter || form.querySelector('button[type="submit"]');
 
-    const $sel = typeof window.jQuery !== 'undefined' ? jQuery('#userSelect') : null;
-    const userId = $sel && $sel.length ? parseInt($sel.val(), 10) : NaN;
+  const $sel = typeof window.jQuery !== 'undefined' ? jQuery('#userSelect') : null;
+  const userId = $sel && $sel.length ? parseInt($sel.val(), 10) : NaN;
 
-    const device = (document.getElementById('deviceName')?.value || '').trim();
-    const orderDate = document.getElementById('orderDate')?.value || '';
-    const amount = euro(document.getElementById('amount')?.value);
-    const contractStatus = document.getElementById('contractStatus')?.value || '';
-    const remark = (document.getElementById('remark')?.value || '').trim();
+  const device = (document.getElementById('deviceName')?.value || '').trim();
+  const orderDate = document.getElementById('orderDate')?.value || '';
+  const amount = euro(document.getElementById('amount')?.value);
+  const contractStatus = document.getElementById('contractStatus')?.value || '';
+  const remark = (document.getElementById('remark')?.value || '').trim();
 
-    if (!userId) {
-      window.showAlert?.('warning', 'Selecteer een gebruiker.');
-      return;
-    }
-    if (!device) {
-      window.showAlert?.('warning', 'Vul een toestelnaam in.');
-      return;
-    }
-    if (!orderDate) {
-      window.showAlert?.('warning', 'Kies een besteldatum.');
-      return;
-    }
-    if (!(amount > 0)) {
-      window.showAlert?.('warning', 'Voer een geldige aanschafwaarde in.');
-      return;
-    }
-    if (!contractStatus) {
-      window.showAlert?.('warning', 'Kies de contractstatus.');
-      return;
-    }
+  // ---- Required veld checks ----
+  if (!userId) {
+    window.showAlert?.('warning', 'Selecteer een gebruiker.');
+    return;
+  }
+  if (!device) {
+    window.showAlert?.('warning', 'Vul een toestelnaam in.');
+    return;
+  }
+  if (!orderDate) {
+    window.showAlert?.('warning', 'Kies een besteldatum.');
+    return;
+  }
+  if (!(amount > 0)) {
+    window.showAlert?.('warning', 'Voer een geldige aanschafwaarde in.');
+    return;
+  }
+  if (!contractStatus) {
+    window.showAlert?.('warning', 'Kies de contractstatus.');
+    return;
+  }
 
-    // Handmatige velden gebruiken (niet automatisch berekenen)
-    const useT = euro(document.getElementById('used-tst-input')?.value);
-    const useO = euro(document.getElementById('used-ovg-input')?.value);
-    const useE = euro(document.getElementById('used-eig-input')?.value);
+  // ---- SOM-CHECK: sum-amount moet 0,00 zijn ----
+  const sumEl = document.getElementById('sum-amount');
+  const rawText = (sumEl?.textContent || '0').trim();
+  const cleaned = rawText
+    .replace(/[^\d,.-]/g, '')   // verwijder alles behalve cijfers, , . -
+    .replace(/\./g, '')         // duizendtallen weghalen
+    .replace(',', '.');         // NL -> EN decimaal
 
-    const username = $sel && $sel.length ? jQuery('#userSelect option:selected').text() : '';
-    const summary = `Gebruiker: ${username}
+  const controle = parseFloat(cleaned || '0');
+
+  if (!Number.isFinite(controle)) {
+    window.showAlert?.('danger', 'Interne fout bij controle van de som (controle is geen getal).');
+    return;
+  }
+
+  const epsilon = 0.01; // marge van 1 cent
+  if (Math.abs(controle) > epsilon) {
+    window.showAlert?.(
+      'danger',
+      'De som (toestelprijs - ingezet budget - eigen bijdrage) moet exact 0,00 zijn voordat je kunt opslaan.'
+    );
+    return; // submit niet uitvoeren
+  }
+
+  // ---- Handmatige budgetvelden ----
+  const useT = euro(document.getElementById('used-tst-input')?.value);
+  const useO = euro(document.getElementById('used-ovg-input')?.value);
+  const useE = euro(document.getElementById('used-eig-input')?.value);
+
+  const username = $sel && $sel.length ? jQuery('#userSelect option:selected').text() : '';
+  const summary = `Gebruiker: ${username}
 Toestel: ${device}
 Datum: ${orderDate}
 Bedrag (ex. btw): € ${fmt(amount)}
@@ -239,48 +264,51 @@ Ingezet: toestel € ${fmt(useT)} · overig € ${fmt(useO)}
 Eigen bijdrage: € ${fmt(useE)}
 Status: ${contractStatus}`;
 
-    if (!confirm('Bevestigen?\n\n' + summary)) return;
+  if (!confirm('Bevestigen?\n\n' + summary)) return;
 
-    if (submitBtn) submitBtn.disabled = true;
-    try {
-      const payload = {
-        userId,
-        device,
-        orderDate,
-        amountExBtw: Number(amount.toFixed(2)),
-        usedTstBudget: Number(useT.toFixed(2)),
-        usedOvgBudget: Number(useO.toFixed(2)),
-        ownContribution: Number(own.toFixed(2)),
-        contractStatus,
-        remark
-      };
+  if (submitBtn) submitBtn.disabled = true;
 
-      const resp = await fetch(API_SAVE, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(payload)
-      });
-      const text = await resp.text().catch(() => '');
-      if (!resp.ok) {
-        let msg = text;
-        try {
-          const j = JSON.parse(text || '{}');
-          msg = j.message || j.error || text;
-        } catch {}
-        throw new Error(msg || `HTTP ${resp.status}`);
-      }
+  try {
+    // ---- Payload voor jouw nieuwe API (post_newphone) ----
+    const payload = {
+      userId,
+      deviceName: device,
+      orderDate,
+      amount: Number(amount.toFixed(2)),          // sluit aan bij jouw API
+      usedTst: Number(useT.toFixed(2)),
+      usedOvg: Number(useO.toFixed(2)),
+      ownContribution: Number(useE.toFixed(2)),   // let op: useE, niet 'own'
+      contractStatus,
+      remark
+    };
 
-      window.showAlert?.('success', 'Aankoop is opgeslagen.');
-      form.reset();
-      recalcManual({ formatInputs: true });
-    } catch (err) {
-      console.error('toestel_aankoop_save error:', err);
-      window.showAlert?.('danger', err.message || 'Opslaan mislukt');
-    } finally {
-      if (submitBtn) submitBtn.disabled = false;
+    const resp = await fetch(API_SAVE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(payload)
+    });
+
+    const text = await resp.text().catch(() => '');
+    if (!resp.ok) {
+      let msg = text;
+      try {
+        const j = JSON.parse(text || '{}');
+        msg = j.message || j.error || text;
+      } catch {}
+      throw new Error(msg || `HTTP ${resp.status}`);
     }
+
+    window.showAlert?.('success', 'Aankoop is opgeslagen.');
+    form.reset();
+    recalcManual({ formatInputs: true });
+  } catch (err) {
+    console.error('toestel_aankoop_save error:', err);
+    window.showAlert?.('danger', err.message || 'Opslaan mislukt');
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
   }
+}
 
   // ───────────────────────────────────────────────────────────────────────────────
   // Bind
@@ -338,8 +366,6 @@ Status: ${contractStatus}`;
         }
       });
     }
-    
-    setupFormSubmit();
   }
   
   function clearUserFields() {
@@ -383,65 +409,6 @@ Status: ${contractStatus}`;
     // Laat jouw volledige validatie + formatting opnieuw lopen
     recalcManual({ formatInputs: true });
   });
-
-
-function setupFormSubmit() {
-  const form = document.getElementById('toestelForm');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // ---------------------------------------------------------
-    // 🔍 VALIDATIE: sum-amount moet exact 0,00 zijn
-    // ---------------------------------------------------------
-    const sumEl = document.getElementById('sum-amount');
-
-    // Haal tekst op en converteer naar EN-decimaal
-    const rawText = (sumEl?.innerText || "0").trim();
-    const normalized = rawText.replace(/\./g, '').replace(',', '.'); 
-    const sumValue = parseFloat(normalized || 0);
-
-    // Niet 0? => foutmelding + STOP
-    if (Math.abs(sumValue) > 0.009) {
-      showError("De som moet exact 0,00 zijn voordat je kunt opslaan.");
-      return;   // ⛔ STOP — submit niet uitvoeren
-    }
-
-    // ---------------------------------------------------------
-    // Payload bouwen zoals je al had
-    // ---------------------------------------------------------
-    const payload = {
-      userId: Number(document.getElementById('userSelect').value),
-      deviceName: document.getElementById('deviceName').value,
-      orderDate: document.getElementById('orderDate').value,
-      amount: Number(document.getElementById('amount').value),
-      usedTst: Number(document.getElementById('used-tst-input').value),
-      usedOvg: Number(document.getElementById('used-ovg-input').value),
-      ownContribution: Number(document.getElementById('used-eig-input').value),
-      contractStatus: document.getElementById('contractStatus').value,
-      remark: document.getElementById('remark').value
-    };
-
-    // ---------------------------------------------------------
-    // POST naar API
-    // ---------------------------------------------------------
-    const resp = await fetch('/api/new-phone', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    const result = await resp.json();
-
-    if (!resp.ok) {
-      showError(result.error || 'Onbekende fout');
-    } else {
-      showSuccess('Aankoop geregistreerd!');
-      form.reset();
-    }
-  });
-}
-
 
   document.addEventListener('DOMContentLoaded', bind);
   
