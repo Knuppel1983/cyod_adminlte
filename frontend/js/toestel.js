@@ -385,15 +385,31 @@ Status: ${contractStatus}`;
   });
 
 
-
-
-
 function setupFormSubmit() {
   const form = document.getElementById('toestelForm');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // ---------------------------------------------------------
+    // 🔍 VALIDATIE: sum-amount moet exact 0,00 zijn
+    // ---------------------------------------------------------
+    const sumEl = document.getElementById('sum-amount');
+
+    // Haal tekst op en converteer naar EN-decimaal
+    const rawText = (sumEl?.innerText || "0").trim();
+    const normalized = rawText.replace(/\./g, '').replace(',', '.'); 
+    const sumValue = parseFloat(normalized || 0);
+
+    // Niet 0? => foutmelding + STOP
+    if (Math.abs(sumValue) > 0.009) {
+      showError("De som moet exact 0,00 zijn voordat je kunt opslaan.");
+      return;   // ⛔ STOP — submit niet uitvoeren
+    }
+
+    // ---------------------------------------------------------
+    // Payload bouwen zoals je al had
+    // ---------------------------------------------------------
     const payload = {
       userId: Number(document.getElementById('userSelect').value),
       deviceName: document.getElementById('deviceName').value,
@@ -406,6 +422,9 @@ function setupFormSubmit() {
       remark: document.getElementById('remark').value
     };
 
+    // ---------------------------------------------------------
+    // POST naar API
+    // ---------------------------------------------------------
     const resp = await fetch('/api/new-phone', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
