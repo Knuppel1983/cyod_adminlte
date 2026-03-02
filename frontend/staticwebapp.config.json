@@ -18,6 +18,8 @@
     { "route": "/api/getuser", "allowedRoles": [ "support" ] },
     { "route": "/api/getuserdata", "allowedRoles": [ "support" ] },
     { "route": "/api/user_setactive", "allowedRoles": [ "support" ] },
+    { "route": "/api/newuser", "allowedRoles": [ "support" ] },
+    { "route": "/api/post_newphone", "allowedRoles": [ "support" ] }, 
     { "route": "/api/getbudgets", "allowedRoles": [ "authenticated" ] },
     { "route": "/*", "allowedRoles": [ "authenticated" ] }
   ],
