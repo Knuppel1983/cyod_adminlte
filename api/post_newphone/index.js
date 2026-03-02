@@ -1,51 +1,110 @@
-// api/user_setactive/index.js
+// api/post_newphone/index.js
+
 const sql = require('mssql');
 
+/**
+ * SQL-configuratie
+ * Pas deze waarden aan (liefst via process.env.* variabelen)
+ */
+// Connectiestring
+const connStr = process.env.SqlConnectionString;
+if (!connStr) {
+  context.res = { status: 500, body: { error: 'SqlConnectionString ontbreekt in app settings' } };
+  return;
+}
+
+/**
+ * Azure Function entrypoint
+ */
 module.exports = async function (context, req) {
+  if (req.method !== 'POST') {
+    context.res = {
+      status: 405,
+      body: { error: 'Only POST is allowed' }
+    };
+    return;
+  }
+
+  const body = req.body || {};
+
+  const {
+    userId,
+    deviceName,
+    orderDate,
+    amount,
+    usedTst,
+    usedOvg,
+    ownContribution,
+    contractStatus,
+    remark
+  } = body;
+
+  // Basisvalidatie (minimaal gelijk aan wat je vroeger in PHP verwachtte)
+  if (!userId || !deviceName || !orderDate || !contractStatus) {
+    context.res = {
+      status: 400,
+      body: { error: 'userId, deviceName, orderDate en contractStatus zijn verplicht.' }
+    };
+    return;
+  }
+
+  // Converteer waardes naar getallen (voor de zekerheid)
+  const usedTstNum = Number(usedTst || 0);
+  const usedOvgNum = Number(usedOvg || 0);
+  const ownContributionNum = Number(ownContribution || 0);
+  const amountNum = amount != null ? Number(amount) : null;
+
+  // Optionele controle of bedragen optellen tot de toestelprijs
+  if (amountNum != null) {
+    const sum = usedTstNum + usedOvgNum + ownContributionNum;
+    const diff = Math.abs(sum - amountNum);
+
+    // Sta een kleine afrondingsfout toe (0.01)
+    if (diff > 0.01) {
+      context.res = {
+        status: 400,
+        body: {
+          error: 'Som van toestelbudget + overig budget + eigen bijdrage komt niet overeen met de aanschafwaarde.',
+          details: { amount: amountNum, sumUsed: sum }
+        }
+      };
+      return;
+    }
+  }
+
   try {
-    // 1) Input lezen en valideren
-    const body = req.body || {};
-    const userId = body.userId;
-    const active = body.active;
-    const reason = typeof body.reason === 'string' ? body.reason : null;
-
-    if (typeof userId !== 'number' || !Number.isInteger(userId)) {
-      context.res = { status: 400, body: { error: 'userId moet een integer zijn' } };
-      return;
-    }
-    if (!(active === 0 || active === 1)) {
-      context.res = { status: 400, body: { error: 'active moet 0 of 1 zijn' } };
-      return;
-    }
-
-    // 2) Wie voert uit? (SWA header of fallback)
-    // x-ms-client-principal-name staat bij SWA login
-    const performedByHeader = req.headers && (req.headers['x-ms-client-principal-name'] || req.headers['x-user']);
-    const performedBy = performedByHeader ? String(performedByHeader) : 'admin@swa';
-
-    // 3) Connectiestring
-    const connStr = process.env.SqlConnectionString;
-    if (!connStr) {
-      context.res = { status: 500, body: { error: 'SqlConnectionString ontbreekt in app settings' } };
-      return;
-    }
-
-    // 4) DB call
+    // 1. Connectie openen (pool wordt hergebruikt binnen de function runtime)
     const pool = await sql.connect(connStr);
-    await pool.request()
-      .input('userId', sql.Int, userId)
-      .input('active', sql.Bit, active)
-      .input('performedBy', sql.NVarChar(256), performedBy)
-      .input('reason', sql.NVarChar(4000), reason)
-      .execute('dbo.user_setactive');
 
-    // 5) OK
-    context.res = { status: 200, body: { ok: true } };
+    // 2. Stored procedure aanroepen met parameters
+    const request = pool.request()
+      .input('UserId',           sql.Int,           userId)
+      .input('Toestel',          sql.NVarChar(50),  deviceName)
+      .input('Besteldatum',      sql.Date,         orderDate)      // 'YYYY-MM-DD' is ok
+      .input('IngToestelBudget', sql.Decimal(18, 2), usedTstNum)
+      .input('IngOverigBudget',  sql.Decimal(18, 2), usedOvgNum)
+      .input('EigenBijdrage',    sql.Decimal(18, 2), ownContributionNum)
+      .input('Contractstatus',   sql.NVarChar(50),  contractStatus)
+      .input('Opmerking',        sql.NVarChar(sql.MAX), remark || null);
+
+    await request.execute('dbo.usp_NewToestelAankoop');
+
+    context.res = {
+      status: 200,
+      body: {
+        success: true,
+        message: 'Toestel aankoop succesvol geregistreerd.'
+      }
+    };
   } catch (err) {
-    // Foutafhandeling: map 'User not found' naar 404, anders 500
-    const msg = (err && err.message) ? err.message : 'Server error';
-    const isNotFound = typeof msg === 'string' && msg.toLowerCase().indexOf('user not found') !== -1;
-    context.log.error('user-set-active error:', err);
-    context.res = { status: isNotFound ? 404 : 500, body: { error: msg } };
+    context.log.error('Error in new-phone API:', err);
+
+    context.res = {
+      status: 500,
+      body: {
+        error: 'Er is een fout opgetreden bij het wegschrijven van de aankoop.',
+        details: err.message
+      }
+    };
   }
 };

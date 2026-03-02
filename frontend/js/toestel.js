@@ -338,6 +338,8 @@ Status: ${contractStatus}`;
         }
       });
     }
+    
+    setupFormSubmit();
   }
   
   function clearUserFields() {
@@ -382,5 +384,47 @@ Status: ${contractStatus}`;
     recalcManual({ formatInputs: true });
   });
 
+
+
+
+
+function setupFormSubmit() {
+  const form = document.getElementById('toestelForm');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      userId: Number(document.getElementById('userSelect').value),
+      deviceName: document.getElementById('deviceName').value,
+      orderDate: document.getElementById('orderDate').value,
+      amount: Number(document.getElementById('amount').value),
+      usedTst: Number(document.getElementById('used-tst-input').value),
+      usedOvg: Number(document.getElementById('used-ovg-input').value),
+      ownContribution: Number(document.getElementById('used-eig-input').value),
+      contractStatus: document.getElementById('contractStatus').value,
+      remark: document.getElementById('remark').value
+    };
+
+    const resp = await fetch('/api/new-phone', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await resp.json();
+
+    if (!resp.ok) {
+      showError(result.error || 'Onbekende fout');
+    } else {
+      showSuccess('Aankoop geregistreerd!');
+      form.reset();
+    }
+  });
+}
+
+
   document.addEventListener('DOMContentLoaded', bind);
+  
+  
 })();
