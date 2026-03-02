@@ -208,6 +208,7 @@ function recalcManual({ formatInputs = false } = {}) {
 
 // ───────────────────────────────────────────────────────────────────────────────
 // Submit
+// ───────────────────────────────────────────────────────────────────────────────
 async function onSubmitToestel(e) {
   e.preventDefault();
   const form = e.currentTarget;
@@ -248,9 +249,9 @@ async function onSubmitToestel(e) {
   const sumEl = document.getElementById('sum-amount');
   const rawText = (sumEl?.textContent || '0').trim();
   const cleaned = rawText
-    .replace(/[^\d,.-]/g, '')   // verwijder alles behalve cijfers, , . -
-    .replace(/\./g, '')         // duizendtallen weghalen
-    .replace(',', '.');         // NL -> EN decimaal
+    .replace(/[^\d,.-]/g, '')
+    .replace(/\./g, '')
+    .replace(',', '.');
 
   const controle = parseFloat(cleaned || '0');
 
@@ -282,7 +283,22 @@ Ingezet: toestel € ${fmt(useT)} · overig € ${fmt(useO)}
 Eigen bijdrage: € ${fmt(useE)}
 Status: ${contractStatus}`;
 
-  if (!confirm('Bevestigen?\n\n' + summary)) return;
+  // 🔔 Vervang window.confirm door confirmModal uit /js/modal.js
+  if (typeof window.confirmModal === 'function') {
+    const ok = await window.confirmModal(
+      'Bevestigen?\n\n' + summary,
+      {
+        title: 'Aankoop bevestigen',
+        confirmText: 'Opslaan',
+        cancelText: 'Annuleren',
+        size: 'modal-md'
+      }
+    );
+    if (!ok) return;
+  } else {
+    // fallback, als modal.js om wat voor reden dan ook niet geladen is
+    if (!window.confirm('Bevestigen?\n\n' + summary)) return;
+  }
 
   if (submitBtn) submitBtn.disabled = true;
 
@@ -292,10 +308,10 @@ Status: ${contractStatus}`;
       userId,
       deviceName: device,
       orderDate,
-      amount: Number(amount.toFixed(2)),          // sluit aan bij jouw API
+      amount: Number(amount.toFixed(2)),
       usedTst: Number(useT.toFixed(2)),
       usedOvg: Number(useO.toFixed(2)),
-      ownContribution: Number(useE.toFixed(2)),   // let op: useE, niet 'own'
+      ownContribution: Number(useE.toFixed(2)),
       contractStatus,
       remark
     };
