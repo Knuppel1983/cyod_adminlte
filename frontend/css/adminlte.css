@@ -15624,3 +15624,12 @@ html.default [data-role="default"] { display: block; }
 
 /* Optioneel: baseline zodat block-level elementen ook echt blocks zijn */
 [data-role="support"], [data-role="default"] { display: block; }
+
+
+
+table.dataTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10; /* belangrijk zodat header boven cellen blijft */
+  background: #fff; /* of AdminLTE card-bg */
+}
