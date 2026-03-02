@@ -1,15 +1,16 @@
 // api/newuser/index.js
 
-const sql = require('mssql');
-
-// Connectiestring
-const connStr = process.env.SqlConnectionString;
-if (!connStr) {
-  context.res = { status: 500, body: { error: 'SqlConnectionString ontbreekt in app settings' } };
-  return;
-}
-
 module.exports = async function (context, req) {
+  
+  const sql = require('mssql');
+
+  // Connectiestring
+  const connStr = process.env.SqlConnectionString;
+  if (!connStr) {
+    context.res = { status: 500, body: { error: 'SqlConnectionString ontbreekt in app settings' } };
+    return;
+  }
+  
   if (req.method !== 'POST') {
     context.res = {
       status: 405,
