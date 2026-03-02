@@ -135,12 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
    * - én in de lokale #alertContainer als die bestaat
    */
   function localShowAlert(type, message) {
-    // 1) Globale alert (bijv. toast / boven in scherm)
-    if (typeof window.showAlert === 'function') {
-      window.showAlert(type, message);
-    }
-
-    // 2) Lokale alert in de kaart
+    // alleen lokale alert
     if (!alertContainer) return;
 
     const div = document.createElement('div');
@@ -150,4 +145,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     alertContainer.appendChild(div);
   }
+
 });
