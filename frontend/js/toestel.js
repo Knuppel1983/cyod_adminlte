@@ -35,116 +35,134 @@
 
   // ───────────────────────────────────────────────────────────────────────────────
   // Recalculate UI (zonder formatting tijdens typen; met formatting op blur/MAX/correcties)
-  function recalcManual({ formatInputs = false } = {}) {
-    const amount = euro(document.getElementById('amount')?.value);
+// Recalculate UI (zonder formatting tijdens typen; met formatting op blur/MAX/correcties)
+function recalcManual({ formatInputs = false } = {}) {
+  const amount = euro(document.getElementById('amount')?.value);
 
-    const availT =
-      euro(
-        document
-          .getElementById('avail-tst')
-          ?.textContent?.replace(/[^\d,.-]/g, '')
-          .replace('.', '')
-          .replace(',', '.')
-      ) || euro(budgets.tst_budget);
+  const availT =
+    euro(
+      document
+        .getElementById('avail-tst')
+        ?.textContent?.replace(/[^\d,.-]/g, '')
+        .replace('.', '')
+        .replace(',', '.')
+    ) ||
+    euro(budgets.tst_budget);
 
-    const availO =
-      euro(
-        document
-          .getElementById('avail-ovg')
-          ?.textContent?.replace(/[^\d,.-]/g, '')
-          .replace('.', '')
-          .replace(',', '.')
-      ) || euro(budgets.ovg_budget);
+  const availO =
+    euro(
+      document
+        .getElementById('avail-ovg')
+        ?.textContent?.replace(/[^\d,.-]/g, '')
+        .replace('.', '')
+        .replace(',', '.')
+    ) ||
+    euro(budgets.ovg_budget);
 
-    let usedT = euro(document.getElementById('used-tst-input')?.value);
-    let usedO = euro(document.getElementById('used-ovg-input')?.value);
-    let usedE = euro(document.getElementById('used-eig-input')?.value);
+  let usedT = euro(document.getElementById('used-tst-input')?.value);
+  let usedO = euro(document.getElementById('used-ovg-input')?.value);
+  let usedE = euro(document.getElementById('used-eig-input')?.value);
 
-    // Validaties & clamps
-    let warnT = '',
-      warnO = '',
-      warnOwn = '';
-    let changed = false;
+  // ─────────────────────────────────────────────
+  // NIEUW: als amount leeg of 0 is → alle inzetten op 0
+  // ─────────────────────────────────────────────
+  if (!(amount > 0)) {
+    usedT = 0;
+    usedO = 0;
+    usedE = 0;
+  }
 
-    // 1) Niet meer inzetten dan beschikbaar
-    if (usedT > availT) {
-      usedT = availT;
-      warnT = 'Max. inzet toestelbudget bereikt.';
+  // Validaties & clamps
+  let warnT = '',
+    warnO = '',
+    warnOwn = '';
+  let changed = false;
+
+  // 1) Niet meer inzetten dan beschikbaar
+  if (usedT > availT) {
+    usedT = availT;
+    warnT = 'Max. inzet toestelbudget bereikt.';
+    changed = true;
+  }
+  if (usedO > availO) {
+    usedO = availO;
+    warnO = 'Max. inzet overig budget bereikt.';
+    changed = true;
+  }
+
+  // 2) Totale inzet mag niet boven aankoopbedrag
+  const totalUse = usedT + usedO + usedE;
+  if (amount > 0 && totalUse > amount) {
+    let overflow = totalUse - amount;
+
+    if (usedE >= overflow) {
+      usedE -= overflow;
       changed = true;
-    }
-    if (usedO > availO) {
-      usedO = availO;
-      warnO = 'Max. inzet overig budget bereikt.';
+      overflow = 0;
+      warnOwn = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
+    } else {
+      overflow -= usedE;
+      usedE = 0;
       changed = true;
-    }
 
-    // 2) Totale inzet mag niet boven aankoopbedrag
-    const totalUse = usedT + usedO + usedE;
-    if (amount > 0 && totalUse > amount) {
-      let overflow = totalUse - amount;
-
-      if (usedE >= overflow) {
-        usedE -= overflow;
+      if (usedO >= overflow) {
+        usedO -= overflow;
         changed = true;
         overflow = 0;
-        warnOwn = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
+        warnO = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
       } else {
-        overflow -= usedE;
-        usedE = 0;
+        overflow -= usedO;
+        usedO = 0;
+        usedT = Math.max(0, usedT - overflow);
         changed = true;
-
-        if (usedO >= overflow) {
-          usedO -= overflow;
-          changed = true;
-          overflow = 0;
-          warnO = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
-        } else {
-          overflow -= usedO;
-          usedO = 0;
-          usedT = Math.max(0, usedT - overflow);
-          changed = true;
-          warnT = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
-        }
+        warnT = 'Inzet + eigen bijdrage is getrimd tot aanschafwaarde.';
       }
     }
-
-    // Helpteksten
-    showHelp('used-tst-help', warnT);
-    showHelp('used-ovg-help', warnO);
-    showHelp('used-eig-help', warnOwn);
-
-    // Som‑controle en kaartkleur
-    const controle = amount - (usedT + usedO + usedE);
-    setText('sum-amount', Number(controle.toFixed(2)));
-
-    const epsilon = 0.01; // 1 cent marge tegen floating-point ruis
-    const isZero = isFinite(controle) && Math.abs(controle) < epsilon;
-    const sumCard = document.getElementById('sum-card');
-    if (sumCard) {
-      sumCard.classList.toggle('bg-danger-subtle', !isZero);
-      sumCard.classList.toggle('bg-info-subtle', isZero);
-    }
-
-    // Restbudget (per potje) en optioneel totaal
-    const restBudgetT = availT - usedT;
-    const restBudgetO = availO - usedO;
-    setText('rest-budgetT', restBudgetT);
-    setText('rest-budgetO', restBudgetO);
-    if (document.getElementById('rest-budget')) {
-      setText('rest-budget', restBudgetT + restBudgetO);
-    }
-
-    // Input formatting alleen op blur / MAX / correcties
-    if (formatInputs || changed) {
-      const f2 = (v) => Number(v).toFixed(2);
-      const elT = document.getElementById('used-tst-input');
-      const elO = document.getElementById('used-ovg-input');
-      const elW = document.getElementById('used-eig-input');
-      if (elT && elT.value !== f2(usedT)) elT.value = f2(usedT);
-      if (elO && elO.value !== f2(usedO)) elO.value = f2(usedO);
-      if (elW && elW.value !== f2(usedE)) elW.value = f2(usedE);
-    }
   }
+
+  // Helpteksten
+  showHelp('used-tst-help', warnT);
+  showHelp('used-ovg-help', warnO);
+  showHelp('used-eig-help', warnOwn);
+
+  // Som‑controle en kaartkleur
+  const controle = amount - (usedT + usedO + usedE);
+  const controleFixed = Number(controle.toFixed(2));
+  setText('sum-amount', controleFixed);
+
+  const epsilon = 0.01; // 1 cent marge tegen floating-point ruis
+  const isZero =
+    isFinite(controleFixed) && Math.abs(controleFixed) < epsilon;
+
+  const sumCard = document.getElementById('sum-card');
+  if (sumCard) {
+    // Als amount <= 0, beschouwen we het ook als “neutraal/ok”
+    const ok = isZero || !(amount > 0);
+    sumCard.classList.toggle('bg-danger-subtle', !ok);
+    sumCard.classList.toggle('bg-info-subtle', ok);
+  }
+
+  // Restbudget (per potje) en optioneel totaal
+  const restBudgetT = availT - usedT;
+  const restBudgetO = availO - usedO;
+  setText('rest-budgetT', restBudgetT);
+  setText('rest-budgetO', restBudgetO);
+  if (document.getElementById('rest-budget')) {
+    setText('rest-budget', restBudgetT + restBudgetO);
+  }
+
+  // Input formatting alleen op blur / MAX / correcties
+  if (formatInputs || changed) {
+    const f2 = (v) => Number(v).toFixed(2);
+    const elT = document.getElementById('used-tst-input');
+    const elO = document.getElementById('used-ovg-input');
+    const elW = document.getElementById('used-eig-input');
+
+    if (elT && elT.value !== f2(usedT)) elT.value = f2(usedT);
+    if (elO && elO.value !== f2(usedO)) elO.value = f2(usedO);
+    if (elW && elW.value !== f2(usedE)) elW.value = f2(usedE);
+  }
+}
 
   // ───────────────────────────────────────────────────────────────────────────────
   // Budgetten ophalen voor geselecteerde gebruiker
@@ -409,25 +427,6 @@ Status: ${contractStatus}`;
     // Laat jouw volledige validatie + formatting opnieuw lopen
     recalcManual({ formatInputs: true });
   });
-
-document.addEventListener('DOMContentLoaded', function () {
-  const amountField        = document.getElementById('amount');
-  const toestelbudgetField = document.getElementById('used-tst-input');
-  const overigBudgetField  = document.getElementById('used-ovg-input');
-  const eigenBijdrageField = document.getElementById('used-eig-input');
-
-  if (!amountField) {
-    console.warn("Veld met id 'amount' niet gevonden.");
-    return;
-  }
-
-  amountField.addEventListener('change', function () {
-    // Zodra amount wordt gewijzigd: andere velden leeg
-    if (toestelbudgetField) toestelbudgetField.value = '';
-    if (overigBudgetField)  overigBudgetField.value  = '';
-    if (eigenBijdrageField) eigenBijdrageField.value = '';
-  });
-});
 
   document.addEventListener('DOMContentLoaded', bind);
   
