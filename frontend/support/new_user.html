@@ -371,11 +371,14 @@
                       <div class="card-body">
                         <div class="mb-3">
                           <label for="username" class="col-form-label">Naam: (format: 'voornaam.achternaam')</label>
-                          <input type="text" class="form-control" id="username"></input>
+                          <input type="text" class="form-control" id="username" required ></input>
                         </div>
+                        <!-- Peildatum (verplicht) -->
                         <div class="mb-3">
-                          <label for="peildatum" class="form-label">Peildatum (datum in dienst):</label>
-                          <input type="date" id="peildatumDate" class="form-control" required />
+                          <label for="newUserPeildatum" class="form-label">Peildatum <span class="text-danger">*</span>
+                          </label>
+                          <input type="date" id="newUserPeildatum" name="peildatum" class="form-control" required />
+                          <div class="form-text">Datum in dienst.</div>
                         </div>
                       </div>
                       <div class="card-footer">
@@ -465,6 +468,7 @@
     <script src="/js/forms.js"></script>
     <script src="/js/modal.js"></script>
     <script src="/js/colormode.js"></script>
+    <script src="/js/new_user.js"></script>
     
     <!--end::Script-->
   </body>
