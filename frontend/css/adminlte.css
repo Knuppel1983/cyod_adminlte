@@ -15631,5 +15631,5 @@ table.dataTable thead th {
   position: sticky;
   top: 0;
   z-index: 10; /* belangrijk zodat header boven cellen blijft */
-  background: #fff; /* of AdminLTE card-bg */
+  /*  background: #fff; of AdminLTE card-bg */
 }
