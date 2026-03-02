@@ -330,61 +330,82 @@ Status: ${contractStatus}`;
 
   // ───────────────────────────────────────────────────────────────────────────────
   // Bind
-  function bind() {
-    // Select2: alleen actieve users laden (forms.js regelt init; hier alleen change)
-    const hasJQ = typeof window.jQuery !== 'undefined';
-    if (hasJQ && typeof jQuery.fn.select2 === 'function') {
-      const $sel = jQuery('#userSelect');
-      if ($sel.length) {
-        // forms.js roept loadUsers(1) aan op basis van data-only-active
-        $sel.on('change', function () {
-          clearUserFields();
-          const id = parseInt($sel.val(), 10);
-          if (id) fetchUserBudgets(id);
-        });
-      }
-    }
-
-    // Submit
-    if (typeof window.bindFormSubmit === 'function') {
-      window.bindFormSubmit('toestelForm', onSubmitToestel);
-    } else {
-      const form = document.getElementById('toestelForm');
-      if (form) form.addEventListener('submit', onSubmitToestel);
-    }
-
-    // Invoer-events: input = geen formatting; blur = wel formatting
-    ['amount', 'used-tst-input', 'used-ovg-input', 'used-eig-input'].forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.addEventListener('input', () => recalcManual({ formatInputs: false }));
-      el.addEventListener('blur', () => recalcManual({ formatInputs: true }));
-    });
-
-    // MAX-knoppen (optioneel aanwezig)
-    const btnT = document.getElementById('btnUsedTMax');
-    if (btnT) {
-      btnT.addEventListener('click', () => {
-        const el = document.getElementById('used-tst-input');
-        const max = Number(budgets?.tst_budget ?? 0);
-        if (el) {
-          el.value = max.toFixed(2);
-          recalcManual({ formatInputs: true });
-        }
-      });
-    }
-    const btnO = document.getElementById('btnUsedOMax');
-    if (btnO) {
-      btnO.addEventListener('click', () => {
-        const el = document.getElementById('used-ovg-input');
-        const max = Number(budgets?.ovg_budget ?? 0);
-        if (el) {
-          el.value = max.toFixed(2);
-          recalcManual({ formatInputs: true });
-        }
+function bind() {
+  // Select2: alleen actieve users laden (forms.js regelt init; hier alleen change)
+  const hasJQ = typeof window.jQuery !== 'undefined';
+  if (hasJQ && typeof jQuery.fn.select2 === 'function') {
+    const $sel = jQuery('#userSelect');
+    if ($sel.length) {
+      // forms.js roept loadUsers(1) aan op basis van data-only-active
+      $sel.on('change', function () {
+        clearUserFields();
+        const id = parseInt($sel.val(), 10);
+        if (id) fetchUserBudgets(id);
       });
     }
   }
+
+  // Submit
+  if (typeof window.bindFormSubmit === 'function') {
+    window.bindFormSubmit('toestelForm', onSubmitToestel);
+  } else {
+    const form = document.getElementById('toestelForm');
+    if (form) form.addEventListener('submit', onSubmitToestel);
+  }
+
+  // Invoer-events
+  ['amount', 'used-tst-input', 'used-ovg-input', 'used-eig-input'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    if (id === 'amount') {
+      // 🔴 Speciaal gedrag voor Aanschafwaarde
+      el.addEventListener('input', () => {
+        const raw = el.value.trim();
+        const val = euro(raw); // gebruikt je bestaande helper
+
+        if (raw === '' || !(val > 0)) {
+          // amount is leeg of 0 -> alle inzetvelden direct naar 0,00
+          recalcManual({ formatInputs: true });
+        } else {
+          // normaal doorrekenen, maar niet formatteren tijdens typen
+          recalcManual({ formatInputs: false });
+        }
+      });
+
+      el.addEventListener('blur', () => recalcManual({ formatInputs: true }));
+    } else {
+      // Overige velden: blijven zoals het was
+      el.addEventListener('input', () => recalcManual({ formatInputs: false }));
+      el.addEventListener('blur', () => recalcManual({ formatInputs: true }));
+    }
+  });
+
+  // MAX-knoppen (optioneel aanwezig) – ongewijzigd
+  const btnT = document.getElementById('btnUsedTMax');
+  if (btnT) {
+    btnT.addEventListener('click', () => {
+      const el = document.getElementById('used-tst-input');
+      const max = Number(budgets?.tst_budget ?? 0);
+      if (el) {
+        el.value = max.toFixed(2);
+        recalcManual({ formatInputs: true });
+      }
+    });
+  }
+  const btnO = document.getElementById('btnUsedOMax');
+  if (btnO) {
+    btnO.addEventListener('click', () => {
+      const el = document.getElementById('used-ovg-input');
+      const max = Number(budgets?.ovg_budget ?? 0);
+      if (el) {
+        el.value = max.toFixed(2);
+        recalcManual({ formatInputs: true });
+      }
+    });
+  }
+}
+``
   
   function clearUserFields() {
     // Voeg hier jouw eigen veld-ID's toe
