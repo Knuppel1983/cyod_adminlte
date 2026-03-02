@@ -41,6 +41,7 @@
                 deferRender: true,
                 pageLength: 100,
                 order: [[1, 'asc']],
+                fixedHeader: true,
                 ajax: {
                   url: '/api/getuserdata?onlyActive=1',   // of '/api/support/getuserdata' als jouw function.json zo route
                   type: 'GET',
