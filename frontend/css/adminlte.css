@@ -15633,3 +15633,8 @@ table.dataTable thead th {
   z-index: 10; /* belangrijk zodat header boven cellen blijft */
   /*  background: #fff; of AdminLTE card-bg */
 }
+
+
+.confirm-modal-preline {
+  white-space: pre-line;
+}
