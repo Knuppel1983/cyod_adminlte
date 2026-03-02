@@ -274,31 +274,46 @@ async function onSubmitToestel(e) {
   const useO = euro(document.getElementById('used-ovg-input')?.value);
   const useE = euro(document.getElementById('used-eig-input')?.value);
 
-  const username = $sel && $sel.length ? jQuery('#userSelect option:selected').text() : '';
-  const summary = `Gebruiker: ${username}
-Toestel: ${device}
-Datum: ${orderDate}
-Bedrag (ex. btw): € ${fmt(amount)}
-Ingezet: toestel € ${fmt(useT)} · overig € ${fmt(useO)}
-Eigen bijdrage: € ${fmt(useE)}
-Status: ${contractStatus}`;
+const username = $sel && $sel.length ? jQuery('#userSelect option:selected').text() : '';
+
+const summaryHtml = [
+  `Gebruiker: ${username}`,
+  `Toestel: ${device}`,
+  `Datum: ${orderDate}`,
+  `Bedrag (ex. btw): € ${fmt(amount)}`,
+  `Ingezet: toestel € ${fmt(useT)} · overig € ${fmt(useO)}`,
+  `Eigen bijdrage: € ${fmt(useE)}`,
+  `Status: ${contractStatus}`
+].join('<br>');
 
   // 🔔 Vervang window.confirm door confirmModal uit /js/modal.js
-  if (typeof window.confirmModal === 'function') {
-    const ok = await window.confirmModal(
-      'Bevestigen?\n\n' + summary,
-      {
-        title: 'Aankoop bevestigen',
-        confirmText: 'Opslaan',
-        cancelText: 'Annuleren',
-        size: 'modal-md'
-      }
-    );
-    if (!ok) return;
-  } else {
-    // fallback, als modal.js om wat voor reden dan ook niet geladen is
-    if (!window.confirm('Bevestigen?\n\n' + summary)) return;
-  }
+if (typeof window.confirmModal === 'function') {
+  const ok = await window.confirmModal(
+    `Bevestigen?<br><br>${summaryHtml}`,
+    {
+      title: 'Aankoop bevestigen',
+      confirmText: 'Opslaan',
+      cancelText: 'Annuleren',
+      size: 'modal-md',
+      html: true   // of allowHtml: true, afhankelijk van hoe modal.js is gebouwd
+    }
+  );
+  if (!ok) return;
+} else {
+  // Fallback naar window.confirm (zonder HTML)
+  const plainSummary = [
+    `Gebruiker: ${username}`,
+    `Toestel: ${device}`,
+    `Datum: ${orderDate}`,
+    `Bedrag (ex. btw): € ${fmt(amount)}`,
+    `Ingezet: toestel € ${fmt(useT)} · overig € ${fmt(useO)}`,
+    `Eigen bijdrage: € ${fmt(useE)}`,
+    `Status: ${contractStatus}`
+  ].join('\n');
+
+  if (!window.confirm('Bevestigen?\n\n' + plainSummary)) return;
+}
+
 
   if (submitBtn) submitBtn.disabled = true;
 
