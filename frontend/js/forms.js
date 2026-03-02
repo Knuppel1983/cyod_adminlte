@@ -26,7 +26,6 @@
 
         // === Form bindings ===
         bindFormSubmit('userActiveForm', onSubmitUserActive); // jouw bestaande pagina
-        bindFormSubmit('newUserForm', onSubmitNewUser);       // nieuwe pagina
 
         // Je kunt hier zonder zorgen meerdere bindFormSubmit-aanroepen doen; als het formulier
         // niet bestaat op deze pagina, gebeurt er niets.
@@ -62,7 +61,6 @@
 
         // Bestaande form-bindings mogen blijven staan
         bindFormSubmit('userActiveForm', onSubmitUserActive);
-        bindFormSubmit('newUserForm', onSubmitNewUser);
       }
 
 
