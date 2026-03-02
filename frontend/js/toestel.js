@@ -421,7 +421,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
-  amountField.addEventListener('input', function () {
+  amountField.addEventListener('change', function () {
     // Zodra amount wordt gewijzigd: andere velden leeg
     if (toestelbudgetField) toestelbudgetField.value = '';
     if (overigBudgetField)  overigBudgetField.value  = '';
