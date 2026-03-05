@@ -21,18 +21,26 @@ module.exports = async function (context, req) {
       // Detail 1 gebruiker (met budgetten)
       request.input('UserId', sql.Int, userId);
       const { recordset } = await request.query(`
-        SELECT TOP (1)
-          u.id         AS user_id,
-          u.username   AS username,
-          u.active     AS active,
-          b.budget     AS tst_budget,
-          r.rep_budget AS rep_budget,
-          o.ovg_budget AS ovg_budget
-        FROM dbo.users u
-        LEFT JOIN dbo.tst_budget b ON b.user_id = u.id
-        LEFT JOIN dbo.rep_budget r ON r.user_id = u.id
-        LEFT JOIN dbo.ovg_budget o ON o.user_id = u.id
-        WHERE u.id = @UserId;
+      SELECT TOP (1)
+            u.id         AS user_id,
+            u.username   AS username,
+            u.active     AS active,
+            b.budget     AS tst_budget,
+            r.rep_budget AS rep_budget,
+            o.ovg_budget AS ovg_budget,
+            t.toestel    AS current_phone
+      FROM dbo.users u
+      LEFT JOIN dbo.tst_budget  b ON b.user_id = u.id
+      LEFT JOIN dbo.rep_budget  r ON r.user_id = u.id
+      LEFT JOIN dbo.ovg_budget  o ON o.user_id = u.id
+      LEFT JOIN dbo.toestel     t ON t.user_id = u.id
+                                   AND t.besteldatum =
+                                       (
+                                           SELECT MAX(t2.besteldatum)
+                                           FROM dbo.toestel t2
+                                           WHERE t2.user_id = u.id
+                                       )
+      WHERE u.id = @UserId;
       `);
       context.res = { status: recordset.length ? 200 : 404, body: recordset.length ? recordset[0] : { ok:false, error:'Not found' } };
       return;
