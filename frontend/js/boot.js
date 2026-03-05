@@ -71,7 +71,8 @@
                       return data; // weergave blijft NL-formaat
                     }
                   },
-                  { data: 'days_to_peildatum', className: 'text-end' }
+                  { data: 'days_to_peildatum', className: 'text-end' },
+                  { data: 'current_phone' }
                 ]
             });
         });
