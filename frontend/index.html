@@ -435,6 +435,20 @@
     <script src="/js/forms.js"></script>
     <script src="/js/modal.js"></script>
     <script src="/js/colormode.js"></script>
+
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const role = document.body.dataset.role;
+      
+        if (role === "support") {
+          window.location.href = "/support/summary.html";
+        } else if (role === "default") {
+          window.location.href = "/dashboard.html";
+        }
+      });
+    </script>
+  
     
     <!--end::Script-->
   </body>
